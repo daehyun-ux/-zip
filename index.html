@@ -524,6 +524,12 @@ body{word-break:keep-all;overflow-wrap:break-word}
 @media (hover:hover){.cat:hover .f-paper.a{transform:translateY(-8px)}.cat:hover .f-paper.b{transform:translateY(-6px) rotate(.6deg)}}
 .cat:active .f-paper.a,.cat.press .f-paper.a{transform:translateY(-13px) rotate(-.8deg)}
 .cat:active .f-paper.b,.cat.press .f-paper.b{transform:translateY(-10px) rotate(1deg)}
+
+/* 폴더 카드 누르면 종이가 위로 스르륵 빠져나감 */
+.cat.pull{z-index:3;position:relative}
+.cat.pull .f-paper.b{transform:translateY(-150px) rotate(2.5deg)!important;opacity:0;transition:transform .4s cubic-bezier(.2,.75,.35,1),opacity .2s ease-in .2s!important}
+.cat.pull .f-paper.a{transform:translateY(-120px) rotate(-3deg)!important;opacity:0;transition:transform .4s cubic-bezier(.2,.75,.35,1) .03s,opacity .2s ease-in .22s!important}
+.cat.pull .f-front{transform:perspective(800px) rotateX(-8deg);transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
 </style>
 </head>
 <body>
@@ -1662,7 +1668,10 @@ function root(){
     setTimeout(()=>{splash(true);w.remove()},640)};
   /* 누르면 폴더가 살짝 열리는 모습을 보여준 뒤 이동 */
   const pressGo=(b,fn)=>{b.addEventListener("pointerdown",()=>b.classList.add("press"));["pointerup","pointerleave","pointercancel"].forEach(ev=>b.addEventListener(ev,()=>b.classList.remove("press")));
-    b.onclick=()=>{b.classList.add("press");setTimeout(fn,matchMedia("(prefers-reduced-motion: reduce)").matches?0:180)}};
+    b.onclick=()=>{if(b.classList.contains("pull"))return;const rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+      b.classList.add("press");if(rm){fn();return}
+      /* 눌린 모습 → 종이 두 장이 폴더에서 스르륵 위로 빠져나간 뒤 이동 */
+      b.classList.remove("press");b.classList.add("pull");setTimeout(fn,400)}};
   el.querySelectorAll(".cat[data-c]").forEach(b=>pressGo(b,()=>archive(b.dataset.c)));
   el.querySelector("#rc").onclick=result;
   pressGo(el.querySelector("#bd"),board);
