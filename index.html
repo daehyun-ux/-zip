@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="그 시절, 우리가 열광했던 음식과 문화 — 2014~2026 한국 유행 아카이브">
+<meta name="description" content="그 시절, 우리가 열광했던 음식들 — 2014~2026 한국 유행 아카이브">
 <meta name="theme-color" content="#FFF6F0">
 <title>먹어봤.zip</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -97,6 +97,7 @@ h2.h{font-size:28px;font-weight:900;letter-spacing:-.8px;margin:4px 0 0;text-wra
 .ficon::after{content:"";position:absolute;left:0;top:5px;width:36px;height:23px;border-radius:4px;background:currentColor}
 .folder.open .ficon{transform:rotate(-6deg) scale(1.06)}
 .yr{font-size:20px;font-weight:800;letter-spacing:-.3px;width:58px}
+.yr{width:auto;min-width:58px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .peek{flex:1;display:flex;gap:4px}
 .qm,.peek svg{width:30px;height:30px}
 .qm{border-radius:8px;background:var(--tint);color:var(--qm);font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center}
@@ -365,6 +366,8 @@ body{word-break:keep-all;overflow-wrap:break-word}
 .r-name input{padding-top:9px;margin-top:-8px}
 @media (max-width:359px){.tab{padding:8px 10px;font-size:12px}}
 .credits{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 12px;margin-top:14px;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}
+.peek{min-width:0}
+@media (max-width:379px){.fhead{gap:8px;padding:12px 12px}.yr{font-size:17px;min-width:0}.peek{gap:3px}.peek svg,.peek .qm{width:24px!important;height:24px!important;font-size:11px}.ficon{transform:scale(.85)}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -404,7 +407,19 @@ body{word-break:keep-all;overflow-wrap:break-word}
 <symbol id="naengmyeon" viewBox="0 0 100 100"><ellipse cx="50" cy="88" rx="34" ry="5" fill="#000" opacity=".08"/><path d="M12 46h76c-2 22-18 36-38 36S14 68 12 46z" fill="#D9DDE3" stroke="#B9C0CA" stroke-width="2"/><ellipse cx="50" cy="46" rx="38" ry="9" fill="#EAD9C0"/><path d="M22 47c6-6 12 4 18-2s12 4 18-2 12 4 20-1" stroke="#8B6B4E" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M26 44c6-4 10 3 16-1s12 3 18-1 10 3 16 0" stroke="#A88566" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="60" cy="36" rx="9" ry="7" fill="#fff"/><circle cx="60" cy="36" r="4.2" fill="#FFC23D"/><path d="M34 34l14-2" stroke="#3FA34D" stroke-width="5" stroke-linecap="round"/><path d="M40 39h10" stroke="#F3E7B8" stroke-width="5" stroke-linecap="round"/></symbol>
 <symbol id="subakbar" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="22" ry="4" fill="#000" opacity=".08"/><rect x="45" y="66" width="10" height="22" rx="4" fill="#E2C08D"/><path d="M28 18h44v46a6 6 0 0 1-6 6H34a6 6 0 0 1-6-6z" fill="#3FA34D"/><path d="M28 18h44v10H28z" fill="#9BE07A"/><path d="M28 18h44v-2a8 8 0 0 0-8-8H36a8 8 0 0 0-8 8z" fill="#F0435A"/><circle cx="38" cy="40" r="2.6" fill="#1B3A1F"/><circle cx="52" cy="48" r="2.6" fill="#1B3A1F"/><circle cx="62" cy="38" r="2.6" fill="#1B3A1F"/><circle cx="44" cy="58" r="2.6" fill="#1B3A1F"/><circle cx="60" cy="58" r="2.6" fill="#1B3A1F"/><path d="M33 22v34" stroke="#fff" stroke-width="3" opacity=".35" stroke-linecap="round"/></symbol>
 <symbol id="whale" viewBox="0 0 100 100"><ellipse cx="50" cy="88" rx="34" ry="5" fill="#000" opacity=".08"/><path d="M14 56c0-16 14-26 32-26 16 0 26 8 32 18l8-10c4-4 8 0 6 4l-6 12 8 6c3 3 0 7-4 6l-10-3c-6 12-20 18-34 18-18 0-32-9-32-25z" fill="#4C7BF4"/><path d="M16 60c6 10 18 16 32 16 10 0 18-3 24-8-6 2-14 3-22 3-14 0-26-4-34-11z" fill="#DCE6FF"/><circle cx="32" cy="50" r="3.4" fill="#1B1A18"/><path d="M40 22c0-6 4-10 4-10M44 24c2-6 8-8 8-8M36 24c-3-5-8-6-8-6" stroke="#7FB2FF" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
-<symbol id="receipt" viewBox="0 0 100 100"><ellipse cx="50" cy="92" rx="30" ry="4" fill="#000" opacity=".08"/><g transform="translate(50 46) scale(1.2) translate(-50 -46)"><path d="M26 10h48v72l-6-5-6 5-6-5-6 5-6-5-6 5-6-5-6 5z" fill="#FCFCFA" stroke="#1B1A18" stroke-width="3" stroke-linejoin="round"/><path d="M36 22h28" stroke="#1B1A18" stroke-width="4" stroke-linecap="round"/><path d="M34 34h20M34 43h16M34 52h22" stroke="#9A968F" stroke-width="3" stroke-linecap="round"/><path d="M60 34h6M60 43h6M60 52h6" stroke="#9A968F" stroke-width="3" stroke-linecap="round"/><path d="M34 63h32" stroke="#1B1A18" stroke-width="3" stroke-dasharray="3 3"/><path d="M36 70h4M42 70h2M46 70h5M53 70h2M57 70h4M63 70h2" stroke="#1B1A18" stroke-width="5"/></g></symbol></defs></svg>
+<symbol id="receipt" viewBox="0 0 100 100"><ellipse cx="50" cy="92" rx="30" ry="4" fill="#000" opacity=".08"/><g transform="translate(50 46) scale(1.2) translate(-50 -46)"><path d="M26 10h48v72l-6-5-6 5-6-5-6 5-6-5-6 5-6-5-6 5z" fill="#FCFCFA" stroke="#1B1A18" stroke-width="3" stroke-linejoin="round"/><path d="M36 22h28" stroke="#1B1A18" stroke-width="4" stroke-linecap="round"/><path d="M34 34h20M34 43h16M34 52h22" stroke="#9A968F" stroke-width="3" stroke-linecap="round"/><path d="M60 34h6M60 43h6M60 52h6" stroke="#9A968F" stroke-width="3" stroke-linecap="round"/><path d="M34 63h32" stroke="#1B1A18" stroke-width="3" stroke-dasharray="3 3"/><path d="M36 70h4M42 70h2M46 70h5M53 70h2M57 70h4M63 70h2" stroke="#1B1A18" stroke-width="5"/></g></symbol>
+<symbol id="injeolmi" viewBox="0 0 100 100"><ellipse cx="50" cy="88" rx="32" ry="5" fill="#000" opacity=".08"/><path d="M20 56h60l-8 26H28z" fill="#fff" stroke="#E6DDF5" stroke-width="2"/><path d="M22 56c0-18 12-30 28-30s28 12 28 30z" fill="#F4ECDA"/><path d="M26 54c2-14 11-24 24-24s22 10 24 24" fill="#E3C27A"/><rect x="34" y="34" width="11" height="9" rx="2" fill="#F7EAD0" stroke="#D9B871" stroke-width="1.5"/><rect x="52" y="30" width="11" height="9" rx="2" fill="#F7EAD0" stroke="#D9B871" stroke-width="1.5"/><rect x="45" y="42" width="11" height="9" rx="2" fill="#F7EAD0" stroke="#D9B871" stroke-width="1.5"/><circle cx="30" cy="48" r="1.6" fill="#C9A253"/><circle cx="66" cy="46" r="1.6" fill="#C9A253"/><circle cx="58" cy="52" r="1.4" fill="#C9A253"/></symbol>
+<symbol id="soju" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="22" ry="4" fill="#000" opacity=".08"/><rect x="44" y="8" width="12" height="10" rx="2" fill="#2E8B57"/><path d="M44 18h12v10c0 4 10 8 10 16v38a6 6 0 0 1-6 6H40a6 6 0 0 1-6-6V44c0-8 10-12 10-16z" fill="#7FD0A0" opacity=".9"/><rect x="36" y="50" width="28" height="22" rx="3" fill="#FFF5C8"/><circle cx="50" cy="61" r="6" fill="#FFC23D"/><path d="M47 61h6M50 58v6" stroke="#E8A21F" stroke-width="1.5"/><path d="M40 34v40" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round"/></symbol>
+<symbol id="juice" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="24" ry="4" fill="#000" opacity=".08"/><path d="M60 6l-6 22" stroke="#4C7BF4" stroke-width="4" stroke-linecap="round"/><path d="M26 24h48l-6 60a6 6 0 0 1-6 5H38a6 6 0 0 1-6-5z" fill="#fff" stroke="#E6DDF5" stroke-width="2"/><path d="M29 40h42l-4 44a4 4 0 0 1-4 3H37a4 4 0 0 1-4-3z" fill="#FF7A45"/><path d="M29 40h42l-1 8H30z" fill="#FFB27A"/><rect x="24" y="20" width="52" height="7" rx="3" fill="#F3EEE8"/><circle cx="40" cy="58" r="2" fill="#fff" opacity=".6"/><circle cx="56" cy="68" r="2.4" fill="#fff" opacity=".6"/></symbol>
+<symbol id="grape" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="26" ry="4" fill="#000" opacity=".08"/><path d="M50 8c0 6 2 10 6 12" stroke="#8B6B4E" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M54 14c8-6 18-4 20 2-8 4-14 2-20-2z" fill="#3FA34D"/><g fill="#B5E06A" stroke="#8DBE3F" stroke-width="1.5"><circle cx="38" cy="30" r="9"/><circle cx="56" cy="28" r="9"/><circle cx="47" cy="40" r="9"/><circle cx="30" cy="44" r="9"/><circle cx="64" cy="42" r="9"/><circle cx="40" cy="55" r="9"/><circle cx="57" cy="56" r="9"/><circle cx="48" cy="69" r="9"/></g><g fill="#fff" opacity=".6"><circle cx="35" cy="27" r="2.2"/><circle cx="53" cy="25" r="2.2"/><circle cx="44" cy="37" r="2.2"/><circle cx="54" cy="53" r="2.2"/><circle cx="45" cy="66" r="2.2"/></g></symbol>
+<symbol id="chickenskin" viewBox="0 0 100 100"><ellipse cx="50" cy="88" rx="32" ry="5" fill="#000" opacity=".08"/><path d="M18 60h64l-8 24H26z" fill="#E2412F"/><path d="M18 60h64v4H18z" fill="#fff" opacity=".7"/><path d="M24 60c-4-10 4-18 12-16 2-8 14-10 18-2 8-6 20 0 18 10 6 2 6 8 4 8z" fill="#E8A04E"/><path d="M30 56c2-6 8-8 12-4M48 50c4-4 10-2 12 2M60 56c2-4 8-4 10 0" stroke="#B9702A" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="38" cy="50" r="1.5" fill="#B9702A"/><circle cx="56" cy="46" r="1.5" fill="#B9702A"/><circle cx="66" cy="54" r="1.5" fill="#B9702A"/><path d="M34 70h32" stroke="#fff" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="beer" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="22" ry="4" fill="#000" opacity=".08"/><rect x="30" y="16" width="40" height="70" rx="7" fill="#F4F1EA" stroke="#D8D2C6" stroke-width="2"/><rect x="30" y="16" width="40" height="8" rx="4" fill="#C9C3B8"/><circle cx="50" cy="48" r="13" fill="#fff" stroke="#1B4E9B" stroke-width="2"/><circle cx="44" cy="40" r="4" fill="#fff" stroke="#1B4E9B" stroke-width="2"/><circle cx="56" cy="40" r="4" fill="#fff" stroke="#1B4E9B" stroke-width="2"/><circle cx="45.5" cy="47" r="1.6" fill="#1B4E9B"/><circle cx="54.5" cy="47" r="1.6" fill="#1B4E9B"/><ellipse cx="50" cy="52" rx="3" ry="2" fill="#1B4E9B"/><rect x="36" y="66" width="28" height="8" rx="2" fill="#1B4E9B"/><path d="M36 26v52" stroke="#fff" stroke-width="3" opacity=".6" stroke-linecap="round"/></symbol>
+<symbol id="zerocan" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="22" ry="4" fill="#000" opacity=".08"/><rect x="31" y="14" width="38" height="72" rx="7" fill="#1B1A18"/><rect x="31" y="14" width="38" height="8" rx="4" fill="#9A968F"/><rect x="31" y="78" width="38" height="8" rx="4" fill="#9A968F"/><ellipse cx="50" cy="50" rx="11" ry="15" fill="none" stroke="#E2412F" stroke-width="5"/><path d="M36 34c10 6 18 6 28 0" stroke="#E2412F" stroke-width="3" fill="none"/><path d="M37 26v46" stroke="#fff" stroke-width="3" opacity=".25" stroke-linecap="round"/></symbol>
+<symbol id="creambread" viewBox="0 0 100 100"><ellipse cx="50" cy="86" rx="34" ry="5" fill="#000" opacity=".08"/><path d="M14 60c0-18 16-30 36-30s36 12 36 30c0 6-4 10-10 10H24c-6 0-10-4-10-10z" fill="#E8B26A"/><path d="M20 58c2-12 14-20 30-20s28 8 30 20c-6 6-12 8-30 8s-24-2-30-8z" fill="#FFFDF6"/><path d="M24 58c6 4 14 5 26 5s20-1 26-5" stroke="#F0E6CF" stroke-width="2" fill="none"/><path d="M14 62c0 8 6 12 12 12h48c6 0 12-4 12-12" fill="#D9984A"/><rect x="38" y="20" width="24" height="10" rx="3" fill="#4C7BF4"/><path d="M42 25h16" stroke="#fff" stroke-width="2"/></symbol>
+<symbol id="bagel" viewBox="0 0 100 100"><ellipse cx="50" cy="86" rx="34" ry="5" fill="#000" opacity=".08"/><ellipse cx="50" cy="56" rx="36" ry="26" fill="#C98A3E"/><ellipse cx="50" cy="52" rx="36" ry="24" fill="#E3A956"/><ellipse cx="50" cy="52" rx="11" ry="7" fill="#FFF6EC"/><ellipse cx="50" cy="50" rx="11" ry="6" fill="#B87A33" opacity=".5"/><g fill="#FFF3D6"><ellipse cx="30" cy="44" rx="2.2" ry="1.2"/><ellipse cx="40" cy="36" rx="2.2" ry="1.2"/><ellipse cx="62" cy="36" rx="2.2" ry="1.2"/><ellipse cx="72" cy="46" rx="2.2" ry="1.2"/><ellipse cx="66" cy="60" rx="2.2" ry="1.2"/><ellipse cx="34" cy="60" rx="2.2" ry="1.2"/><ellipse cx="52" cy="66" rx="2.2" ry="1.2"/></g></symbol>
+<symbol id="tiramisu" viewBox="0 0 100 100"><ellipse cx="50" cy="88" rx="28" ry="4" fill="#000" opacity=".08"/><path d="M26 28h48l-4 56H30z" fill="#fff" stroke="#E6DDF5" stroke-width="2" opacity=".9"/><path d="M28 44h44l-1 12H29z" fill="#8B5A3C"/><path d="M29 56h42l-1 12H30z" fill="#FFF6E4"/><path d="M30 68h40l-1 14H31z" fill="#8B5A3C"/><path d="M27 32h46l-1 12H28z" fill="#FFF6E4"/><path d="M27 32h46" stroke="#6B4228" stroke-width="5" stroke-dasharray="2 3"/><circle cx="42" cy="26" r="7" fill="#9B6237"/><circle cx="58" cy="25" r="6" fill="#B07444"/><path d="M40 22c2-2 4-2 6 0M56 21c2-2 4-1 5 1" stroke="#fff" stroke-width="1.5" fill="none" opacity=".6"/></symbol>
+<symbol id="matcha" viewBox="0 0 100 100"><ellipse cx="50" cy="88" rx="30" ry="5" fill="#000" opacity=".08"/><path d="M20 40h60c0 26-12 44-30 44S20 66 20 40z" fill="#fff" stroke="#E6DDF5" stroke-width="2"/><ellipse cx="50" cy="40" rx="30" ry="8" fill="#7DB34A"/><ellipse cx="50" cy="40" rx="24" ry="5" fill="#A8D46F"/><path d="M38 40c4-3 8 3 12 0s8 3 12 0" stroke="#fff" stroke-width="2" fill="none" opacity=".8"/><path d="M70 14c-8 4-12 12-10 20" stroke="#3FA34D" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M62 18c6-6 16-6 18 0-6 4-12 4-18 0z" fill="#3FA34D"/></symbol>
+<symbol id="buttermochi" viewBox="0 0 100 100"><ellipse cx="50" cy="86" rx="32" ry="5" fill="#000" opacity=".08"/><rect x="18" y="38" width="64" height="38" rx="14" fill="#F2C76B"/><rect x="18" y="38" width="64" height="30" rx="14" fill="#FBE3A6"/><path d="M24 48c8-6 16 2 26-4s18 2 26-2" stroke="#E8B04A" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="40" y="24" width="22" height="16" rx="3" fill="#FFE27A" stroke="#E8C33F" stroke-width="2" transform="rotate(-8 51 32)"/><path d="M44 30h12" stroke="#fff" stroke-width="2" opacity=".7" transform="rotate(-8 51 32)"/></symbol></defs></svg>
 <div class="app" id="app"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="stamp" id="stamp">영수증에 기록!</div>
@@ -942,7 +957,7 @@ mk({id:"mlt",year:2019,name:"마라탕",sub:"얼얼한 중국식 국물",icon:"m
  stats:[["배달의민족 '마라'<br>상호 업소","10배",0],["요기요 마라 주문<br>2019.1~5","8배",1],["서울 대림동 마라 요리 배달 업소","40곳",2,1]],
  note:"요기요에서는 같은 기간 마라 메뉴를 파는 업소도 4배 늘었다. 위메프의 마라탕 재료 매출은 2019년 1~5월 전년보다 96배 넘게 뛰었다.",
  why:["해외여행이 늘며 외국 음식에 대한 거부감이 줄었다.","자극적인 맛을 찾는 소비자가 늘었다.","마라치킨, 마라떡볶이처럼 다른 음식과 합친 메뉴가 쏟아졌다."],
- now:{when:"2024년",t:"5년 뒤에는 마라탕과 탕후루를 합친 노래 '마라탕후루'가 챌린지 열풍을 일으켰다. 문화 폴더 2024에 있다."},
+ now:{when:"2024년",t:"5년 뒤에는 마라탕과 탕후루를 합친 노래 '마라탕후루'가 챌린지 열풍을 일으켰다."},
  src:[["아시아경제, 2019.6.4","https://view.asiae.co.kr/article/2019053115403035543"],["토요경제, 2019.6.11","https://www.sateconomy.co.kr/news/view/179589315910498"]]}),
 mk({id:"hdg",year:2017,name:"1000원 핫도그",sub:"명랑핫도그 외",icon:"hotdog",
  hints:[["나는 2016년 부산의 한 대학가에서 시작해 반년 만에 가맹점이 560곳을 넘었어요.","불황 속 '가성비' 간식."],["1년 새 비슷한 프랜차이즈가 9개 생겼고, 매장이 합쳐서 1000개를 넘었어요.","창업비는 2000만~3000만 원대."],["쌀 반죽을 입혀 튀긴 막대 간식이에요. 하나에 1000원.","설탕과 케첩은 필수."]],
@@ -1109,12 +1124,160 @@ mk({id:"msk",year:2015,name:"복면가왕",sub:"MBC 미스터리 음악쇼",icon
  src:[["데일리안, 2015.7.12","https://www.dailian.co.kr/news/view/514511/"],["데일리안","https://www.dailian.co.kr/news/view/506426/"],["OSEN","https://www.osen.co.kr/article/G1110210937"],["OSEN","https://www.osen.co.kr/article/G1110119857"],["텐아시아, 2015.2","https://www.tenasia.co.kr/article/2015022472014"]]})
 );
 
+FOODS.push(
+{id:"sbg",year:2014,name:"인절미 빙수",sub:"설빙",icon:"injeolmi",
+ hints:[["나는 2013년 한 디저트 카페 브랜드의 대표 메뉴로 떴고, 그 브랜드 매장은 1년 만에 33곳에서 482곳으로 늘었어요.","'코리안 디저트 카페'를 내세웠죠."],["우유 얼음 위에 고소한 가루를 듬뿍 뿌린 게 내 대표 메뉴예요.","떡집에서 익숙한 맛."],["콩고물과 떡을 올린 눈꽃 우유 빙수예요.","브랜드 이름에 '눈(雪)'이 들어가요."]],
+ opts:["sbg","hbc","bhi","jjp"],desc:"콩고물과 떡을 올린 설빙의 눈꽃 우유 빙수",tags:["설빙","콩고물","눈꽃빙수"],
+ remember:"우유를 얼려 곱게 간 눈꽃 얼음 위에 콩고물과 인절미 떡을 올린 빙수다. 2013년 8월 '코리안 디저트 카페'를 내세운 설빙의 대표 메뉴로, 설빙은 이 메뉴로 짧은 기간에 전국 브랜드가 됐다.",
+ head:{t:"여름 강자 '설빙' '쥬씨' 지난 겨울 뭐 먹고 살아쓰까",m:"비즈한국 · 2017.04.11"},
+ stats:[["설빙 매장<br>2013년","33곳",0],["설빙 매장<br>출범 1년 뒤","482곳",1],["2015년 3월 매장 수","490여 곳",2,1]],
+ note:"매장 수는 공정거래위원회 가맹사업거래 정보공개서와 설빙 측 설명 기준이다. 2015년 기사는 매장 수가 한동안 정체돼 있다고 전했다.",
+ why:["팥빙수 대신 콩고물과 떡을 올린 '한국식 디저트'라는 새로움.","곱게 간 우유 얼음이 입에서 녹는 눈꽃빙수 식감.","가맹점이 빠르게 늘며 전국 어디서나 먹을 수 있게 됐다."],
+ now:{when:"2017년",t:"빙수 전문점의 약점인 겨울 매출이 과제로 남았다. 설빙 매장은 2015년 480여 곳, 2016년 470곳, 2017년 452곳으로 조금씩 줄었다."},
+ src:[["비즈한국, 2017.4.11","https://bizhankook.com/articles/13083.html"],["헤럴드경제, 2015.3.31","https://biz.heraldcorp.com/article/439334"]]},
+
+{id:"shr",year:2015,name:"순하리 처음처럼",sub:"과일소주 · 롯데주류",icon:"soju",verb:"마셔봤",
+ hints:[["나는 2015년 3월 부산·경남에서 먼저 나와, 70여 일 만에 2200만 병이 팔렸어요.","'소주계 허니버터칩'으로 불렸죠."],["내가 뜨자 다른 소주 회사들도 블루베리·석류·유자 맛을 잇달아 내놨어요.","품귀로 편의점 발주가 막히기도."],["유자 과즙을 넣은 도수 낮은 소주예요.","이름에 '처음처럼'이 붙어요."]],
+ opts:["shr","jjp","jjw","hbc"],desc:"유자 맛으로 과일소주 열풍을 연 저도 소주",tags:["과일소주","유자","품귀"],
+ remember:"롯데주류가 처음처럼에 유자 과즙을 넣어 도수를 낮춘 과일소주다. 2015년 3월 말 부산·경남에 먼저 출시돼 SNS 입소문으로 품귀를 빚었고, '과일소주' 열풍을 불렀다.",
+ head:{t:"'2200만병 돌파' 순하리 처음처럼 열풍 어디까지",m:"뉴스토마토 · 2015.06.15"},
+ stats:[["출시 두 달여 만에","1000만 병",0],["약 70일 만에<br>누적","2200만 병",1],["출시 3개월 누적 (2016년 보도)","4000만 병",2,1]],
+ note:"한 편의점에서는 2015년 5월 초 순하리가 처음처럼 4종 매출의 69~73%를 차지한 날도 있었다(경향신문).",
+ why:["쓴맛을 줄인 달콤한 과일맛이 소주를 안 마시던 사람까지 끌어들였다.","부산·경남에서만 팔려 '구하기 힘든 술'이 되며 SNS 인증이 번졌다.","경쟁사들이 블루베리·석류·유자 맛 소주를 잇달아 내며 판이 커졌다."],
+ now:{when:"2015년 말",t:"유행은 빨리 식었다. 2015년 2분기 200억 원이던 매출이 연말에는 50억 원 수준으로 떨어졌다는 보도가 나왔다."},
+ src:[["뉴스토마토, 2015.6.15","https://newstomato.com/ReadNews.aspx?no=562880"],["경향신문, 2015.5.15","https://www.khan.co.kr/article/201505150727171"],["뉴스토마토, 2016.10.21","https://newstomato.com/ReadNews.aspx?no=699907"]]},
+
+{id:"jcy",year:2016,name:"쥬씨 생과일주스",sub:"1500원 대용량 주스",icon:"juice",verb:"마셔봤",
+ hints:[["나는 2015년 5월 대학가 1호점을 열고, 1년 만에 가맹점이 500곳 넘게 늘었어요.","2016년 여름에만 150곳이 더 생겼죠."],["커다란 컵에 담긴 음료를 1500원대에 팔았어요.","그 가격이 가능하냐는 의심도 받았어요."],["과일을 그 자리에서 갈아 주는 주스 프랜차이즈예요.","이름은 영어 '주스'를 닮았어요."]],
+ opts:["jcy","cst","cpb","sbg"],desc:"1500원대 대용량 생과일주스 프랜차이즈",tags:["생과일주스","가성비","대용량"],
+ remember:"과일을 매장에서 바로 갈아 큰 컵에 담아 1500원대에 판 생과일주스 프랜차이즈다. 2015년 5월 숙명여대 앞 가맹 1호점을 시작으로 빠르게 늘었다.",
+ head:{t:"[프랜차이즈, 지금 만나러 갑니다] 말 많고 탈 많았던 1년…논란 딛고 도약",m:"아시아경제 · 2016.11.01"},
+ stats:[["가맹 1호점 뒤<br>1년 만에","500곳+",0],["2016년 여름<br>새로 연 매장","150곳",1],["2016년 11월 매장 수","800여 곳",2,1]],
+ note:"2016년 4월에는 가맹점이 450호점을 넘었다(시대). 회사는 그해 매출을 400억~500억 원으로 내다봤다.",
+ why:["1500원대라는 가격으로 '가성비 음료' 시장을 열었다.","커다란 컵 크기가 SNS에서 화제가 됐다.","작은 매장으로 창업할 수 있어 가맹점이 빠르게 늘었다."],
+ now:{when:"2017년",t:"여름 음료라 겨울 매출이 약점으로 꼽혔다. 2017년 기사는 설빙과 함께 '여름 강자'들이 겨울을 어떻게 버티는지를 다뤘다."},
+ src:[["아시아경제, 2016.11.1","https://view.asiae.co.kr/article/2016110111003390592"],["시대(머니S), 2016.4.8","https://www.sidae.com/article/2016033016058043656"],["비즈한국, 2017.4.11","https://bizhankook.com/articles/13083.html"]]},
+
+{id:"kbk",year:2017,name:"꼬북칩",sub:"오리온 · 콘스프맛",icon:"kkobuk",
+ hints:[["나는 2017년 3월에 나와 4개월 만에 1100만 봉을 넘겼어요.","그해 제과 결산의 히트 제품."],["한 장을 네 겹으로 겹친 특이한 식감이에요.","첫맛은 옥수수 수프."],["거북이 등껍질을 닮은 스낵이에요.","이름에 거북이가 숨어 있어요."]],
+ opts:["kbk","hdg","sbb","jjw"],desc:"네 겹으로 겹친 거북이 등껍질 모양 스낵",tags:["네 겹","콘스프","오리온"],
+ remember:"오리온이 2017년 3월 내놓은 스낵으로, 얇은 칩을 네 겹으로 겹쳐 바삭한 식감을 냈다. 첫 제품은 콘스프맛이었다.",
+ head:{t:"2017 식품업계 흥행 '대박' 신제품 5는",m:"이데일리 · 2017.12.31"},
+ stats:[["출시 4개월<br>(2017년 7월)","1100만 봉",0],["2017년<br>판매","2300만 봉",1],["출시 한 달 반 매출","40억 원",2,1]],
+ note:"식품음료신문은 2017년 꼬북칩 매출을 250억 원으로 집계하며 그해 제과 히트 제품으로 꼽았다.",
+ why:["네 겹 칩이라는 처음 보는 식감.","익숙한 콘스프맛으로 시작해 진입 장벽이 낮았다.","출시 한 달 반 만에 매출 40억 원을 올릴 만큼 초반 반응이 빨랐다."],
+ now:{when:"2020년 이후",t:"맛을 늘리며 장수 브랜드가 됐다. 2020년 나온 초코츄러스맛은 2021 폴더에 따로 있다."},
+ src:[["이데일리, 2017.12.31","https://edaily.co.kr/News/Read?mediaCodeNo=257&newsId=01403846616164096"],["식품음료신문, 2018.1.15","https://www.thinkfood.co.kr/news/articleView.html?idxno=78733"]]},
+
+{id:"smc",year:2018,name:"샤인머스캣",sub:"씨 없는 청포도",icon:"grape",
+ hints:[["나는 2018년 한 대형마트에서 판매가 전년보다 515.8% 뛰었어요.","2017년에 처음 매대에 올랐죠."],["비싸도 사 먹는 '프리미엄 과일'의 대명사가 됐어요.","1년 새 재배 면적이 79% 늘었어요."],["껍질째 먹는 씨 없는 연둣빛 포도예요.","망고 같은 향이 나요."]],
+ opts:["smc","sts","pnm","mlt"],desc:"껍질째 먹는 씨 없는 프리미엄 청포도",tags:["프리미엄 과일","청포도","씨 없음"],
+ remember:"씨가 없고 껍질째 먹을 수 있는 연둣빛 포도다. 당도가 높고 망고 같은 향이 나 '프리미엄 과일'로 불리며 빠르게 퍼졌다.",
+ head:{t:"씨 없는 포도 '샤인머스켓' 3주 앞당겨 컴백",m:"토요경제 · 2019.06.09"},
+ stats:[["이마트 판매<br>2018년 증가율","+515.8%",0],["재배 면적<br>2019년 증가율","+79%",1],["마켓컬리 판매 (2019년 7월)","전년보다 259%↑",2,1]],
+ note:"같은 기간 전체 포도 재배 면적은 3% 늘어나는 데 그쳤다(한국농촌경제연구원). 현대백화점의 샤인머스캣 판매도 2019년 7월 164.1% 늘었다.",
+ why:["씨를 뱉거나 껍질을 깔 필요가 없어 먹기 편했다.","높은 당도와 독특한 향으로 '선물용 과일'이 됐다.","비싸도 맛있는 걸 고르는 소비 흐름과 맞물렸다."],
+ now:{when:"2019년",t:"인기에 재배 농가가 몰렸다. 포도 재배 면적 중 샤인머스캣 비중은 2018년 7.4%에서 2019년 12.9%로 커졌다."},
+ src:[["토요경제, 2019.6.9","https://www.sateconomy.co.kr/news/view/179589295083502"],["이투데이, 2019.8.8","https://www.etoday.co.kr/news/view/1785161"]]},
+
+{id:"dgj",year:2019,name:"KFC 닭껍질튀김",sub:"인도네시아에서 온 메뉴",icon:"chickenskin",
+ hints:[["나는 2019년 6월, 한 커뮤니티 이용자의 '들여와 달라'는 글에서 시작했어요.","원래는 인도네시아 자카르타 일부 매장 메뉴."],["6개 매장에서 한정으로 나와 반나절 만에 다 팔렸어요.","일주일 만에 13곳에 더 풀렸죠."],["치킨에서 껍질만 떼어 바삭하게 튀긴 메뉴예요.","손으로 일일이 떼어 만들어 많이 못 만들었대요."]],
+ opts:["dgj","hdb","mlt","sts"],desc:"치킨 껍질만 바삭하게 튀긴 KFC 한정 메뉴",tags:["KFC","소비자 요청","한정판"],
+ remember:"닭 가슴살 껍질만 떼어 바삭하게 튀긴 메뉴다. 인도네시아 일부 KFC에서 팔던 것을 한 온라인 커뮤니티 이용자가 국내 판매를 요청하는 글을 올렸고, 요청이 쏟아지며 2019년 6월 19일 한국에 나왔다.",
+ head:{t:"KFC, '닭껍질튀김' 판매 매장 전국 13곳 확대",m:"데일리안 · 2019.06.25"},
+ stats:[["첫 판매<br>매장","6곳",0],["첫 판매<br>결과","반나절 만에 품절",1],["가격","2800원",2,1]],
+ note:"닭 가슴살 껍질을 손으로 떼어 만들어 대량 공급이 어려웠다. 판매량은 공개되지 않았다.",
+ why:["소비자가 직접 요청해 출시된 메뉴라는 이야기가 화제가 됐다.","해외에서만 먹던 메뉴를 한정으로 먹어볼 수 있다는 희소성.","치킨 껍질을 좋아하는 사람들의 '취향 저격'."],
+ now:{when:"2019년 6월",t:"출시 일주일 만인 6월 27일부터 서울역점, 대학로점, 신촌역점 등 13곳에서 추가로 팔았다."},
+ src:[["데일리안, 2019.6.25","https://m.dailian.co.kr/news/view/805570"],["시대(머니S), 2019.6.18","https://www.sidae.com/article/2019061815498041298"]]},
+
+{id:"gpb",year:2020,name:"곰표 밀맥주",sub:"CU × 대한제분",icon:"beer",verb:"마셔봤",
+ hints:[["나는 2020년 5월 편의점 단독으로 나와, 첫 생산분 10만 개가 사흘 만에 다 팔렸어요.","일주일 만에 30만 개."],["밀가루 회사 마스코트가 캔에 그려져 있어요.","뉴트로 콜라보의 대표 사례."],["하얀 곰이 그려진 수제 밀맥주예요.","이름은 밀가루 브랜드에서 왔어요."]],
+ opts:["gpb","dgc","crf","kbc"],desc:"밀가루 브랜드 곰 마스코트를 입힌 편의점 수제 맥주",tags:["뉴트로","콜라보","편의점"],
+ remember:"밀가루 브랜드 '곰표'의 곰 마스코트를 캔에 입힌 수제 밀맥주다. CU가 대한제분, 수제맥주 회사와 손잡고 2020년 5월 단독으로 내놨다.",
+ head:{t:"CU '곰표 밀맥주', 출시 일주일 만에 30만개 순삭",m:"데일리안 · 2020.06.09"},
+ stats:[["첫 생산분<br>완판까지","3일",0],["출시 일주일<br>누적","30만 개",1],["2021년 5월 2주 판매","300만 개",2,1]],
+ note:"2021년 5월 2주 판매량은 2020년 월평균 판매량(20만 개)의 약 30배였다. 판매는 처음부터 발주 제한 속에서 이뤄졌다.",
+ why:["익숙한 밀가루 브랜드를 맥주로 만든 의외성.","레트로 감성의 곰 캐릭터가 SNS 인증을 불렀다.","편의점에서만 파는 한정판이라 '찾아 마시는' 재미."],
+ now:{when:"2021년 5월",t:"인기가 다시 폭발해 2주 동안 300만 개가 팔렸다. 생산이 따라가지 못해 CU는 점포 발주를 중단했다."},
+ src:[["데일리안, 2020.6.9","https://www.dailian.co.kr/news/view/896331/"],["뉴스토마토, 2021.5.12","https://newstomato.com/ReadNews.aspx?no=1043876"]]},
+
+{id:"zro",year:2021,name:"제로 탄산음료",sub:"칼로리 0 콜라·사이다",icon:"zerocan",verb:"마셔봤",
+ hints:[["2021년, 나를 포함한 시장이 2년 만에 약 5배로 커졌어요.","2189억 원 규모."],["한 사이다 브랜드의 내 버전은 출시 9개월여 만에 1억 캔이 팔렸어요.","단맛은 그대로, 설탕은 빼고."],["칼로리가 0인 콜라와 사이다예요.","이름에 숫자 '0'이 붙어요."]],
+ opts:["zro","rtb","kbc","crf"],desc:"설탕을 빼 칼로리를 0으로 만든 콜라·사이다",tags:["0칼로리","다이어트","콜라"],
+ remember:"설탕 대신 감미료를 넣어 칼로리를 0으로 만든 탄산음료다. 2021년 무렵 칼로리를 줄이면서 단맛은 즐기려는 수요가 늘며 콜라, 사이다, 아이스티까지 제로 제품이 쏟아졌다.",
+ head:{t:"제로칼로리 음료 '열풍'…식품업계, '2천억 시장' 정조준",m:"뉴스토마토 · 2022.04.19"},
+ stats:[["제로 탄산 시장<br>2021년","2189억 원",0],["2년 전보다","약 5배",1],["칠성사이다 제로 누적 1억 캔까지","9개월여",2,1]],
+ note:"시장 규모는 콜라와 사이다 판매액을 합친 추정치다. 이마트24에서는 2022년 1~7월 제로 음료 판매량이 전년보다 83% 늘었다.",
+ why:["단맛은 즐기면서 칼로리는 줄이고 싶은 수요가 커졌다.","업계는 코로나19 이후 제로 음료 수요가 크게 늘었다고 봤다.","콜라·사이다를 넘어 아이스티까지 번졌다. 보성홍차 아이스티 제로는 1년 만에 1500만 병이 팔렸다."],
+ now:{when:"2022년",t:"편의점 매대에서 제로 콜라가 일반 콜라를 앞질렀다. 이마트24 소형 캔 판매 1위가 코카콜라에서 코카콜라 제로로 바뀌었다."},
+ src:[["뉴스토마토, 2022.4.19","https://newstomato.com/ReadNews.aspx?no=1118152"],["뉴데일리, 2022.8.30","https://biz.newdaily.co.kr/site/data/html/2022/08/30/2022083000043.amp.html"],["뉴스토마토, 2022.6.1","https://newstomato.com/ReadNews.aspx?no=1126303"]]},
+
+{id:"ysc",year:2022,name:"연세우유 생크림빵",sub:"CU",icon:"creambread",
+ hints:[["나는 2022년 초 편의점에 나와, 그해에만 1800만 개 넘게 팔렸어요.","한때 품절 대란."],["나를 반으로 갈라 단면을 찍는 '반갈샷'이 유행했어요.","빵보다 크림이 더 많아 보이죠."],["대학 이름이 붙은 우유 브랜드의 생크림을 꽉 채운 빵이에요.","편의점 냉장 코너에 있어요."]],
+ opts:["ysc","pkb","ygw","rtb"],desc:"생크림을 꽉 채운 편의점 냉장 빵",tags:["반갈샷","편의점빵","생크림"],
+ remember:"연세우유 생크림을 빵 속에 가득 채운 CU의 냉장 빵이다. 빵을 반으로 갈라 크림 단면을 찍어 올리는 '반갈샷'이 SNS에서 유행하며 품절이 이어졌다.",
+ head:{t:"\"1분에 47개씩 팔렸다\"… CU 연세우유 크림빵, 누적 판매량 5000만개 돌파",m:"토요경제 · 2024.01.18"},
+ stats:[["출시 첫해<br>2022년","1900만 개",0],["2023년<br>판매","3000만 개",1],["출시 2년 누적","5000만 개",2,1]],
+ note:"파이낸셜뉴스는 2022년 12월 기준 1800만 개 넘게 팔렸다고 전했다. 2년 누적 기준으로는 1분에 약 47개가 팔린 셈이다.",
+ why:["빵을 갈랐을 때 크림이 가득한 단면이 '인증샷'이 됐다.","냉장 생크림빵을 전국 편의점에서 살 수 있게 됐다.","우유 브랜드와의 협업이 맛에 대한 믿음을 줬다."],
+ now:{when:"2024년",t:"맛을 바꾼 시리즈가 계속 나오며 편의점 대표 빵이 됐다. 2024년 흑백요리사 열풍 때는 밤 티라미수 레시피 재료로 쓰여 매출이 다시 늘었다."},
+ src:[["토요경제, 2024.1.18","https://sateconomy.co.kr/news/view/1065594701840933"],["파이낸셜뉴스, 2022.12.4","https://www.fnnews.com/news/202212041817405390"]]},
+
+{id:"bgl",year:2023,name:"베이글",sub:"런던 베이글 뮤지엄 오픈런",icon:"bagel",
+ hints:[["2023년, 나를 파는 한 가게 앞에는 평일에도 3시간 넘는 줄이 섰어요.","'빵지순례'의 끝판왕."],["나를 파는 전문점 매출은 3년 새 216% 늘어 디저트 업종 중 가장 빨리 컸어요.","쫄깃한 식감이 특징."],["가운데 구멍이 뚫린 둥근 빵이에요.","크림치즈를 듬뿍 발라 먹죠."]],
+ opts:["bgl","thl","mtk","ysc"],desc:"오픈런 행렬을 만든 쫄깃한 둥근 빵",tags:["오픈런","빵지순례","크림치즈"],
+ remember:"반죽을 데친 뒤 구워 쫄깃한 식감을 낸 고리 모양 빵이다. 2023년 '런던 베이글 뮤지엄' 같은 전문점 앞에 긴 줄이 늘어서며 베이글 열풍이 불었다.",
+ head:{t:"'빵지 순례'의 주인공, 대세는 베이글",m:"시대(머니S) · 2023.10.30"},
+ stats:[["베이글 전문점 매출<br>2019→2022","+216%",0],["베이글 가맹점 수<br>3년 새","+117%",1],["런던 베이글 뮤지엄 안국점 평일 대기","3시간+",2,1]],
+ note:"매출·가맹점 수치는 KB국민카드가 디저트 전문점을 분석한 결과다. 안국점 하루 평균 방문자는 약 1600명이었다.",
+ why:["'빵지순례' 문화가 퍼지며 줄 서는 빵집이 하나의 놀이가 됐다.","이국적인 매장 분위기가 SNS 인증을 불렀다.","대형 베이커리도 베이글 신제품을 냈고, 파리바게뜨 제품은 한 달 만에 200만 개가 팔렸다."],
+ now:{when:"2023년 8월",t:"백화점들이 줄 서는 베이글 가게를 모시기 시작했다. 롯데월드몰 매장에는 아침 7시부터 수백 명이 줄을 섰다."},
+ src:[["시대(머니S), 2023.10.30","https://www.sidae.com/article/2023102710253133247"],["이코노미스트, 2023.9.9","https://economist.co.kr/article/view/ecn202309080031"]]},
+
+{id:"btr",year:2024,name:"밤 티라미수",sub:"흑백요리사 · 나폴리 맛피아",icon:"tiramisu",
+ hints:[["나는 2024년 가을, 한 넷플릭스 요리 경연에서 편의점 재료로 만들어 1위를 했어요.","심사위원 두 명의 극찬."],["편의점에서 다시 나오자 1만 개가 4분 만에 팔렸어요.","1초에 40개꼴."],["밤과 크림을 층층이 쌓은 이탈리아 디저트예요.","셰프의 별명은 이탈리아 도시 이름."]],
+ opts:["btr","dbc","yaj","bgl"],desc:"흑백요리사 편의점 미션 1위 디저트",tags:["흑백요리사","편의점","나폴리 맛피아"],
+ remember:"넷플릭스 요리 경연 '흑백요리사'에서 흑수저 셰프 '나폴리 맛피아'(권성준)가 편의점 재료로 만들어 1위를 한 디저트다. CU가 셰프와 손잡고 상품으로 내놨다.",
+ head:{t:"\"1초에 40개씩, 편의점 기록 갈아 치웠다\"… CU '맛폴리 밤 티라미수' 24일부터 판매",m:"뉴데일리 · 2024.10.23"},
+ stats:[["10월 16일<br>1만 개 완판","4분",0],["9일간 사전예약<br>누적","15만 개",1],["가격","4900원",2,1]],
+ note:"사전예약 기간 매일 1만~2만 개가 평균 20분 만에 다 팔렸다. 포켓CU 앱 출시 이후 최단 시간·최다 수량 기록이었다.",
+ why:["넷플릭스 비영어 시리즈 세계 1위에 오른 프로그램의 화제성.","누구나 사는 편의점 재료로 만들었다는 점이 따라 하기 욕구를 자극했다.","방송 직후 레시피 재료인 맛밤, 연세우유 크림빵 매출까지 뛰었다."],
+ now:{when:"2024년 10월",t:"10월 24일부터 전국 1만 8천여 개 CU 점포에 매일 입고되기 시작했다. 다른 편의점도 출연 셰프들과 협업 상품을 잇달아 냈다."},
+ src:[["뉴데일리, 2024.10.23","https://biz.newdaily.co.kr/site/data/html/2024/10/23/2024102300017.amp.html"],["아시아경제(다음), 2024.10.23","https://v.daum.net/v/9Ahq8hlozu"],["이투데이, 2024.10.8","https://www.etoday.co.kr/news/view/2407594"]]},
+
+{id:"mch",year:2025,name:"말차",sub:"말차 라떼 · 말차 디저트",icon:"matcha",
+ hints:[["2025년, 한 편의점에서는 내 맛 상품 매출이 한 달 새 전년의 약 50배가 됐어요.","인스타그램 해시태그 41만 건."],["과자, 아이스크림, 하이볼, 막걸리까지 내 맛이 붙었어요.","원래는 다도에서 쓰던 가루."],["찻잎을 곱게 간 초록색 가루예요.","라떼로 많이 마셔요."]],
+ opts:["mch","cbs","twc","btr"],desc:"찻잎을 곱게 간 초록 가루, 라떼부터 과자까지",tags:["말차라떼","초록","플레이버"],
+ remember:"찻잎을 곱게 갈아 만든 초록색 가루차다. 2025년 해외에서 불던 말차 열풍이 한국에도 번지며 카페 음료부터 과자, 아이스크림, 술까지 말차 맛이 쏟아졌다.",
+ head:{t:"말차 한스푼 넣으니 '대박' 식품사 화두 '발상의 전환'",m:"헤럴드경제 · 2025.10.09"},
+ stats:[["GS25 말차맛 상품<br>2025년 8월","전년의 약 50배",0],["세븐일레븐<br>8~9월","전년의 9배",1],["스타벅스 말차 음료 상반기 판매","30%+↑",2,1]],
+ note:"CU의 말차 관련 매출도 같은 기간 129.8% 늘었다. 스타벅스 수치는 '제주 말차 라떼'와 '제주 말차 크림 프라푸치노' 두 제품 기준이다.",
+ why:["해외 SNS에서 시작된 말차 열풍이 한국으로 번졌다.","쌉쌀한 맛과 선명한 초록색이 '인증샷'에 잘 어울렸다.","식품 회사들이 기존 인기 과자에 말차 맛을 더해 쉽게 접할 수 있었다."],
+ now:{when:"2025년 가을",t:"말차는 한철 유행을 넘어 '맛 하나의 장르'가 됐다. 쿠크다스, 초코송이 같은 장수 과자도 말차 버전을 냈고, 몽쉘도 말차 제품을 준비했다."},
+ src:[["헤럴드경제, 2025.10.9","https://www.heraldk.com/article/2025100918215324847"],["SBS Biz, 2025.8.28","https://biz.sbs.co.kr/amp/article/20000255870"]]},
+
+{id:"btt",year:2026,name:"버터떡",sub:"상하이에서 건너온 떡",icon:"buttermochi",
+ hints:[["나는 2026년 3월, 검색량이 0에서 정점까지 열흘 남짓 만에 치솟았어요.","두쫀쿠보다 3배 넘게 빨랐대요."],["중국 상하이 여행 인증샷으로 입소문이 났어요.","편의점들이 일주일 안에 줄줄이 상품을 냈죠."],["버터를 넣어 구운 쫀득한 떡이에요.","겉은 바삭, 속은 쫀득."]],
+ opts:["btt","dzk","hjs","mch"],desc:"버터를 넣어 구운 겉바속쫀 떡",tags:["상하이","겉바속쫀","광속 유행"],
+ remember:"버터를 넣어 구워 겉은 바삭하고 속은 쫀득한 떡이다. 2026년 2월 중국 상하이 여행 인증샷으로 입소문이 나기 시작해 3월에 크게 유행했다.",
+ head:{t:"편의점, 버터떡 라인업 속전속결…두쫀쿠 때와 차원이 다른 반응속도",m:"스마트투데이 · 2026.03.25"},
+ stats:[["#버터떡 인스타 게시물<br>3월 초","1만 건+",0],["GS25 버터떡빵<br>출시 첫날","2만 개",1],["검색량 0→정점 (구글 트렌드)","10일 남짓",2,1]],
+ note:"CU는 3월 16일 하루 1만 개 한정으로 앱 예약 판매를 시작했고, 개시 직후 다 팔렸다. 네이버 데이터랩에서는 3월 5일 관심도가 두쫀쿠를 넘어섰다.",
+ why:["두쫀쿠 다음 유행을 찾던 1020세대가 빠르게 옮겨 탔다.","해외여행 인증샷에서 시작해 '현지의 맛'이라는 호기심을 자극했다.","편의점과 카페가 며칠 만에 상품을 내며 쉽게 먹어볼 수 있었다."],
+ now:{when:"2026년 4월",t:"확산 속도는 두쫀쿠보다 3배 넘게 빨랐지만, 파급력은 두쫀쿠보다 낮다는 평가가 나왔다. 편의점들은 유행 포착 사흘 만에 상품을 내놓을 만큼 대응이 빨라졌다."},
+ src:[["스마트투데이, 2026.3.25","https://www.smarttoday.co.kr/ko-kr/articles/105674"],["서울신문, 2026.4.3","https://m.seoul.co.kr/news/2026/04/03/20260403032001"]]}
+);
+
 const YORDER=[2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014];
 FOODS.sort((a,b)=>YORDER.indexOf(a.year)-YORDER.indexOf(b.year));
 CULTURE.sort((a,b)=>YORDER.indexOf(a.year)-YORDER.indexOf(b.year));
-FOODS.forEach(f=>{f.cat="food";f.verb="먹어봤"});
+FOODS.forEach(f=>{f.cat="food";f.verb=f.verb||"먹어봤"});
 CULTURE.forEach(f=>f.cat="culture");
-const ITEMS=[...FOODS,...CULTURE];
+/* 문화 폴더 표시 여부: false면 숨김(데이터는 그대로 남아 있음). 다시 보이려면 true로 */
+const SHOW_CULTURE=false;
+const ITEMS=SHOW_CULTURE?[...FOODS,...CULTURE]:[...FOODS];
+const CAT_KEYS=SHOW_CULTURE?["food","culture"]:["food"];
 const HARD={
 dzk:[["나는 한 해의 끝자락에 입소문을 탔고, 이듬해 1월엔 배달앱 검색어 1위를 한 달 넘게 지켰어요.","냉면집, 초밥집에서도 나를 팔았대요."],["나 때문에 한 오픈마켓의 마시멜로 판매량이 전월보다 20배 늘었어요.","피스타치오값도 20% 올랐죠."],["나는 2년 전 유행한 해외 디저트의 속재료를 쫀득한 반죽으로 감싸 만들었어요.","쿠키라 불리지만 떡에 가깝대요."]],
 hjs:[["나는 서울 성수동에서 시작한 디저트 브랜드예요.","백화점 매장 대기는 두세 시간이 기본."],["편의점과 손잡고 낸 상품이 한 달 만에 60만 개 넘게 팔렸어요.","나를 집에서 흉내 낸 '짭○○'도 나왔죠."],["딸기 모찌를 떠올리게 하는 알찬 단면으로 처음 화제가 됐어요.","앙금보다 요거트 크림이 더 맛있다는 평이 많아요."]],
@@ -1147,6 +1310,10 @@ ITEMS.forEach(f=>{if(HARD[f.id])f.hints=HARD[f.id]});
 const CATS={food:{name:"음식",list:FOODS,ds:"줄 서고, 품절되고, 따라 만들던 그 음식들",ico:["cookie","choco","chips"]},
             culture:{name:"문화",list:CULTURE,ds:"따라 부르고, 따라 추던 노래와 챌린지",ico:["apt","phone","bucket"]}};
 const YEARS=[2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014];
+/* 아카이브 폴더는 2년 단위: [시작, 끝] (2014는 첫해라 단독) */
+const PERIODS=[[2025,2026],[2023,2024],[2021,2022],[2019,2020],[2017,2018],[2015,2016],[2014,2014]];
+const periodKey=y=>{if(y==null)return null;const p=PERIODS.find(([a,b])=>y>=a&&y<=b);return p?p[0]:null};
+const periodLabel=([a,b])=>a===b?String(a):`${a}–${String(b).slice(2)}`;
 const byId=Object.fromEntries(ITEMS.map(f=>[f.id,f]));
 const lab=(f,a)=>{const v=f.verb.replace("봤","봄");return a==="y"?v:a==="n"?"안 "+v:"기억 안 남"};
 const KEY="meogeobwat.v1";
@@ -1156,7 +1323,7 @@ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const app=document.getElementById("app");
 const ic=(n,cls="")=>`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><use href="#${n}"/></svg>`;
 const doneIn=cat=>CATS[cat].list.filter(f=>S.done[f.id]).length;
-const fileNo=f=>String(CATS[f.cat].list.filter(x=>x.year===f.year).indexOf(f)+1).padStart(2,"0");
+const fileNo=f=>{const k=periodKey(f.year);return String(CATS[f.cat].list.filter(x=>periodKey(x.year)===k).indexOf(f)+1).padStart(2,"0")};
 const dir=f=>`먹어봤.zip / ${CATS[f.cat].name}`;
 let openYear=null, Q=null, CUR="food";
 function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
@@ -1170,7 +1337,8 @@ function splash(back){
   setCat(null);
   const n=Object.keys(S.done).length;
   const RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const tiles=[["castella",14,30,-14],["apt",252,22,12],["chips",-2,156,-8],["phone",268,150,10],["cookie",40,246,6],["bucket",236,248,-10],["note",134,0,4]];
+  const tiles=SHOW_CULTURE?[["castella",14,30,-14],["apt",252,22,12],["chips",-2,156,-8],["phone",268,150,10],["cookie",40,246,6],["bucket",236,248,-10],["note",134,0,4]]
+    :[["castella",14,30,-14],["tanghulu",252,22,12],["chips",-2,156,-8],["coffee",268,150,10],["cookie",40,246,6],["bingsu",236,248,-10],["bubbletea",134,0,4]];
   const el=mount(`
    <div class="eyebrow">디지털콘텐츠종합설계</div>
    <div class="stage" id="stage">
@@ -1181,8 +1349,8 @@ function splash(back){
     <div class="tap-hint">폴더를 눌러봐</div>
    </div>
    <h1 class="title">먹어봤<em>.zip</em></h1>
-   <p class="lead">그 시절, 우리가 열광했던 음식과 문화</p>
-   <div class="chips"><span class="chip">${ITEMS.length} files</span><span class="chip">2 folders</span><span class="chip">2014–2026</span></div>
+   <p class="lead">${SHOW_CULTURE?"그 시절, 우리가 열광했던 음식과 문화":"그 시절, 우리가 열광했던 음식들"}</p>
+   <div class="chips"><span class="chip">${ITEMS.length} files</span><span class="chip">${CAT_KEYS.length} folder${CAT_KEYS.length>1?"s":""}</span><span class="chip">2014–2026</span></div>
    <div class="credits"><span>202221823 민건희</span><span>202221840 최대현</span><span>202321808 김민주</span></div>
    ${n?`<div class="resume">지난번에 ${n}개 파일을 열어봤어</div>`:""}
    <div class="bottom" style="width:100%"><button class="btn p" id="open">${n?"이어서 열어보기":"압축 파일 열어보기"}</button></div>`,"splash");
@@ -1287,8 +1455,8 @@ function root(){
   const el=mount(`
    <div class="top"><button class="back" id="home" aria-label="처음 화면">←</button><div class="path">먹어봤.zip /</div></div>
    <h2 class="h">압축 해제 완료</h2>
-   <p class="sub" style="margin:6px 0 0">폴더가 두 개 나왔어. 어디부터 열어볼래?</p>
-   <div class="cats">${["food","culture"].map(c=>{const d=doneIn(c);return `
+   <p class="sub" style="margin:6px 0 0">${SHOW_CULTURE?"폴더가 두 개 나왔어. 어디부터 열어볼래?":"음식 폴더가 나왔어. 연도별로 하나씩 열어봐!"}</p>
+   <div class="cats">${CAT_KEYS.map(c=>{const d=doneIn(c);return `
     <button class="cat ${c}" data-c="${c}">
       <span class="mono" style="font-size:12px;opacity:.85">/${CATS[c].name}</span>
       <span class="nm">${CATS[c].name}</span>
@@ -1312,7 +1480,7 @@ function root(){
   el.querySelectorAll(".cat").forEach(b=>b.onclick=()=>archive(b.dataset.c));
   el.querySelector("#rc").onclick=result;
   el.querySelector("#bd").onclick=board;
-  BoardStore.list().then(ps=>{const c=el.querySelector("#bdCnt");if(c)c.textContent=`글 ${ps.length}개 · 보러 가기 →`});
+  BoardStore.count().then(n=>{const c=el.querySelector("#bdCnt");if(c)c.textContent=`글 ${n}개 · 보러 가기 →`}).catch(()=>{});
 }
 
 /* 2. archive */
@@ -1324,12 +1492,12 @@ function archive(cat,focusYear){
    <div class="top"><button class="back" id="up" aria-label="상위 폴더">←</button><div class="path">먹어봤.zip / <b>${CATS[cat].name}</b> /</div></div>
    <div style="display:flex;align-items:center;gap:8px"><h2 class="h">${CATS[cat].name} 아카이브</h2></div>
    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px">
-     <span class="sub">연도 폴더를 눌러 파일을 열어봐</span><span class="tag acc">${n} / ${N} 열람</span></div>
+     <span class="sub">2년 단위 폴더를 눌러 파일을 열어봐</span><span class="tag acc">${n} / ${N} 열람</span></div>
    <div class="prog"><div class="track"><div class="fill" style="width:0"></div></div><span>${pct}%</span></div>
-   <div class="folders">${YEARS.map(y=>{
-     const fs=list.filter(f=>f.year===y),d=fs.filter(f=>S.done[f.id]).length;
-     return `<div class="folder ${openYear===y?"open":""} ${d===fs.length?"done":""}" data-y="${y}">
-      <button class="fhead" aria-expanded="${openYear===y}"><span class="ficon"></span><span class="yr">${y}</span>
+   <div class="folders">${PERIODS.map(pr=>{const y=pr[0],isOpen=periodKey(openYear)===y;
+     const fs=list.filter(f=>f.year>=pr[0]&&f.year<=pr[1]),d=fs.filter(f=>S.done[f.id]).length;
+     return `<div class="folder ${isOpen?"open":""} ${d===fs.length?"done":""}" data-y="${y}">
+      <button class="fhead" aria-expanded="${isOpen}" aria-label="${pr[0]===pr[1]?pr[0]+"년":pr[0]+"년부터 "+pr[1]+"년까지"}"><span class="ficon"></span><span class="yr">${periodLabel(pr)}</span>
        <span class="peek">${fs.map(f=>S.done[f.id]?ic(f.icon):`<span class="qm">?</span>`).join("")}</span>
        <span class="cnt">${d} / ${fs.length}</span></button>
       <div class="files"><div>${fs.map(f=>{const dn=S.done[f.id];return `
@@ -1529,11 +1697,11 @@ function result(){
     <div class="r-dash"></div>
     <div class="r-row r-th"><span class="r-nm">품목</span><span>힌트</span><span>시간</span><span>결과</span></div>
     <div class="r-dash"></div>
-    ${st.opened.length?sec("food",D.food)+sec("culture",D.culture):`<div class="r-none">- 아직 열어본 파일이 없습니다 -</div>`}
+    ${st.opened.length?CAT_KEYS.map(c=>sec(c,D[c])).join(""):`<div class="r-none">- 아직 열어본 파일이 없습니다 -</div>`}
     <div class="r-dash"></div>
     <div class="r-kv"><span>열어본 파일</span><span>${st.opened.length} / ${st.N}</span></div>
     <div class="r-kv"><span>먹어본 음식</span><span>${st.exp.food} / ${FOODS.length}</span></div>
-    <div class="r-kv"><span>경험한 문화</span><span>${st.exp.culture} / ${CULTURE.length}</span></div>
+    ${SHOW_CULTURE?`<div class="r-kv"><span>경험한 문화</span><span>${st.exp.culture} / ${CULTURE.length}</span></div>`:""}
     <div class="r-kv"><span>힌트 없이 정답</span><span>${st.opened.filter(f=>S.done[f.id].solved&&S.done[f.id].hints===1).length}건</span></div>
     <div class="r-kv"><span>평균 본 힌트</span><span>${st.avgH}개</span></div>
     <div class="r-kv"><span>총 풀이 시간</span><span>${st.opened.length?fmtT(st.total):"-"}</span></div>
@@ -1559,8 +1727,8 @@ function result(){
   const nm=el.querySelector("#rcName");
   nm.addEventListener("input",()=>{S.name=nm.value.trim();save()});
   el.querySelector("#cp").onclick=()=>{
-    const all=[...D.food,...D.culture];
-    const txt=`[먹어봤.zip 영수증${S.name?" · "+S.name:""}]\n`+(all.length?all.map(x=>`${x.f.year} ${x.f.name} - 힌트 ${x.h} · ${x.t} · ${x.r}${x.w} · ${x.ate}`).join("\n"):"열어본 파일 없음")+`\n먹어본 음식 ${st.exp.food}/${FOODS.length} · 경험한 문화 ${st.exp.culture}/${CULTURE.length}\n유행 민감도 ${st.sens==null?"측정 중":st.sens+"/100"} · ${st.rank}`;
+    const all=CAT_KEYS.flatMap(c=>D[c]);
+    const txt=`[먹어봤.zip 영수증${S.name?" · "+S.name:""}]\n`+(all.length?all.map(x=>`${x.f.year} ${x.f.name} - 힌트 ${x.h} · ${x.t} · ${x.r}${x.w} · ${x.ate}`).join("\n"):"열어본 파일 없음")+`\n먹어본 음식 ${st.exp.food}/${FOODS.length}${SHOW_CULTURE?` · 경험한 문화 ${st.exp.culture}/${CULTURE.length}`:""}\n유행 민감도 ${st.sens==null?"측정 중":st.sens+"/100"} · ${st.rank}`;
     (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast("결과를 복사했어")).catch(()=>toast("복사가 안 돼. 화면을 캡처해줘"));
   };
   el.querySelector("#dl").onclick=()=>saveImage(st,now);
@@ -1659,9 +1827,9 @@ async function drawReceipt(st,now){
       y+=62;}
     y+=6;
   };
-  if(st.opened.length){sec("food",D.food);sec("culture",D.culture);}else{t("- 아직 열어본 파일이 없습니다 -",W/2,y,17,400,"center",gray);y+=40;}
+  if(st.opened.length){CAT_KEYS.forEach(c=>sec(c,D[c]));}else{t("- 아직 열어본 파일이 없습니다 -",W/2,y,17,400,"center",gray);y+=40;}
   dash(y-18);y+=18;
-  const rows=[["열어본 파일",`${st.opened.length} / ${st.N}`],["먹어본 음식",`${st.exp.food} / ${FOODS.length}`],["경험한 문화",`${st.exp.culture} / ${CULTURE.length}`],["힌트 없이 정답",`${st.opened.filter(f=>S.done[f.id].solved&&S.done[f.id].hints===1).length}건`],["평균 본 힌트",`${st.avgH}개`],["총 풀이 시간",st.opened.length?fmtT(st.total):"-"],["최단 기록",st.fast?`${st.fast.name} ${mmss(S.done[st.fast.id].ms)}`:"-"]];
+  const rows=[["열어본 파일",`${st.opened.length} / ${st.N}`],["먹어본 음식",`${st.exp.food} / ${FOODS.length}`],...(SHOW_CULTURE?[["경험한 문화",`${st.exp.culture} / ${CULTURE.length}`]]:[]),["힌트 없이 정답",`${st.opened.filter(f=>S.done[f.id].solved&&S.done[f.id].hints===1).length}건`],["평균 본 힌트",`${st.avgH}개`],["총 풀이 시간",st.opened.length?fmtT(st.total):"-"],["최단 기록",st.fast?`${st.fast.name} ${mmss(S.done[st.fast.id].ms)}`:"-"]];
   for(const [a,b] of rows){kv(a,b,y);y+=30;}
   y-=8;dbl(y);y+=40;
   kv("유행 민감도",st.sens==null?"-":`${st.sens} / 100`,y,26,700);y+=24;
@@ -1717,35 +1885,69 @@ function showImage(c){
 }
 
 /* ===== 게시판 =====
-   BoardStore: 저장소 어댑터. 지금은 브라우저(localStorage)에 저장한다.
-   배포할 때는 아래 네 함수(list, add, comment, remove)만 서버 API(Firebase, Supabase 등)
-   호출로 바꾸면 모든 방문자가 같은 게시판을 보게 된다. 나머지 화면 코드는 그대로 둔다. */
-const BoardStore={
+   BoardStore: 저장소 어댑터.
+   - SB_URL / SB_KEY가 채워져 있으면 Supabase 서버에 저장 → 모든 방문자가 같은 게시판을 봄
+   - 비어 있으면 이 브라우저(localStorage)에만 저장 (미리보기용)
+   SB_KEY에는 anon(publishable) 키만 넣는다. service_role/secret 키는 절대 넣지 말 것. */
+const SB_URL="https://qtrpnbvlmnfhkvsbqaxs.supabase.co";
+const SB_KEY="sb_publishable_bWaNvO-GubYOp-MKvqQRDA_0tHq2bIR";
+const SB_LIB="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js";
+let myId=(()=>{try{let v=localStorage.getItem("meogeobwat.me");if(!v){v="u"+Math.random().toString(36).slice(2,10);localStorage.setItem("meogeobwat.me",v)}return v}catch(e){return "guest"}})();
+const LocalStore={
+  remote:false,
   KEY:"meogeobwat.board.v1",
   _read(){try{const r=localStorage.getItem(this.KEY);const v=r?JSON.parse(r):null;return v&&Array.isArray(v.posts)?v:{posts:[]}}catch(e){return {posts:[]}}},
   _write(v){try{localStorage.setItem(this.KEY,JSON.stringify(v));return true}catch(e){return false}},
+  async count(){return this._read().posts.length},
   async list(){return this._read().posts.slice().sort((a,b)=>b.at-a.at)},
+  async get(id){return (await this.list()).find(x=>x.id===id)||null},
   async add(post){const v=this._read();v.posts.push(post);if(!this._write(v))throw new Error("full");return post},
   async comment(postId,c){const v=this._read(),p=v.posts.find(x=>x.id===postId);if(!p)throw new Error("gone");p.comments.push(c);if(!this._write(v))throw new Error("full");return p},
   async remove(postId){const v=this._read();v.posts=v.posts.filter(x=>x.id!==postId);this._write(v)},
   async removeComment(postId,cid){const v=this._read(),p=v.posts.find(x=>x.id===postId);if(!p)throw new Error("gone");p.comments=p.comments.filter(c=>c.id!==cid);this._write(v);return p}
 };
-const myId=(()=>{try{let v=localStorage.getItem("meogeobwat.me");if(!v){v="u"+Math.random().toString(36).slice(2,10);localStorage.setItem("meogeobwat.me",v)}return v}catch(e){return "guest"}})();
+const RemoteStore={
+  remote:true,_sb:null,_ready:null,
+  _lib(){return window.supabase?Promise.resolve():new Promise((ok,no)=>{const sc=document.createElement("script");sc.src=SB_LIB;sc.onload=ok;sc.onerror=()=>no(new Error("lib"));document.head.appendChild(sc)})},
+  ensure(){ /* 처음 한 번: 라이브러리 로드 → 익명 로그인(브라우저에 유지) → myId = 서버가 준 사용자 ID */
+    if(!this._ready)this._ready=(async()=>{await this._lib();
+      this._sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:"meogeobwat.auth"}});
+      let {data}=await this._sb.auth.getSession();let user=data&&data.session&&data.session.user;
+      if(!user){const r=await this._sb.auth.signInAnonymously();if(r.error)throw r.error;user=r.data.user}
+      myId=user.id;return this._sb})().catch(e=>{this._ready=null;throw e});
+    return this._ready},
+  _map(p){return {id:p.id,author:p.author,owner:p.owner,text:p.text||"",img:p.img,kind:p.kind,at:Date.parse(p.created_at),
+    comments:(p.comments||[]).map(c=>({id:c.id,author:c.author,owner:c.owner,text:c.text,at:Date.parse(c.created_at)})).sort((a,b)=>a.at-b.at)}},
+  _cols:"id,author,owner,text,img,kind,created_at,comments(id,author,owner,text,created_at)",
+  async count(){const sb=await this.ensure();const {count,error}=await sb.from("posts").select("id",{count:"exact",head:true});if(error)throw error;return count||0},
+  async list(){const sb=await this.ensure();const {data,error}=await sb.from("posts").select(this._cols).order("created_at",{ascending:false}).limit(200);if(error)throw error;return data.map(p=>this._map(p))},
+  async get(id){const sb=await this.ensure();const {data,error}=await sb.from("posts").select(this._cols).eq("id",id).maybeSingle();if(error)throw error;return data?this._map(data):null},
+  async add(post){const sb=await this.ensure();const {error}=await sb.from("posts").insert({author:post.author,text:post.text||"",img:post.img,kind:post.kind});if(error)throw error},
+  async comment(postId,c){const sb=await this.ensure();const {error}=await sb.from("comments").insert({post_id:postId,author:c.author,text:c.text});if(error)throw error},
+  async remove(postId){const sb=await this.ensure();const {error}=await sb.from("posts").delete().eq("id",postId);if(error)throw error},
+  async removeComment(postId,cid){const sb=await this.ensure();const {error}=await sb.from("comments").delete().eq("id",cid);if(error)throw error}
+};
+/* claude.ai 미리보기 안에서는 외부 서버 접속이 막힐 수 있어 브라우저 저장으로, 배포 사이트에서는 서버로 */
+const IN_PREVIEW=/claude|anthropic/i.test(location.hostname)||location.protocol==="file:"&&!window.__forceRemote;
+const BoardStore=SB_URL&&SB_KEY&&!IN_PREVIEW?RemoteStore:LocalStore;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const ago=t=>{const s=Math.floor((Date.now()-t)/1000);if(s<60)return "방금";if(s<3600)return `${Math.floor(s/60)}분 전`;if(s<86400)return `${Math.floor(s/3600)}시간 전`;return fmtD(t)};
 function shrinkGray(src,maxW=480,q=.6){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const r=Math.min(1,maxW/im.width),c=document.createElement("canvas");c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.filter="grayscale(1)";x.drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",q))};im.onerror=no;im.src=src})}
 function shrink(src,maxW=720,q=.82){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const r=Math.min(1,maxW/im.width),c=document.createElement("canvas");c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",q))};im.onerror=no;im.src=src})}
 
-async function board(){
-  setCat("board");
-  const posts=await BoardStore.list();
+let boardTimer=null;
+async function board(keepScroll){
+  setCat("board");clearInterval(boardTimer);
+  let posts=[],failed=false;
+  try{posts=await BoardStore.list()}catch(e){failed=true}
+  const y=keepScroll?window.scrollY:0;
   const el=mount(`
    <div class="top"><button class="back" id="up" aria-label="상위 폴더">←</button><div class="path">먹어봤.zip / <b>게시판</b> /</div></div>
    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px">
      <div><h2 class="h">영수증 게시판</h2><p class="sub" style="margin:4px 0 0">내 영수증을 자랑하고, 그 시절 이야기를 나눠봐</p></div>
      <span class="tag acc">${posts.length}개</span></div>
-   <div class="bd-guide"><b>영수증 올리는 방법</b><ol><li>음식·문화 폴더에서 문제를 풀어봐</li><li>'나의 유행 영수증 보기'를 눌러 영수증을 발행해</li><li>영수증 아래 '게시판에 올리기'를 누르고 한마디를 적으면 끝!</li></ol><button class="btn dark" id="goRc">내 영수증 보러 가기</button></div>
+   <div class="bd-guide"><b>영수증 올리는 방법</b><ol><li>${SHOW_CULTURE?"음식·문화":"음식"} 폴더에서 문제를 풀어봐</li><li>'나의 유행 영수증 보기'를 눌러 영수증을 발행해</li><li>영수증 아래 '게시판에 올리기'를 누르고 한마디를 적으면 끝!</li></ol><button class="btn dark" id="goRc">내 영수증 보러 가기</button></div>
    <div class="bd-list">${posts.length?posts.map(p=>`
      <button class="bd-post" data-id="${p.id}">
        <div class="bd-meta"><b>${esc(p.author)}</b><span>${ago(p.at)}</span></div>
@@ -1753,12 +1955,17 @@ async function board(){
        ${p.img?`<img class="bd-thumb" src="${p.img}" alt="${esc(p.author)}의 첨부 이미지">`:""}
        <div class="bd-foot"><span>댓글 ${p.comments.length}</span>${p.kind==="receipt"?`<span class="bd-badge">영수증</span>`:""}</div>
      </button>`).join(""):`
-     <div class="bd-empty"><div class="bd-empty-t">아직 올라온 영수증이 없어</div><p>위 방법대로 첫 번째 영수증을 올려봐.</p></div>`}
+     <div class="bd-empty">${failed?`<div class="bd-empty-t">게시판 서버에 연결하지 못했어</div><p>인터넷 연결을 확인하고 잠시 뒤 다시 열어줘.</p>`:`<div class="bd-empty-t">아직 올라온 영수증이 없어</div><p>위 방법대로 첫 번째 영수증을 올려봐.</p>`}</div>`}
    </div>
    <div class="bottom"></div>`,"board");
   el.querySelector("#up").onclick=root;
   el.querySelector("#goRc").onclick=result;
   el.querySelectorAll(".bd-post").forEach(b=>b.onclick=()=>postView(b.dataset.id));
+  if(keepScroll)window.scrollTo(0,y);
+  /* 서버 모드: 게시판을 보고 있는 동안 10초마다 새 글·댓글 확인 */
+  if(BoardStore.remote){const sig=ps=>ps.map(p=>p.id+":"+p.comments.length).join(",");const cur=sig(posts);
+    boardTimer=setInterval(async()=>{if(!document.getElementById("board")||document.hidden){if(!document.getElementById("board"))clearInterval(boardTimer);return}
+      try{const n=await BoardStore.list();if(sig(n)!==cur&&document.getElementById("board"))board(true)}catch(e){}},10000)}
 }
 
 function writePost(preImg){
@@ -1789,13 +1996,15 @@ function writePost(preImg){
     const name=el.querySelector("#wName").value.trim(),text=ta.value.trim();
     if(!name){setErr("이름을 입력해줘");el.querySelector("#wName").focus();return}
     if(!img){setErr("첨부된 영수증이 없어. 영수증 화면에서 다시 올려줘");return}
+    const go=el.querySelector('#wf [type="submit"]');if(go&&go.disabled)return;if(go){go.disabled=true;go.dataset.t=go.textContent;go.textContent="올리는 중…"}
     try{await BoardStore.add({id:uid(),author:name,owner:myId,text,img,kind,at:Date.now(),comments:[]});S.name=S.name||name;save();toast("글을 올렸어");board()}
-    catch(x){setErr("저장 공간이 꽉 찼어. 예전 글을 지우고 다시 올려줘")}});
+    catch(x){if(go){go.disabled=false;go.textContent=go.dataset.t}setErr(BoardStore.remote?"올리지 못했어. 인터넷 연결을 확인하고 다시 눌러줘":"저장 공간이 꽉 찼어. 예전 글을 지우고 다시 올려줘")}});
 }
 
 async function postView(id){
   setCat("board");
-  const p=(await BoardStore.list()).find(x=>x.id===id);if(!p){toast("삭제된 글이야");board();return}
+  clearInterval(boardTimer);let p=null;try{p=await BoardStore.get(id)}catch(e){toast("게시판 서버에 연결하지 못했어");return}
+  if(!p){toast("삭제된 글이야");board();return}
   const mine=p.owner===myId;
   const el=mount(`
    <div class="top"><button class="back" id="bk" aria-label="게시판으로">←</button><div class="path">게시판 / <b>${esc(p.author)}</b></div></div>
@@ -1812,7 +2021,7 @@ async function postView(id){
      <div class="nb-err" id="cErr" hidden></div>
    </form>`,"post");
   el.querySelector("#bk").onclick=board;
-  if(mine){const d=el.querySelector("#pDel");d.onclick=async()=>{if(!d.dataset.c){d.dataset.c=1;d.textContent="한 번 더 누르면 삭제돼";setTimeout(()=>{delete d.dataset.c;d.textContent="내 글 삭제"},2500);return}await BoardStore.remove(p.id);toast("글을 지웠어");board()}}
+  if(mine){const d=el.querySelector("#pDel");d.onclick=async()=>{if(!d.dataset.c){d.dataset.c=1;d.textContent="한 번 더 누르면 삭제돼";setTimeout(()=>{delete d.dataset.c;d.textContent="내 글 삭제"},2500);return}try{await BoardStore.remove(p.id);toast("글을 지웠어");board()}catch(e){toast("글을 지우지 못했어. 다시 눌러줘")}}}
   el.querySelectorAll(".bd-cdel").forEach(b=>b.onclick=async()=>{
     if(!b.dataset.c){b.dataset.c=1;b.textContent="한 번 더";b.classList.add("on");setTimeout(()=>{delete b.dataset.c;b.textContent="삭제";b.classList.remove("on")},2500);return}
     try{await BoardStore.removeComment(p.id,b.dataset.cid);toast("댓글을 지웠어");postView(p.id)}catch(x){toast("댓글을 지우지 못했어")}});
