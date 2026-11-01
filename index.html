@@ -345,7 +345,7 @@ h2.h{font-size:28px;font-weight:900;letter-spacing:-.8px;margin:4px 0 0;text-wra
 .stage.dive .fz.front{transform:perspective(380px) rotateX(-84deg);transition:transform .75s cubic-bezier(.45,0,.25,1)}
 .stage.dive .fz.fpaper{transition:transform .75s cubic-bezier(.45,0,.25,1)}
 .stage.dive .fz.fpaper{transform:translateY(-8px)}
-.paperwipe{position:fixed;inset:0;z-index:95;background:#FBFAF7;transition:transform 1s cubic-bezier(.7,0,.25,1);box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.paperwipe{position:fixed;left:0;right:0;top:-25vh;bottom:-25vh;z-index:95;background:#FBFAF7;transition:transform 1s cubic-bezier(.7,0,.25,1);box-shadow:0 10px 30px rgba(0,0,0,.12)}
 .paperwipe::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:linear-gradient(-45deg,transparent 7px,#FBFAF7 0) 0 0/14px 10px repeat-x,linear-gradient(45deg,transparent 7px,#FBFAF7 0) 0 0/14px 10px repeat-x}
 .paperwipe.go{transform:translateY(-110%)}
 .screen.emerge{animation:emerge 1.1s cubic-bezier(.25,.8,.25,1)}
@@ -364,6 +364,7 @@ h2.h{font-size:28px;font-weight:900;letter-spacing:-.8px;margin:4px 0 0;text-wra
 body{font-variant-numeric:tabular-nums}
 .tag{white-space:nowrap;flex-shrink:0}
 .screen{overflow-x:clip}
+#app{overflow-x:clip}
 body{word-break:keep-all;overflow-wrap:break-word}
 .r-name input{padding-top:9px;margin-top:-8px}
 @media (max-width:359px){.tab{padding:8px 10px;font-size:12px}}
@@ -371,7 +372,7 @@ body{word-break:keep-all;overflow-wrap:break-word}
 .peek{min-width:0}
 @media (max-width:379px){.fhead{gap:8px;padding:12px 12px}.yr{font-size:17px;min-width:0}.peek{gap:3px}.peek svg,.peek .qm{width:24px!important;height:24px!important;font-size:11px}.ficon{transform:scale(.85)}}
 /* 기사 탭: 누르는 버튼처럼 보이게 */
-.tabs{padding:22px 22px 8px 4px;margin:-14px -4px 0;gap:8px}
+.tabs{padding:30px 22px 8px 4px;margin:-22px -4px 0;gap:8px}
 .tab{position:relative;overflow:visible;border:1.5px solid var(--line);box-shadow:0 3px 0 var(--line);transform:translateY(0);
   transition:background .2s,color .2s,transform .12s ease,box-shadow .12s ease;animation:tabIn .45s cubic-bezier(.3,1.5,.5,1) both;-webkit-tap-highlight-color:transparent;cursor:pointer}
 .tab:nth-child(2){animation-delay:.07s}.tab:nth-child(3){animation-delay:.14s}.tab:nth-child(4){animation-delay:.21s}
@@ -1529,8 +1530,10 @@ function splash(back){
     setTimeout(()=>{const er=el.getBoundingClientRect(),pr=el.querySelector(".fz.fpaper").getBoundingClientRect();
       el.querySelectorAll(".tap-hint,.bottom").forEach(x=>x.style.visibility="hidden");
       el.style.transformOrigin=`${pr.left-er.left+pr.width/2}px ${pr.top-er.top+pr.height*.42}px`;
+      const pad=Math.round(innerHeight*.25),sy=scrollY;
+      Object.assign(app.style,{position:"fixed",left:"0",right:"0",top:(-pad-sy)+"px",height:`calc(100% + ${pad*2+sy}px)`,paddingTop:pad+"px",overflow:"hidden",zIndex:"1"});
       el.style.willChange="transform";el.style.transition="transform .75s cubic-bezier(.55,0,.8,.2)";el.style.transform="scale(11)"},1450);
-    setTimeout(()=>{root();const sc=app.firstElementChild;sc.classList.remove("in");
+    setTimeout(()=>{app.removeAttribute("style");scrollTo(0,0);root();const sc=app.firstElementChild;sc.classList.remove("in");
       const w=document.createElement("div");w.className="paperwipe";document.body.appendChild(w);
       sc.classList.add("emerge");
       requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add("go")));
