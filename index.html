@@ -54,8 +54,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset
 #splash{text-align:center;align-items:center;overflow:hidden}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:1px;color:var(--acc);font-weight:700;margin-top:48px}
 .stage{position:relative;width:min(340px,100%);height:320px;margin-top:6px}
-.food-tile{position:absolute;z-index:6;width:74px;height:74px;border-radius:20px;background:var(--paper);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(160,80,40,.12);animation:bob 4s ease-in-out infinite;transition:transform .7s cubic-bezier(.2,.9,.3,1.2),opacity .5s}
-.food-tile svg{width:58px;height:58px}
+.food-tile{position:absolute;z-index:6;width:64px;height:64px;border-radius:18px;background:var(--paper);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(160,80,40,.12);animation:bob 4s ease-in-out infinite;transition:transform .7s cubic-bezier(.2,.9,.3,1.2),opacity .5s}
+.food-tile svg{width:50px;height:50px}
 @keyframes bob{50%{translate:0 -6px}}
 .fz{position:absolute;left:50%;top:84px;width:184px;height:148px;margin-left:-92px;padding:0;background:none;pointer-events:none}
 .fz img{width:100%;height:100%;display:block;pointer-events:none}
@@ -289,6 +289,7 @@ h2.h{font-size:28px;font-weight:900;letter-spacing:-.8px;margin:4px 0 0;text-wra
 .r-bar{height:46px;margin:12px 12px 4px;background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 4px,#111 4px 5px,transparent 5px 8px,#111 8px 11px,transparent 11px 13px)}
 .r-thanks{font-weight:700;margin-top:10px}
 .namebox{position:fixed;inset:0;z-index:90;background:rgba(20,18,16,.55);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fadeIn .2s}
+.bd-me{font-weight:600;color:var(--mute);font-size:.9em}
 .namebox.out{opacity:0;transition:opacity .25s}
 @keyframes fadeIn{from{opacity:0}}
 .nb-card{background:#FCFCFA;width:100%;max-width:340px;padding:22px 20px 16px;font-family:"Nanum Gothic Coding","IBM Plex Mono",monospace;color:#111;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
@@ -536,7 +537,7 @@ body{word-break:keep-all;overflow-wrap:break-word}
 <symbol id="beer" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="22" ry="4" fill="#000" opacity=".08"/><rect x="30" y="16" width="40" height="70" rx="7" fill="#F4F1EA" stroke="#D8D2C6" stroke-width="2"/><rect x="30" y="16" width="40" height="8" rx="4" fill="#C9C3B8"/><circle cx="50" cy="48" r="13" fill="#fff" stroke="#1B4E9B" stroke-width="2"/><circle cx="44" cy="40" r="4" fill="#fff" stroke="#1B4E9B" stroke-width="2"/><circle cx="56" cy="40" r="4" fill="#fff" stroke="#1B4E9B" stroke-width="2"/><circle cx="45.5" cy="47" r="1.6" fill="#1B4E9B"/><circle cx="54.5" cy="47" r="1.6" fill="#1B4E9B"/><ellipse cx="50" cy="52" rx="3" ry="2" fill="#1B4E9B"/><rect x="36" y="66" width="28" height="8" rx="2" fill="#1B4E9B"/><path d="M36 26v52" stroke="#fff" stroke-width="3" opacity=".6" stroke-linecap="round"/></symbol>
 <symbol id="zerocan" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="22" ry="4" fill="#000" opacity=".08"/><rect x="31" y="14" width="38" height="72" rx="7" fill="#1B1A18"/><rect x="31" y="14" width="38" height="8" rx="4" fill="#9A968F"/><rect x="31" y="78" width="38" height="8" rx="4" fill="#9A968F"/><ellipse cx="50" cy="50" rx="11" ry="15" fill="none" stroke="#E2412F" stroke-width="5"/><path d="M36 34c10 6 18 6 28 0" stroke="#E2412F" stroke-width="3" fill="none"/><path d="M37 26v46" stroke="#fff" stroke-width="3" opacity=".25" stroke-linecap="round"/></symbol>
 <symbol id="creambread" viewBox="0 0 100 100"><ellipse cx="50" cy="86" rx="34" ry="5" fill="#000" opacity=".08"/><path d="M14 60c0-18 16-30 36-30s36 12 36 30c0 6-4 10-10 10H24c-6 0-10-4-10-10z" fill="#E8B26A"/><path d="M20 58c2-12 14-20 30-20s28 8 30 20c-6 6-12 8-30 8s-24-2-30-8z" fill="#FFFDF6"/><path d="M24 58c6 4 14 5 26 5s20-1 26-5" stroke="#F0E6CF" stroke-width="2" fill="none"/><path d="M14 62c0 8 6 12 12 12h48c6 0 12-4 12-12" fill="#D9984A"/><rect x="38" y="20" width="24" height="10" rx="3" fill="#4C7BF4"/><path d="M42 25h16" stroke="#fff" stroke-width="2"/></symbol>
-<symbol id="bagel" viewBox="0 0 100 100"><ellipse cx="50" cy="86" rx="34" ry="5" fill="#000" opacity=".08"/><ellipse cx="50" cy="56" rx="36" ry="26" fill="#C98A3E"/><ellipse cx="50" cy="52" rx="36" ry="24" fill="#E3A956"/><ellipse cx="50" cy="52" rx="11" ry="7" fill="#FFF6EC"/><ellipse cx="50" cy="50" rx="11" ry="6" fill="#B87A33" opacity=".5"/><g fill="#FFF3D6"><ellipse cx="30" cy="44" rx="2.2" ry="1.2"/><ellipse cx="40" cy="36" rx="2.2" ry="1.2"/><ellipse cx="62" cy="36" rx="2.2" ry="1.2"/><ellipse cx="72" cy="46" rx="2.2" ry="1.2"/><ellipse cx="66" cy="60" rx="2.2" ry="1.2"/><ellipse cx="34" cy="60" rx="2.2" ry="1.2"/><ellipse cx="52" cy="66" rx="2.2" ry="1.2"/></g></symbol>
+<symbol id="donut" viewBox="0 0 100 100"><ellipse cx="50" cy="87" rx="36" ry="5" fill="#000" opacity=".08"/><ellipse cx="50" cy="58" rx="38" ry="26" fill="#D9963F"/><ellipse cx="50" cy="54" rx="38" ry="25" fill="#F0B866"/><path d="M14 52c0-13 16-22 36-22s36 9 36 22c0 4-3 6-6 5-3-1-4 4-8 4s-4-4-8-3c-4 1-4 6-9 6s-5-5-9-5-5 5-9 4-3-5-7-5-5 3-8 1c-3-1-4-4-8-4-1 0-1-1 0-3z" fill="#FF8FB1"/><ellipse cx="50" cy="51" rx="11" ry="6.5" fill="#FFF6EC"/><ellipse cx="50" cy="49.5" rx="11" ry="5.5" fill="#C9813A" opacity=".55"/><g stroke-width="2.6" stroke-linecap="round"><path d="M27 44l4-2" stroke="#FFE066"/><path d="M38 36l3 3" stroke="#6EC6FF"/><path d="M60 35l4-1" stroke="#FFFFFF"/><path d="M70 43l2 4" stroke="#7BD88F"/><path d="M66 56l4 1" stroke="#FFE066"/><path d="M32 56l3-3" stroke="#6EC6FF"/><path d="M47 41l3 1" stroke="#7BD88F"/><path d="M76 51l-3 2" stroke="#FFFFFF"/><path d="M22 50l3 1" stroke="#FFFFFF"/></g></symbol><symbol id="bagel" viewBox="0 0 100 100"><ellipse cx="50" cy="86" rx="34" ry="5" fill="#000" opacity=".08"/><ellipse cx="50" cy="56" rx="36" ry="26" fill="#C98A3E"/><ellipse cx="50" cy="52" rx="36" ry="24" fill="#E3A956"/><ellipse cx="50" cy="52" rx="11" ry="7" fill="#FFF6EC"/><ellipse cx="50" cy="50" rx="11" ry="6" fill="#B87A33" opacity=".5"/><g fill="#FFF3D6"><ellipse cx="30" cy="44" rx="2.2" ry="1.2"/><ellipse cx="40" cy="36" rx="2.2" ry="1.2"/><ellipse cx="62" cy="36" rx="2.2" ry="1.2"/><ellipse cx="72" cy="46" rx="2.2" ry="1.2"/><ellipse cx="66" cy="60" rx="2.2" ry="1.2"/><ellipse cx="34" cy="60" rx="2.2" ry="1.2"/><ellipse cx="52" cy="66" rx="2.2" ry="1.2"/></g></symbol>
 <symbol id="tiramisu" viewBox="0 0 100 100"><ellipse cx="50" cy="88" rx="28" ry="4" fill="#000" opacity=".08"/><path d="M26 28h48l-4 56H30z" fill="#fff" stroke="#E6DDF5" stroke-width="2" opacity=".9"/><path d="M28 44h44l-1 12H29z" fill="#8B5A3C"/><path d="M29 56h42l-1 12H30z" fill="#FFF6E4"/><path d="M30 68h40l-1 14H31z" fill="#8B5A3C"/><path d="M27 32h46l-1 12H28z" fill="#FFF6E4"/><path d="M27 32h46" stroke="#6B4228" stroke-width="5" stroke-dasharray="2 3"/><circle cx="42" cy="26" r="7" fill="#9B6237"/><circle cx="58" cy="25" r="6" fill="#B07444"/><path d="M40 22c2-2 4-2 6 0M56 21c2-2 4-1 5 1" stroke="#fff" stroke-width="1.5" fill="none" opacity=".6"/></symbol>
 <symbol id="matcha" viewBox="0 0 100 100"><ellipse cx="50" cy="88" rx="30" ry="5" fill="#000" opacity=".08"/><path d="M20 40h60c0 26-12 44-30 44S20 66 20 40z" fill="#fff" stroke="#E6DDF5" stroke-width="2"/><ellipse cx="50" cy="40" rx="30" ry="8" fill="#7DB34A"/><ellipse cx="50" cy="40" rx="24" ry="5" fill="#A8D46F"/><path d="M38 40c4-3 8 3 12 0s8 3 12 0" stroke="#fff" stroke-width="2" fill="none" opacity=".8"/><path d="M70 14c-8 4-12 12-10 20" stroke="#3FA34D" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M62 18c6-6 16-6 18 0-6 4-12 4-18 0z" fill="#3FA34D"/></symbol>
 <symbol id="buttermochi" viewBox="0 0 100 100"><ellipse cx="50" cy="86" rx="32" ry="5" fill="#000" opacity=".08"/><rect x="18" y="38" width="64" height="38" rx="14" fill="#F2C76B"/><rect x="18" y="38" width="64" height="30" rx="14" fill="#FBE3A6"/><path d="M24 48c8-6 16 2 26-4s18 2 26-2" stroke="#E8B04A" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="40" y="24" width="22" height="16" rx="3" fill="#FFE27A" stroke="#E8C33F" stroke-width="2" transform="rotate(-8 51 32)"/><path d="M44 30h12" stroke="#fff" stroke-width="2" opacity=".7" transform="rotate(-8 51 32)"/></symbol></defs></svg>
@@ -1031,7 +1032,7 @@ mk({id:"thl",year:2023,name:"탕후루",sub:"과일 설탕 꼬치",icon:"tanghul
  src:[["뉴시스, 2023.9.20","https://mobile.newsis.com/view/NISX20230918_0002454883"],["파이낸셜뉴스(연합), 2024.6.24","https://www.fnnews.com/news/202406240616259524"]]}),
 mk({id:"mtk",year:2023,name:"먹태깡",sub:"농심",icon:"snackbag",
  hints:[["나는 2023년 6월, 국민 과자의 후속작으로 나왔어요.","한 대기업 부회장이 SNS에 '먹어봐라'라고 올렸죠."],["마트에서 1인 2봉 한정 판매를 하자 오픈런이 벌어졌어요.","12주 만에 600만 봉."],["맥주 안주로 즐겨 먹는 말린 생선 맛 과자예요.","청양마요 소스 맛이 더해졌어요."]],
- opts:["mtk","thl","hbc","kbc"],desc:"먹태 맛을 옮긴 새우깡의 후속 스낵",tags:["농심","안주 과자","오픈런"],
+ opts:["mtk","thl","hbc","dnt"],desc:"먹태 맛을 옮긴 새우깡의 후속 스낵",tags:["농심","안주 과자","오픈런"],
  remember:"농심이 2023년 6월 26일 새우깡의 후속작으로 낸 스낵이다. 맥주 안주로 인기 있는 먹태의 맛에 청양마요 소스 맛을 더했다.",
  head:{t:"'먹태깡' 품절대란 주말 오픈런까지! [뉴시스Pic]",m:"뉴시스 · 2023.07.30"},
  stats:[["출시 12주<br>누적 판매","600만 봉",0],["주당 생산량<br>(초기 30만 봉)","60만 봉",1],["이마트 한정 판매 구매 제한","1인 2봉",2,1]],
@@ -1039,19 +1040,19 @@ mk({id:"mtk",year:2023,name:"먹태깡",sub:"농심",icon:"snackbag",
  why:["정용진 신세계그룹 부회장이 SNS에 올리며 화제가 됐다.","맥주 안주에 어울리는 '어른용 과자'로 자리 잡았다.","구하기 어려워 마트 오픈런까지 벌어졌다."],
  now:{when:"2025년 2월",t:"모방 제품이 잇따르며 '어른용 안주 스낵' 시장이 생겼다. 농심은 2025년 2월 '먹태깡 고추장마요맛'을 냈다."},
  src:[["뉴시스, 2023.7.30","https://www.newsis.com/view/NISX20230730_0002395653"],["스마트투데이, 2023.9.22","https://www.smarttoday.co.kr/ko-kr/articles/35500"],["아주경제, 2025.2.14","https://www.ajunews.com/view/20250214092132431"]]}),
-mk({id:"kbc",year:2021,name:"꼬북칩 초코츄러스맛",sub:"오리온",icon:"kkobuk",
- hints:[["나는 2020년 가을에 나와 이듬해까지 매진 행렬이 이어졌어요.","출시 50일 만에 350만 봉."],["넉 달 만에 1000만 봉 넘게 팔렸어요. 하루 약 10만 봉꼴이죠.","2020년 12월 한 달 매출 33억 원."],["겹겹이 쌓인 과자에 초콜릿과 츄러스 맛을 입혔어요.","놀이공원 간식 맛."]],
- opts:["kbc","rtb","hbc","mtk"],desc:"츄러스 맛을 입힌 겹겹 과자",tags:["오리온","품귀","단짠"],
- remember:"오리온의 겹겹 과자 꼬북칩에 츄러스 맛과 초콜릿을 더한 제품이다. 2020년 9월 출시됐다.",
- head:{t:"꼬북칩 초코츄러스맛, 4개월 만에 1000만 봉… 하루 10만 봉꼴",m:"아시아경제 · 2021.01.13",sum:1},
- stats:[["출시 넉 달<br>누적 판매","1000만 봉+",0],["누적<br>매출","110억 원+",1],["2020년 12월 한 달 매출","33억 원",2,1]],
- note:"오리온은 2021년에도 매진이 이어지고 있다고 밝혔다. 출시 약 6개월 뒤인 2021년 3월에는 누적 1500만 봉을 넘겼다.",
- why:["익숙한 꼬북칩 식감에 츄러스라는 새 맛을 더했다.","매대에 놓이면 사라져 '구하기 힘든 과자'가 됐다.","하루 약 10만 봉씩 팔릴 만큼 다시 사는 사람이 많았다."],
- now:{when:"2021년 1월",t:"출시 넉 달 만에 누적 매출 110억 원을 넘기며 오리온의 대표 히트작이 됐다."},
- src:[["아시아경제, 2021.1.13","https://view.asiae.co.kr/article/2021011307101509141"],["데일리안, 2021.3.11","https://m.dailian.co.kr/news/view/971224"]]}),
+mk({id:"dnt",year:2021,name:"수제 도넛",sub:"노티드 · 랜디스도넛",icon:"donut",
+ hints:[["2021년, 나를 파는 가게를 한 곳씩 찾아다니는 '도장깨기'가 MZ세대에게 유행했어요.","문 열기 전부터 줄 서는 '오픈런'."],["배달앱 요기요에서 2021년 내 주문 수가 1년 전보다 120% 늘었어요.","요기요 2021 신규 인기 메뉴 3위."],["크림을 꽉 채우거나 알록달록하게 꾸민 동그란 튀김 빵이에요.","가운데 구멍이 뚫린 것도 있어요."]],
+ opts:["dnt","crf","rtb","cst"],desc:"크림을 채우거나 화려하게 꾸민 수제 도넛",tags:["오픈런","도장깨기","SNS"],
+ remember:"노티드·랜디스도넛 같은 수제 도넛 가게가 SNS에서 인기를 끌면서 2021년 '도넛 도장깨기'와 오픈런이 유행했다.",
+ head:{t:"\"칼로리 폭탄에도 오픈런\"…'도넛 도장깨기'에 빠진 MZ세대",m:"이코노미스트 · 2021.12.18",sum:1},
+ stats:[["요기요 도넛 주문<br>전년 대비","120% 증가",0],["SNS '도넛'<br>태그 게시물","약 34만 개",1],["크리스피크림 2021년 상반기 매출","약 20% 증가",2,1]],
+ note:"던킨도 2021년 상반기 매출이 전년보다 11% 늘었고, 8월에는 수제 도넛 매장 '던킨라이브'를 열었다.",
+ why:["크림을 가득 채우거나 화려하게 꾸며 사진 찍기 좋은 디저트였다.","가게마다 맛과 모양이 달라 여러 곳을 찾아다니는 '도장깨기'가 놀이가 됐다.","매장 앞 줄서기 인기가 배달앱 주문으로까지 번졌다."],
+ now:{when:"2022년 1월",t:"요기요가 발표한 2021년 신규 배달 인기 메뉴에서 크로플·로제에 이어 3위에 올랐다."},
+ src:[["이코노미스트, 2021.12.18","https://economist.co.kr/article/view/ecn202112180007"],["세계일보, 2022.1.21","https://www.segye.com/newsView/20220121504337"]]}),
 mk({id:"rtb",year:2021,name:"로제 떡볶이",sub:"크림 + 고추장",icon:"rose",
  hints:[["나는 2021년 봄, 한 오픈마켓 판매량이 1년 새 990% 늘었어요.","인스타그램 게시물만 4만여 개."],["맵기를 부드럽게 덜어 매운 걸 못 먹는 사람도 즐겼어요.","파스타 소스와 같은 이름."],["빨간 떡볶이 소스에 크림을 섞어 분홍빛을 띠어요.","와인 이름과도 같아요."]],
- opts:["rtb","kbc","mlt","thl"],desc:"떡볶이 소스에 크림을 더한 분홍빛 떡볶이",tags:["크림","분홍 소스","밀키트"],
+ opts:["rtb","dnt","mlt","thl"],desc:"떡볶이 소스에 크림을 더한 분홍빛 떡볶이",tags:["크림","분홍 소스","밀키트"],
  remember:"매운 떡볶이 소스에 크림이나 우유를 더해 맛을 부드럽게 한 떡볶이다. 토마토와 크림을 섞은 '로제 파스타'에서 이름을 따왔다.",
  head:{t:"맵지만 부드러운… '로제 떡볶이'가 뜬다",m:"이투데이 · 2021.04.03"},
  stats:[["G마켓 판매 증가<br>2021.3 전년 대비","+990%",0],["옥션 판매 증가<br>같은 기간","+550%",1],["인스타그램 '로제떡볶이' 게시물","4만여 개",2,1]],
@@ -1313,7 +1314,7 @@ FOODS.push(
 
 {id:"gpb",year:2020,name:"곰표 밀맥주",sub:"CU × 대한제분",icon:"beer",verb:"마셔봤",
  hints:[["나는 2020년 5월 편의점 단독으로 나와, 첫 생산분 10만 개가 사흘 만에 다 팔렸어요.","일주일 만에 30만 개."],["밀가루 회사 마스코트가 캔에 그려져 있어요.","뉴트로 콜라보의 대표 사례."],["하얀 곰이 그려진 수제 밀맥주예요.","이름은 밀가루 브랜드에서 왔어요."]],
- opts:["gpb","dgc","crf","kbc"],desc:"밀가루 브랜드 곰 마스코트를 입힌 편의점 수제 맥주",tags:["뉴트로","콜라보","편의점"],
+ opts:["gpb","dgc","crf","dnt"],desc:"밀가루 브랜드 곰 마스코트를 입힌 편의점 수제 맥주",tags:["뉴트로","콜라보","편의점"],
  remember:"밀가루 브랜드 '곰표'의 곰 마스코트를 캔에 입힌 수제 밀맥주다. CU가 대한제분, 수제맥주 회사와 손잡고 2020년 5월 단독으로 내놨다.",
  head:{t:"CU '곰표 밀맥주', 출시 일주일 만에 30만개 순삭",m:"데일리안 · 2020.06.09"},
  stats:[["첫 생산분<br>완판까지","3일",0],["출시 일주일<br>누적","30만 개",1],["2021년 5월 2주 판매","300만 개",2,1]],
@@ -1324,7 +1325,7 @@ FOODS.push(
 
 {id:"zro",year:2021,name:"제로 탄산음료",sub:"칼로리 0 콜라·사이다",icon:"zerocan",verb:"마셔봤",
  hints:[["2021년, 나를 포함한 시장이 2년 만에 약 5배로 커졌어요.","2189억 원 규모."],["한 사이다 브랜드의 내 버전은 출시 9개월여 만에 1억 캔이 팔렸어요.","단맛은 그대로, 설탕은 빼고."],["칼로리가 0인 콜라와 사이다예요.","이름에 숫자 '0'이 붙어요."]],
- opts:["zro","rtb","kbc","crf"],desc:"설탕을 빼 칼로리를 0으로 만든 콜라·사이다",tags:["0칼로리","다이어트","콜라"],
+ opts:["zro","rtb","dnt","crf"],desc:"설탕을 빼 칼로리를 0으로 만든 콜라·사이다",tags:["0칼로리","다이어트","콜라"],
  remember:"설탕 대신 감미료를 넣어 칼로리를 0으로 만든 탄산음료다. 2021년 무렵 칼로리를 줄이면서 단맛은 즐기려는 수요가 늘며 콜라, 사이다, 아이스티까지 제로 제품이 쏟아졌다.",
  head:{t:"제로칼로리 음료 '열풍'…식품업계, '2천억 시장' 정조준",m:"뉴스토마토 · 2022.04.19"},
  stats:[["제로 탄산 시장<br>2021년","2189억 원",0],["2년 전보다","약 5배",1],["칠성사이다 제로 누적 1억 캔까지","9개월여",2,1]],
@@ -1463,7 +1464,7 @@ function splash(back){
   const n=Object.keys(S.done).length;
   const RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   const tiles=SHOW_CULTURE?[["castella",14,30,-14],["apt",252,22,12],["chips",-2,156,-8],["phone",268,150,10],["cookie",40,246,6],["bucket",236,248,-10],["note",134,0,4]]
-    :[["castella",14,30,-14],["tanghulu",252,22,12],["chips",-2,156,-8],["coffee",268,150,10],["cookie",40,246,6],["bingsu",236,248,-10],["bubbletea",134,0,4]];
+    :[["castella",4,26,-12],["bubbletea",92,2,5],["tanghulu",186,0,-6],["donut",274,24,11],["croffle",-6,112,-8],["choco",284,108,9],["cookie",8,196,7],["tiramisu",276,194,-9],["bingsu",54,262,-5],["yakgwa",224,262,8]];
   const el=mount(`
    <div class="eyebrow">디지털콘텐츠종합설계</div>
    <div class="stage" id="stage">
@@ -2229,6 +2230,9 @@ async function postView(id,keep){
   const mine=p.owner===myId;
   const pk=cmtKnown[p.id];cmtKnown[p.id]=new Set(p.comments.map(c=>c.id));
   const cfresh=new Set(pk?p.comments.filter(c=>!pk.has(c.id)&&c.owner!==myId).map(c=>c.id):[]);
+  /* 댓글 이름: 글쓴이는 '글쓴이', 나머지는 이 글에 처음 댓글 단 순서대로 익명1, 익명2… (같은 사람은 같은 번호) */
+  const anonNo={};let anonN=0;[...p.comments].sort((a,b)=>a.at-b.at).forEach(c=>{const k=c.owner||c.id;if(c.owner&&c.owner===p.owner)return;if(!(k in anonNo))anonNo[k]=++anonN});
+  const cName=c=>c.owner&&c.owner===p.owner?"글쓴이":"익명"+anonNo[c.owner||c.id];
   const el=mount(`
    <div class="top"><button class="back" id="bk" aria-label="게시판으로">←</button><div class="path">게시판 / <b>${esc(p.author)}</b></div></div>
    <article class="bd-detail">
@@ -2238,9 +2242,9 @@ async function postView(id,keep){
      ${mine?`<button class="nb-skip" id="pDel" style="align-self:flex-end">내 글 삭제</button>`:""}
    </article>
    <h3 class="bd-ch">댓글 ${p.comments.length}</h3>
-   <div class="bd-comments">${p.comments.length?p.comments.map(c=>`<div class="bd-c ${cfresh.has(c.id)?"fresh":""}"><div class="bd-meta"><b>${esc(c.author)}</b><span>${ago(c.at)}${c.owner===myId?`<button class="bd-cdel" data-cid="${c.id}" aria-label="내 댓글 삭제">삭제</button>`:""}</span></div><p>${esc(c.text)}</p></div>`).join(""):`<p class="bd-none">첫 댓글을 남겨봐</p>`}</div>
+   <div class="bd-comments">${p.comments.length?p.comments.map(c=>`<div class="bd-c ${cfresh.has(c.id)?"fresh":""}"><div class="bd-meta"><b>${cName(c)}${c.owner===myId?' <span class="bd-me">(나)</span>':""}</b><span>${ago(c.at)}${c.owner===myId?`<button class="bd-cdel" data-cid="${c.id}" aria-label="내 댓글 삭제">삭제</button>`:""}</span></div><p>${esc(c.text)}</p></div>`).join(""):`<p class="bd-none">첫 댓글을 남겨봐</p>`}</div>
    <form id="cf" class="bd-cform bottom" novalidate>
-     <div class="bd-crow"><input id="cName" class="bd-in" maxlength="12" placeholder="이름" value="${esc(S.name||"")}" autocomplete="off" style="flex:0 0 88px"><input id="cText" class="bd-in" maxlength="200" placeholder="댓글을 입력해줘" autocomplete="off"><button class="btn p bd-send" type="submit">등록</button></div>
+     <div class="bd-crow"><input id="cText" class="bd-in" maxlength="200" placeholder="익명으로 댓글 달기" autocomplete="off"><button class="btn p bd-send" type="submit">등록</button></div>
      <div class="nb-err" id="cErr" hidden></div>
    </form>`,"post");
   el.querySelector("#bk").onclick=board;
@@ -2249,11 +2253,11 @@ async function postView(id,keep){
     if(!b.dataset.c){b.dataset.c=1;b.textContent="한 번 더";b.classList.add("on");setTimeout(()=>{delete b.dataset.c;b.textContent="삭제";b.classList.remove("on")},2500);return}
     try{await BoardStore.removeComment(p.id,b.dataset.cid);toast("댓글을 지웠어");postView(p.id)}catch(x){toast("댓글을 지우지 못했어")}});
   const err=el.querySelector("#cErr");
-  ["#cName","#cText"].forEach(s=>el.querySelector(s).addEventListener("input",()=>{err.hidden=true}));
+  el.querySelector("#cText").addEventListener("input",()=>{err.hidden=true});
   el.querySelector("#cf").addEventListener("submit",async e=>{e.preventDefault();
-    const n=el.querySelector("#cName").value.trim(),t=el.querySelector("#cText").value.trim();
-    if(!n||!t){err.textContent=!n?"이름을 입력해줘":"댓글 내용을 입력해줘";err.hidden=false;return}
-    try{await BoardStore.comment(p.id,{id:uid(),author:n,owner:myId,text:t,at:Date.now()});S.name=S.name||n;save();postView(p.id,true)}
+    const t=el.querySelector("#cText").value.trim();
+    if(!t){err.textContent="댓글 내용을 입력해줘";err.hidden=false;return}
+    try{await BoardStore.comment(p.id,{id:uid(),author:"익명",owner:myId,text:t,at:Date.now()});postView(p.id,true)}
     catch(x){err.textContent="댓글을 저장하지 못했어";err.hidden=false}});
   if(keep){el.classList.remove("in");window.scrollTo(0,y)}
   /* 서버 모드: 글을 보고 있는 동안 5초마다 새 댓글 확인. 쓰던 댓글 내용은 그대로 유지 */
@@ -2261,8 +2265,8 @@ async function postView(id,keep){
     const check=async()=>{if(!document.getElementById("post")){clearInterval(boardTimer);return}if(document.hidden)return;
       try{const s2=await BoardStore.postSig(id);
         if(s2===null){clearInterval(boardTimer);toast("삭제된 글이야");board();return}
-        if(s2!==cur&&document.getElementById("post")){const nm=el.querySelector("#cName").value,tx=el.querySelector("#cText").value,foc=document.activeElement&&document.activeElement.id;
-          await postView(id,true);const e2=document.getElementById("post");if(e2){e2.querySelector("#cName").value=nm;e2.querySelector("#cText").value=tx;if(foc&&e2.querySelector("#"+foc))e2.querySelector("#"+foc).focus()}}}catch(e){}};
+        if(s2!==cur&&document.getElementById("post")){const tx=el.querySelector("#cText").value,foc=document.activeElement&&document.activeElement.id;
+          await postView(id,true);const e2=document.getElementById("post");if(e2){e2.querySelector("#cText").value=tx;if(foc&&e2.querySelector("#"+foc))e2.querySelector("#"+foc).focus()}}}catch(e){}};
     boardTimer=setInterval(check,5000);boardCheck=check}
 }
 
