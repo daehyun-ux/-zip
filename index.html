@@ -1512,7 +1512,7 @@ function archive(cat,focusYear){
     fd.querySelector(".fhead").onclick=()=>{
       const y=+fd.dataset.y,was=fd.classList.contains("open");
       el.querySelectorAll(".folder").forEach(o=>{o.classList.remove("open");o.querySelector(".fhead").setAttribute("aria-expanded","false")});
-      if(!was){fd.classList.add("open");fd.querySelector(".fhead").setAttribute("aria-expanded","true");openYear=y}else openYear=null;
+      if(!was){fd.classList.add("open");fd.querySelector(".fhead").setAttribute("aria-expanded","true");openYear=y}else openYear=null;setRoute(`archive/${CUR}${openYear?"/"+openYear:""}`,true);
     };
   });
   el.querySelectorAll(".file").forEach(b=>b.onclick=()=>{const f=byId[b.dataset.id];S.done[f.id]?record(f):quiz(f)});
@@ -1925,6 +1925,9 @@ const RemoteStore={
   async add(post){const sb=await this.ensure();const {error}=await sb.from("posts").insert({author:post.author,text:post.text||"",img:post.img,kind:post.kind});if(error)throw error},
   async comment(postId,c){const sb=await this.ensure();const {error}=await sb.from("comments").insert({post_id:postId,author:c.author,text:c.text});if(error)throw error},
   async remove(postId){const sb=await this.ensure();const {error}=await sb.from("posts").delete().eq("id",postId);if(error)throw error},
+  /* 가벼운 변경 확인용: 이미지 없이 글 ID와 댓글 ID만 받아옴 */
+  async sig(){const sb=await this.ensure();const {data,error}=await sb.from("posts").select("id,comments(id)").order("created_at",{ascending:false}).limit(200);if(error)throw error;return data.map(p=>p.id+":"+(p.comments||[]).length).join(",")},
+  async postSig(id){const sb=await this.ensure();const {data,error}=await sb.from("posts").select("id,comments(id)").eq("id",id).maybeSingle();if(error)throw error;return data?(data.comments||[]).map(c=>c.id).sort().join(","):null},
   async removeComment(postId,cid){const sb=await this.ensure();const {error}=await sb.from("comments").delete().eq("id",cid);if(error)throw error}
 };
 /* claude.ai 미리보기 안에서는 외부 서버 접속이 막힐 수 있어 브라우저 저장으로, 배포 사이트에서는 서버로 */
@@ -1936,7 +1939,8 @@ const ago=t=>{const s=Math.floor((Date.now()-t)/1000);if(s<60)return "방금";if
 function shrinkGray(src,maxW=480,q=.6){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const r=Math.min(1,maxW/im.width),c=document.createElement("canvas");c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.filter="grayscale(1)";x.drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",q))};im.onerror=no;im.src=src})}
 function shrink(src,maxW=720,q=.82){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const r=Math.min(1,maxW/im.width),c=document.createElement("canvas");c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",q))};im.onerror=no;im.src=src})}
 
-let boardTimer=null;
+let boardTimer=null,boardCheck=null;
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&boardCheck)boardCheck()});
 async function board(keepScroll){
   setCat("board");clearInterval(boardTimer);
   let posts=[],failed=false;
@@ -1961,11 +1965,12 @@ async function board(keepScroll){
   el.querySelector("#up").onclick=root;
   el.querySelector("#goRc").onclick=result;
   el.querySelectorAll(".bd-post").forEach(b=>b.onclick=()=>postView(b.dataset.id));
-  if(keepScroll)window.scrollTo(0,y);
-  /* 서버 모드: 게시판을 보고 있는 동안 10초마다 새 글·댓글 확인 */
-  if(BoardStore.remote){const sig=ps=>ps.map(p=>p.id+":"+p.comments.length).join(",");const cur=sig(posts);
-    boardTimer=setInterval(async()=>{if(!document.getElementById("board")||document.hidden){if(!document.getElementById("board"))clearInterval(boardTimer);return}
-      try{const n=await BoardStore.list();if(sig(n)!==cur&&document.getElementById("board"))board(true)}catch(e){}},10000)}
+  if(keepScroll){el.classList.remove("in");window.scrollTo(0,y)}
+  /* 서버 모드: 게시판을 보고 있는 동안 5초마다 가볍게 변경 확인 → 바뀌면 자동 새로고침 */
+  if(BoardStore.remote){const cur=posts.map(p=>p.id+":"+p.comments.length).join(","),n0=posts.length;
+    const check=async()=>{if(!document.getElementById("board")){clearInterval(boardTimer);return}if(document.hidden)return;
+      try{const s2=await BoardStore.sig();if(s2!==cur&&document.getElementById("board")){const n1=s2?s2.split(",").length:0;await board(true);if(n1>n0)toast("새 글이 올라왔어")}}catch(e){}};
+    boardTimer=setInterval(check,5000);boardCheck=check}
 }
 
 function writePost(preImg){
@@ -2001,9 +2006,9 @@ function writePost(preImg){
     catch(x){if(go){go.disabled=false;go.textContent=go.dataset.t}setErr(BoardStore.remote?"올리지 못했어. 인터넷 연결을 확인하고 다시 눌러줘":"저장 공간이 꽉 찼어. 예전 글을 지우고 다시 올려줘")}});
 }
 
-async function postView(id){
+async function postView(id,keep){
   setCat("board");
-  clearInterval(boardTimer);let p=null;try{p=await BoardStore.get(id)}catch(e){toast("게시판 서버에 연결하지 못했어");return}
+  clearInterval(boardTimer);boardCheck=null;const y=keep?window.scrollY:0;let p=null;try{p=await BoardStore.get(id)}catch(e){toast("게시판 서버에 연결하지 못했어");return}
   if(!p){toast("삭제된 글이야");board();return}
   const mine=p.owner===myId;
   const el=mount(`
@@ -2030,11 +2035,85 @@ async function postView(id){
   el.querySelector("#cf").addEventListener("submit",async e=>{e.preventDefault();
     const n=el.querySelector("#cName").value.trim(),t=el.querySelector("#cText").value.trim();
     if(!n||!t){err.textContent=!n?"이름을 입력해줘":"댓글 내용을 입력해줘";err.hidden=false;return}
-    try{await BoardStore.comment(p.id,{id:uid(),author:n,owner:myId,text:t,at:Date.now()});S.name=S.name||n;save();postView(p.id)}
+    try{await BoardStore.comment(p.id,{id:uid(),author:n,owner:myId,text:t,at:Date.now()});S.name=S.name||n;save();postView(p.id,true)}
     catch(x){err.textContent="댓글을 저장하지 못했어";err.hidden=false}});
+  if(keep){el.classList.remove("in");window.scrollTo(0,y)}
+  /* 서버 모드: 글을 보고 있는 동안 5초마다 새 댓글 확인. 쓰던 댓글 내용은 그대로 유지 */
+  if(BoardStore.remote){const cur=p.comments.map(c=>c.id).sort().join(",");
+    const check=async()=>{if(!document.getElementById("post")){clearInterval(boardTimer);return}if(document.hidden)return;
+      try{const s2=await BoardStore.postSig(id);
+        if(s2===null){clearInterval(boardTimer);toast("삭제된 글이야");board();return}
+        if(s2!==cur&&document.getElementById("post")){const nm=el.querySelector("#cName").value,tx=el.querySelector("#cText").value,foc=document.activeElement&&document.activeElement.id;
+          await postView(id,true);const e2=document.getElementById("post");if(e2){e2.querySelector("#cName").value=nm;e2.querySelector("#cText").value=tx;if(foc&&e2.querySelector("#"+foc))e2.querySelector("#"+foc).focus()}}}catch(e){}};
+    boardTimer=setInterval(check,5000);boardCheck=check}
 }
 
-splash();
+/* ===== 화면 기록: 새로고침해도 보던 화면 유지 + 휴대폰 뒤로가기(제스처)로 이전 화면 =====
+   주소 끝 #경로에 현재 화면을 적고, 화면을 옮길 때마다 브라우저 방문 기록에 한 칸씩 쌓는다. */
+const NAV={stack:[],skipPop:false,popping:false};
+const navUrl=r=>location.pathname+location.search+(r?"#"+r:"");
+function setRoute(r,replace){
+  try{
+    const st=NAV.stack,top=st.length-1;
+    if(NAV.popping||st[top]===r){if(st[top]!==r){st[top]=r;history.replaceState({i:top},"",navUrl(r))}return}
+    if(replace){st[top]=r;history.replaceState({i:top},"",navUrl(r));return}
+    if(top>=1&&st[top-1]===r){NAV.skipPop=true;st.pop();history.back();return}   /* 화면 속 ← 버튼 = 브라우저 뒤로가기와 같은 칸 */
+    st.push(r);history.pushState({i:st.length-1},"",navUrl(r));
+  }catch(e){}
+}
+(function(){
+  /* 문제를 다 풀고 기록 화면으로 갈 때, 글을 올리고 게시판으로 갈 때는 기록을 덮어씀(뒤로가기 헛칸 방지) */
+  const W=(name,route)=>{const f=window[name];window[name]=function(...a){const out=f.apply(this,a);try{const r=route(...a),top=NAV.stack[NAV.stack.length-1]||"";
+    const rep=(name==="record"&&top===`quiz/${a[0].id}`)||(name==="board"&&top==="write");setRoute(r,rep)}catch(e){}return out}};
+  W("splash",()=>"");W("root",()=>"root");
+  W("archive",()=>`archive/${CUR}${openYear?"/"+periodKey(openYear):""}`);
+  W("quiz",f=>`quiz/${f.id}`);W("reveal",f=>`quiz/${f.id}`);W("record",f=>`record/${f.id}`);
+  W("result",()=>"result");W("board",()=>"board");W("writePost",()=>"write");W("postView",id=>`post/${id}`);
+})();
+function render(h,fromPop){
+  const [a,b,c]=decodeURIComponent(h||"").split("/");
+  try{
+    if(a==="root")return root();
+    if(a==="archive"&&CAT_KEYS.includes(b))return archive(b,c?+c:null);
+    if((a==="quiz"||a==="record")&&byId[b])return S.done[b]?record(byId[b]):quiz(byId[b]);
+    if(a==="result")return result();
+    if(a==="board"||a==="write")return board();
+    if(a==="post"&&b)return postView(b);
+  }catch(e){}
+  const cur=document.querySelector(".screen");
+  return splash(!!(fromPop&&cur&&cur.id==="root"));   /* 압축 해제 화면에서 뒤로 → 줌아웃 연출 */
+}
+/* 바로 들어온 주소(공유 링크·새로고침)도 뒤로가기가 자연스럽게: 상위 화면들을 기록에 미리 깔아둠 */
+function parentChain(h){
+  const [a,b]=h.split("/");const ch=["","root"];
+  if(a==="quiz"||a==="record"){const f=byId[b];if(f)ch.push(`archive/${f.cat}/${periodKey(f.year)}`)}
+  if(a==="post"||a==="write")ch.push("board");
+  if(a==="write")return ch.concat("board").filter((x,k,arr)=>arr.indexOf(x)===k);
+  return ch;
+}
+window.addEventListener("popstate",e=>{
+  if(NAV.skipPop){NAV.skipPop=false;return}
+  const h=decodeURIComponent(location.hash.slice(1));
+  const i=e.state&&typeof e.state.i==="number"?e.state.i:null;
+  if(i!=null){NAV.stack.length=i;NAV.stack[i]=h}else NAV.stack.push(h);
+  NAV.popping=true;try{render(h,true)}finally{NAV.popping=false}
+});
+function boot(){
+  /* 새로고침(같은 탭)이면 보던 화면 복원, 공유 링크로 새로 열면 첫 화면부터 */
+  let alive=false;try{alive=sessionStorage.getItem("meogeobwat.alive")==="1";sessionStorage.setItem("meogeobwat.alive","1")}catch(e){}
+  let navType="";try{navType=(performance.getEntriesByType("navigation")[0]||{}).type||""}catch(e){}
+  const restore=alive||navType==="reload"||navType==="back_forward";
+  const h=restore?decodeURIComponent(location.hash.slice(1)):"";
+  try{
+    const chain=h&&h!=="write"?parentChain(h).filter(x=>x!==h):[];
+    if(chain.length){NAV.stack=[chain[0]];history.replaceState({i:0},"",navUrl(chain[0]));
+      for(const r of chain.slice(1)){NAV.stack.push(r);history.pushState({i:NAV.stack.length-1},"",navUrl(r))}
+      NAV.stack.push(h);history.pushState({i:NAV.stack.length-1},"",navUrl(h))}
+    else{NAV.stack=[h==="write"?"board":h];history.replaceState({i:0},"",navUrl(NAV.stack[0]))}
+  }catch(e){NAV.stack=[h]}
+  NAV.popping=true;try{render(h==="write"?"board":h)}finally{NAV.popping=false}
+}
+boot();
 </script>
 
 </body>
