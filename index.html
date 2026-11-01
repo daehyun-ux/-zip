@@ -368,6 +368,33 @@ body{word-break:keep-all;overflow-wrap:break-word}
 .credits{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 12px;margin-top:14px;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}
 .peek{min-width:0}
 @media (max-width:379px){.fhead{gap:8px;padding:12px 12px}.yr{font-size:17px;min-width:0}.peek{gap:3px}.peek svg,.peek .qm{width:24px!important;height:24px!important;font-size:11px}.ficon{transform:scale(.85)}}
+/* 기사 탭: 누르는 버튼처럼 보이게 */
+.tabs{padding:4px 4px 8px;margin:4px -4px 0;gap:8px}
+.tab{position:relative;overflow:visible;border:1.5px solid var(--line);box-shadow:0 3px 0 var(--line);transform:translateY(0);
+  transition:background .2s,color .2s,transform .12s ease,box-shadow .12s ease;animation:tabIn .45s cubic-bezier(.3,1.5,.5,1) both;-webkit-tap-highlight-color:transparent;cursor:pointer}
+.tab:nth-child(2){animation-delay:.07s}.tab:nth-child(3){animation-delay:.14s}.tab:nth-child(4){animation-delay:.21s}
+.tab:hover{transform:translateY(-1px);box-shadow:0 4px 0 var(--line)}
+.tab:active,.tab.press{transform:translateY(3px)!important;box-shadow:0 0 0 var(--line)!important}
+.tab.on{border-color:var(--ink);box-shadow:0 3px 0 rgba(0,0,0,.28)}
+.tab.on:active,.tab.on.press{box-shadow:0 0 0 rgba(0,0,0,.28)!important}
+.tab .dot{position:absolute;top:-3px;right:-2px;width:9px;height:9px;border-radius:50%;background:var(--acc);border:2px solid var(--bg);transition:transform .25s,opacity .25s}
+.tab .dot::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--acc);animation:dotPing 1.6s ease-out infinite}
+.tab.seen .dot{transform:scale(0);opacity:0}
+.tab.nudge{animation:tabNudge .7s cubic-bezier(.3,1.6,.5,1)}
+.tab .rip{position:absolute;border-radius:50%;background:currentColor;opacity:.25;transform:scale(0);animation:rip .5s ease-out forwards;pointer-events:none}
+.tab-clip{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+.swipe-hint .ar{display:inline-block;animation:arL 1.4s ease-in-out infinite}.swipe-hint .ar.r{animation-name:arR}
+@keyframes tabIn{from{opacity:0;transform:translateY(8px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes tabNudge{0%,100%{transform:none}25%{transform:translateY(-5px) rotate(-3deg)}50%{transform:translateY(0) rotate(2deg)}70%{transform:translateY(-2px)}}
+@keyframes dotPing{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.4);opacity:0}}
+@keyframes rip{to{transform:scale(2.6);opacity:0}}
+@keyframes arL{50%{transform:translateX(-4px)}}@keyframes arR{50%{transform:translateX(4px)}}
+.scrap-link{display:block;text-decoration:none;color:inherit;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;-webkit-tap-highlight-color:transparent}
+.scrap-link:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.08)}
+.scrap-link:active{transform:translateY(1px) scale(.99);box-shadow:none}
+.scrap-go{display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:12px;font-weight:800;color:var(--acc);border-bottom:1.5px solid currentColor;padding-bottom:1px}
+.scrap-go b{display:inline-block;transition:transform .2s}.scrap-link:hover .scrap-go b{transform:translate(2px,-2px)}
+@media (prefers-reduced-motion:reduce){.tab,.tab.nudge,.tab .dot::after,.swipe-hint .ar{animation:none!important}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1603,28 +1630,46 @@ function record(f){
   const el=mount(`
    <div class="top"><button class="back" id="bk" aria-label="아카이브로">←</button><div class="path">${f.id}.${f.cat==="food"?"food":"clip"} / record</div></div>
    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><h2 class="h" style="margin:0">${f.name}</h2><span class="mono" style="font-size:13px;color:var(--mute)">${f.year}</span>${d?`<span class="tag acc">${lab(f,d.ate)}</span>`:""}</div>
-   <div class="tabs" role="tablist">${tabs.map((t,i)=>`<button class="tab ${i===0?"on":""}" role="tab" data-i="${i}">${t}</button>`).join("")}</div>
+   <div class="tabs" role="tablist">${tabs.map((t,i)=>`<button class="tab ${i===0?"on seen":""}" role="tab" data-i="${i}" aria-selected="${i===0}"><span class="tab-clip"></span>${t}${i?`<span class="dot" aria-hidden="true"></span>`:""}</button>`).join("")}</div>
    <div class="panels" id="panels">
     <div class="panel">${ic(f.icon,"big-icon")}<p class="body-text">${f.remember}</p>
       <div class="chips" style="justify-content:flex-start">${f.tags.map(t=>`<span class="chip">#${t}</span>`).join("")}</div></div>
     <div class="panel">
-      <div class="scrap"><small>${f.head.sum?"보도 요약":"기사 스크랩"} · ${f.head.m}</small><p>${f.head.t}</p></div>
+      ${(()=>{const hs=headSrc(f);return hs?`<a class="scrap scrap-link" href="${hs[1]}" target="_blank" rel="noopener" aria-label="기사 원문 새 탭에서 열기: ${hs[0]}"><small>${f.head.sum?"보도 요약":"기사 스크랩"} · ${f.head.m}</small><p>${f.head.t}</p><span class="scrap-go">기사 원문 보기 <b>↗</b></span></a>`:`<div class="scrap"><small>${f.head.sum?"보도 요약":"기사 스크랩"} · ${f.head.m}</small><p>${f.head.t}</p></div>`})()}
       <div class="stats">${f.stats.map(s=>`<div class="stat t${s[2]} ${s[3]?"wide":""}"><div class="l">${s[0]}</div><div class="v" data-v="${s[1]}">${s[1]}</div></div>`).join("")}</div>
       <p class="note">${f.note}</p></div>
     <div class="panel"><ul class="points">${f.why.map((w,i)=>`<li><i>${i+1}</i><span>${w}</span></li>`).join("")}</ul></div>
     <div class="panel"><div class="now-card"><div class="when">${f.now.when}</div><p class="body-text" style="margin-top:8px">${f.now.t}</p></div>
       <div class="src">출처 · ${f.src.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(" · ")}</div></div>
    </div>
-   <div class="swipe-hint">← 옆으로 넘겨서 더 보기 →</div>
+   <div class="swipe-hint"><span class="ar">←</span> 탭을 누르거나 옆으로 넘겨봐 <span class="ar r">→</span></div>
    <div class="bottom">${nextF?`<div class="row2"><button class="btn s" id="arc">아카이브</button><button class="btn dark" id="nx">다음 파일 열기 →</button></div>`:`<button class="btn p" id="res">결과 영수증 받기</button>`}</div>`,"record");
   el.querySelector("#bk").onclick=()=>archive(f.cat,f.year);
   const P=el.querySelector("#panels"),T=[...el.querySelectorAll(".tab")];
   let counted=false;
-  const setTab=i=>{T.forEach((t,j)=>{t.classList.toggle("on",j===i);t.setAttribute("aria-selected",j===i)});if(i===1&&!counted){counted=true;countUp(el)}};
-  T.forEach(t=>t.onclick=()=>P.scrollTo({left:P.clientWidth*+t.dataset.i,behavior:"smooth"}));
+  let lastAct=Date.now();
+  let seenT=0;const setTab=i=>{T.forEach((t,j)=>{t.classList.toggle("on",j===i);t.setAttribute("aria-selected",j===i)});clearTimeout(seenT);seenT=setTimeout(()=>{if(T[i]&&!T[i].classList.contains("seen")){T[i].classList.add("seen");lastAct=Date.now()}},260);if(i===1&&!counted){counted=true;countUp(el)}};
+  T.forEach(t=>{
+    t.onclick=()=>{lastAct=Date.now();P.scrollTo({left:P.clientWidth*+t.dataset.i,behavior:"smooth"})};
+    /* 누르는 순간 눌림 + 물결 */
+    t.addEventListener("pointerdown",e=>{t.classList.add("press");const r=t.getBoundingClientRect(),z=Math.max(r.width,r.height),sp=document.createElement("span");
+      sp.className="rip";sp.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;t.querySelector(".tab-clip").appendChild(sp);setTimeout(()=>sp.remove(),520)});
+    ["pointerup","pointerleave","pointercancel"].forEach(ev=>t.addEventListener(ev,()=>t.classList.remove("press")));
+  });
+  /* 안 본 탭이 있으면 잠깐씩 톡톡 튀어서 눌러보라고 알려줌 */
+  const nudger=setInterval(()=>{if(!document.body.contains(el)){clearInterval(nudger);return}
+    const un=T.find(t=>!t.classList.contains("seen"));if(!un){clearInterval(nudger);return}
+    if(Date.now()-lastAct<2500||document.hidden)return;un.classList.remove("nudge");void un.offsetWidth;un.classList.add("nudge");setTimeout(()=>un.classList.remove("nudge"),750)},2600);
   P.addEventListener("scroll",()=>setTab(Math.round(P.scrollLeft/P.clientWidth)),{passive:true});
   if(nextF){el.querySelector("#arc").onclick=()=>archive(f.cat,f.year);el.querySelector("#nx").onclick=()=>{openYear=nextF.year;quiz(nextF)}}
   else el.querySelector("#res").onclick=result;
+}
+/* 기사 스크랩 → 출처 목록에서 같은 언론사·날짜의 기사 링크 찾기 */
+function headSrc(f){
+  const norm=x=>String(x).toLowerCase().replace(/korea\s*joongang\s*daily/,"중앙데일리").replace(/\s|\(.*?\)|business|코리아|\.|·|,/g,"");
+  const [out,date]=f.head.m.split(" · "),o=norm(out),d=(date||"").replace(/\.0?/g,".");
+  const c=f.src.filter(s=>{const n=norm(s[0].split(",")[0]);return n&&(n.includes(o)||o.includes(n))});
+  return c.find(s=>{const sd=(s[0].split(",")[1]||"").trim();return sd&&d.startsWith(sd.slice(0,7))})||c[0]||null;
 }
 function countUp(el){
   el.querySelectorAll(".stat .v").forEach(v=>{
