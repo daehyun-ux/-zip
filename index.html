@@ -1656,7 +1656,7 @@ let S={done:{}};
 try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)||S;if(!S.done)S.done={}}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const app=document.getElementById("app");
-const ic=(n,cls="")=>String(n).startsWith("img:")?`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><image href="${imgUrl(String(n).slice(4),"thumb")}" x="6" y="6" width="88" height="88" preserveAspectRatio="xMidYMid slice" style="clip-path:inset(0 round 20px)"/></svg>`:`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><use href="#${n}"/></svg>`;
+const ic=(n,cls="")=>String(n).startsWith("emoji:")?`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><text x="50" y="56" text-anchor="middle" dominant-baseline="middle" font-size="72" style="font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif">${String(n).slice(6).replace(/[&<>"]/g,"")}</text></svg>`:String(n).startsWith("img:")?`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><image href="${imgUrl(String(n).slice(4),"thumb")}" x="6" y="6" width="88" height="88" preserveAspectRatio="xMidYMid slice" style="clip-path:inset(0 round 20px)"/></svg>`:`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><use href="#${n}"/></svg>`;
 const doneIn=cat=>CATS[cat].list.filter(f=>S.done[f.id]).length;
 const fileNo=f=>{const k=periodKey(f.year);return String(CATS[f.cat].list.filter(x=>periodKey(x.year)===k).indexOf(f)+1).padStart(2,"0")};
 const dir=f=>`먹어봤.zip / ${CATS[f.cat].name}`;
