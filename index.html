@@ -654,6 +654,13 @@ body{word-break:keep-all;overflow-wrap:break-word}
 #splash .stage{margin-top:auto}
 #splash .bottom{margin-top:auto}
 #splash .intro{margin-bottom:12px}
+
+/* ===== 서버에서 올린 사진 ===== */
+.rec-photo{margin:4px 0 14px;border-radius:18px;overflow:hidden;background:var(--tint)}
+.rec-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.rec-photo figcaption{padding:7px 12px;font-size:11px;color:var(--mute);background:var(--paper)}
+.rec-photo figcaption a{color:inherit}
+.r-privacy{margin:10px 0 0;text-align:center;font-size:11px;color:var(--mute)}
 </style>
 </head>
 <body>
@@ -1604,13 +1611,52 @@ const PERIODS=FOOD_YEARS.map(y=>[y,y]).reverse();   /* 한 해 = 한 폴더, 최
 const periodKey=y=>{if(y==null)return null;const p=PERIODS.find(([a,b])=>y>=a&&y<=b);return p?p[0]:null};
 const periodLabel=([a,b])=>a===b?String(a):`${a}–${String(b).slice(2)}`;
 const byId=Object.fromEntries(ITEMS.map(f=>[f.id,f]));
+/* ===== 백엔드 서버 연결 =====
+   API_BASE에 서버 주소를 넣으면(예: "https://meogeobwat-api.onrender.com") 음식 데이터를 서버에서 불러오고 영수증을 저장함.
+   비워 두면 지금처럼 이 파일 안의 데이터만 씀. 서버가 꺼져 있거나 느리면 마지막으로 받은 데이터 → 내장 데이터 순서로 보여줌 */
+const API_BASE="https://cxtreex65g.onrender.com";
+const imgUrl=(id,v)=>`${API_BASE}/api/images/${encodeURIComponent(id)}${v?"?v="+v:""}`;
+const FOODS_CACHE="meogeobwat.foods";
+let FOODS_VER="local";
+function applyFoods(list,ver){
+  if(!Array.isArray(list))return false;
+  const fresh=list.filter(f=>f&&f.id&&f.name&&Array.isArray(f.hints)&&FOOD_YEARS.includes(f.year)).map(f=>Object.assign(f,{cat:"food",verb:f.verb||"먹어봤"}));
+  if(!fresh.length)return false;
+  fresh.sort((a,b)=>YORDER.indexOf(a.year)-YORDER.indexOf(b.year)||(a.ord??9999)-(b.ord??9999));
+  FOODS.length=0;FOODS.push(...fresh);
+  ITEMS.length=0;ITEMS.push(...(SHOW_CULTURE?[...FOODS,...CULTURE]:FOODS));
+  for(const k in byId)delete byId[k];
+  ITEMS.forEach(f=>{byId[f.id]=f});
+  if(typeof trRefresh==="function")trRefresh();
+  FOODS_VER=ver||"remote";return true;
+}
+function loadRemoteFoods(){
+  if(!API_BASE)return;
+  try{const c=JSON.parse(localStorage.getItem(FOODS_CACHE)||"null");if(c&&c.version)applyFoods(c.foods,c.version)}catch(e){}
+  fetch(API_BASE+"/api/foods",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(d=>{
+    if(!d||d.version===FOODS_VER)return;
+    if(applyFoods(d.foods,d.version))try{localStorage.setItem(FOODS_CACHE,JSON.stringify(d))}catch(e){}
+  }).catch(()=>{});
+}
+/* 영수증 저장: 이름·서명 없이 파일별 기록과 점수만. 같은 브라우저는 같은 번호로 덮어씀 */
+function sendReceipt(st){
+  if(!API_BASE||!st.opened.length)return;
+  let cid;
+  try{cid=localStorage.getItem("meogeobwat.cid");
+    if(!cid){cid=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)).replace(/[^A-Za-z0-9_-]/g,"").slice(0,64);localStorage.setItem("meogeobwat.cid",cid)}}catch(e){return}
+  const items=st.opened.map(f=>{const d=S.done[f.id];return {id:f.id,hints:Math.min(3,Math.max(1,d.hints||1)),ms:d.ms==null?null:Math.round(d.ms),solved:!!d.solved,wrong:Math.min(99,d.wrong||0),ate:d.ate||null}});
+  const body=JSON.stringify({clientId:cid,receipt:{items,total:st.N,sens:st.sens,rank:st.sens==null?null:st.rank,ate:st.exp.food}});
+  try{if(sessionStorage.getItem("meogeobwat.rsig")===body)return}catch(e){}
+  fetch(API_BASE+"/api/receipts",{method:"POST",headers:{"Content-Type":"application/json"},body,keepalive:true})
+    .then(r=>{if(r.ok)try{sessionStorage.setItem("meogeobwat.rsig",body)}catch(e){}}).catch(()=>{});
+}
 const lab=(f,a)=>{const v=f.verb.replace("봤","봄");return a==="y"?v:a==="n"?"안 "+v:"기억 안 남"};
 const KEY="meogeobwat.v1";
 let S={done:{}};
 try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)||S;if(!S.done)S.done={}}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const app=document.getElementById("app");
-const ic=(n,cls="")=>`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><use href="#${n}"/></svg>`;
+const ic=(n,cls="")=>String(n).startsWith("img:")?`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><image href="${imgUrl(String(n).slice(4),"thumb")}" x="6" y="6" width="88" height="88" preserveAspectRatio="xMidYMid slice" style="clip-path:inset(0 round 20px)"/></svg>`:`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><use href="#${n}"/></svg>`;
 const doneIn=cat=>CATS[cat].list.filter(f=>S.done[f.id]).length;
 const fileNo=f=>{const k=periodKey(f.year);return String(CATS[f.cat].list.filter(x=>periodKey(x.year)===k).indexOf(f)+1).padStart(2,"0")};
 const dir=f=>`먹어봤.zip / ${CATS[f.cat].name}`;
@@ -1833,9 +1879,10 @@ const TR_LIFE=[
 ].map(t=>Object.assign(t,{ids:t.ids.split(" ")}));
 /* 시기별 비교: 3시기 × 지표. 편의점 상품 = 편의점이 그 유행 상품을 따로 만들어 판 경우 */
 const TR_ERAS=[{n:"2014~2016",a:2014,b:2016},{n:"2018~2020",a:2018,b:2020},{n:"2022~2026",a:2022,b:2026}];
-const TR_CVS="sbb gpb ysc ygw dbc btr twc mch dzk hjs btt".split(" ").filter(i=>byId[i]);
+const TR_CVS_ALL="sbb gpb ysc ygw dbc btr twc mch dzk hjs btt".split(" "),TR_CVS=TR_CVS_ALL.filter(i=>byId[i]);
 /* 목록에서 뺀(홀수 해) 음식은 분석에서도 제외 */
-[...TR_TYPES,...TR_LIFE].forEach(t=>t.ids=t.ids.filter(i=>byId[i]));
+[...TR_TYPES,...TR_LIFE].forEach(t=>{t.all=t.ids.slice();t.ids=t.ids.filter(i=>byId[i])});
+function trRefresh(){[...TR_TYPES,...TR_LIFE].forEach(t=>{t.ids=t.all.filter(i=>byId[i])});TR_CVS.length=0;TR_CVS.push(...TR_CVS_ALL.filter(i=>byId[i]))}
 const trType=k=>TR_TYPES.find(t=>t.k===k);
 const trTypesOf=id=>TR_TYPES.filter(t=>t.ids.includes(id));
 const trLifeOf=id=>TR_LIFE.find(t=>t.ids.includes(id));
@@ -2099,7 +2146,7 @@ function record(f){
    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><h2 class="h" style="margin:0">${f.name}</h2><span class="mono" style="font-size:13px;color:var(--mute)">${f.year}</span>${d?`<span class="tag acc">${lab(f,d.ate)}</span>`:""}</div>
    <div class="tabs" role="tablist">${tabs.map((t,i)=>`<button class="tab ${i===0?"on seen":""}" role="tab" data-i="${i}" aria-selected="${i===0}"><span class="tab-clip"></span>${t}${i?`<span class="dot" aria-hidden="true"></span>`:""}</button>`).join("")}</div>
    <div class="panels" id="panels">
-    <div class="panel">${ic(f.icon,"big-icon")}<p class="body-text">${f.remember}</p>
+    <div class="panel">${f.photo?`<figure class="rec-photo"><img src="${imgUrl(f.photo.id)}" alt="${f.photo.alt||f.name}" loading="lazy" decoding="async"><figcaption>사진 · ${f.photo.url?`<a href="${f.photo.url}" target="_blank" rel="noopener">${f.photo.credit}</a>`:f.photo.credit}</figcaption></figure>`:ic(f.icon,"big-icon")}<p class="body-text">${f.remember}</p>
       <div class="chips" style="justify-content:flex-start">${f.tags.map(t=>`<span class="chip">#${t}</span>`).join("")}</div></div>
     <div class="panel">
       ${(()=>{const hs=headSrc(f);return hs?`<a class="scrap scrap-link" href="${hs[1]}" target="_blank" rel="noopener" aria-label="기사 원문 새 탭에서 열기: ${hs[0]}"><small>${f.head.sum?"보도 요약":"기사 스크랩"} · ${f.head.m}</small><p>${f.head.t}</p><span class="scrap-go">기사 원문 보기 <b>↗</b></span></a>`:`<div class="scrap"><small>${f.head.sum?"보도 요약":"기사 스크랩"} · ${f.head.m}</small><p>${f.head.t}</p></div>`})()}
@@ -2236,7 +2283,7 @@ function result(){
     <div class="r-c r-small">${st.no.replace("No.","2014")}${posNo(st.opened.length)}2026</div>
     <div class="r-c r-thanks">감사합니다. 또 열어주세요!</div>
    </div>
-   <div class="bottom"><div class="row2"><button class="btn dark" id="dl">이미지로 저장</button><button class="btn dark" id="post">게시판에 올리기</button></div><div class="row2" style="margin-top:8px"><button class="btn s" id="cp">결과 복사</button><button class="btn s" id="rs">다시 하기</button></div></div>`,"result");
+   <div class="bottom"><div class="row2"><button class="btn dark" id="dl">이미지로 저장</button><button class="btn dark" id="post">게시판에 올리기</button></div><div class="row2" style="margin-top:8px"><button class="btn s" id="cp">결과 복사</button><button class="btn s" id="rs">다시 하기</button></div>${API_BASE?`<p class="r-privacy">영수증 기록은 이름·서명 없이 통계용으로만 저장돼요</p>`:""}</div>`,"result");
   el.querySelectorAll(".line").forEach((l,i)=>setTimeout(()=>l.classList.add("show"),120+i*70));
   el.querySelector("#bk").onclick=root;
   const nm=el.querySelector("#rcName");
@@ -2253,6 +2300,7 @@ function result(){
   rs.onclick=()=>{if(!rs.dataset.c){rs.dataset.c=1;rs.textContent="정말 처음부터?";setTimeout(()=>{delete rs.dataset.c;rs.textContent="다시 하기"},2500);return}
     S={done:{},name:S.name};save();openYear=null;root()};
   el.querySelector("#rcSign").onclick=()=>signPad();
+  sendReceipt(st);
   askName(nm);
 }
 function trimSign(cv){
@@ -2630,6 +2678,7 @@ window.addEventListener("popstate",e=>{
   NAV.popping=true;try{render(h,true)}finally{NAV.popping=false}
 });
 function boot(){
+  loadRemoteFoods();
   /* 새로고침(같은 탭)이면 보던 화면 복원, 공유 링크로 새로 열면 첫 화면부터 */
   let alive=false;try{alive=sessionStorage.getItem("meogeobwat.alive")==="1";sessionStorage.setItem("meogeobwat.alive","1")}catch(e){}
   let navType="";try{navType=(performance.getEntriesByType("navigation")[0]||{}).type||""}catch(e){}
