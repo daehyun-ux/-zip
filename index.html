@@ -767,6 +767,43 @@ button.ev-node{transition:transform .15s}button.ev-node:active{transform:scale(.
 .ate-kick{margin:0;font-size:13px;font-weight:800;color:var(--acc)}
 .ate-big{margin:6px 0 0;font-size:26px;line-height:1.35;font-weight:900;word-break:keep-all}
 .ate-page .ate-note{margin:10px 0 0;font-size:13px;color:var(--sub);line-height:1.6}
+
+/* 지금은? (시안) */
+.nw-card{background:var(--paper);border-radius:22px;padding:18px 16px 16px;box-shadow:0 2px 14px rgba(120,60,20,.06)}
+.nw-when{font-size:14px;font-weight:800;color:var(--acc)}
+.nw-h{margin:6px 0 0;font-size:21px;font-weight:900;line-height:1.35;word-break:keep-all}
+.nw-t{margin:8px 0 0;font-size:15px;line-height:1.7;word-break:keep-all}
+.nw-box{margin-top:14px;background:#FFF6EE;border-radius:18px;padding:14px}
+.nw-bh{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:15px;font-weight:800}
+.nw-bh svg{width:22px;height:22px;fill:none;stroke:#B0703A;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nw-bh small{font-size:12px;font-weight:600;color:var(--sub)}
+.nw-tl{list-style:none;margin:16px 0 0;padding:0;display:grid;grid-template-columns:repeat(var(--n),1fr);position:relative}
+.nw-tl::before{content:"";position:absolute;top:8px;left:calc(50%/var(--n));right:calc(50%/var(--n));height:3px;border-radius:2px;background:linear-gradient(90deg,var(--acc),#FFC7A8)}
+.nw-tl li{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 3px;word-break:keep-all}
+.nw-tl i{width:18px;height:18px;border-radius:50%;background:var(--paper);border:3px solid #FFB08A;z-index:1}
+.nw-tl li.on i{border-color:var(--acc);box-shadow:0 0 0 4px var(--acc-soft)}
+.nw-tl b{margin-top:8px;font-size:13.5px;font-weight:800;color:#A8401F}
+.nw-tl span{margin-top:2px;font-size:13px;font-weight:700;line-height:1.35}
+.nw-tl small{margin-top:2px;font-size:11.5px;color:var(--sub);line-height:1.35}
+.nw-chg{display:flex;align-items:center;gap:8px;margin-top:16px}
+.nw-v{flex:1;position:relative;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;min-width:0}
+.nw-v small{display:block;font-size:12px;color:var(--sub);line-height:1.35;word-break:keep-all}
+.nw-v b{display:block;margin-top:3px;font-size:19px;font-weight:900;line-height:1.25;word-break:keep-all}
+.nw-v.hi{background:#FFEDE3;border-color:#FFC2A6}.nw-v.hi small,.nw-v.hi b{color:#C2410C}
+.nw-v.hi.dn{background:#EEF2F8;border-color:#C9D3E3}.nw-v.hi.dn small,.nw-v.hi.dn b{color:#3E5578}
+.nw-v em{position:absolute;top:-12px;right:-4px;font-style:normal;font-size:12px;font-weight:800;color:#fff;background:var(--acc);padding:3px 9px;border-radius:999px;white-space:nowrap}
+.nw-v.dn em{background:#5B7090}
+.nw-ar{font-size:22px;font-weight:900;color:var(--acc);flex-shrink:0}
+.nw-nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px}
+.nw-card+.src{margin-top:12px}
+
+.lk-go-trend{width:100%;margin-top:14px;background:#5A3A0E;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px}
+.lk-zip{width:22px;height:17px;border-radius:3px 3px 4px 4px;background:#FFD84D;position:relative}
+.lk-zip::before{content:"";position:absolute;left:0;top:-3px;width:10px;height:5px;border-radius:2px 2px 0 0;background:#FFD84D}
+
+.nw-st{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.nw-st b{width:fit-content;font-size:15px;font-weight:900;padding:4px 12px;border-radius:999px;background:var(--ink);color:#fff}
+.nw-st p{margin:4px 0 0;font-size:13.5px;line-height:1.6;color:var(--sub)}
 </style>
 </head>
 <body>
@@ -2030,7 +2067,7 @@ function trend(){
   const rows=[["가게가 빠르게 늘어남",trType("shop").ids],["방송·유명인",trType("star").ids],["편의점 전용 상품",TR_CVS]];
   const typeList=(list,open)=>list.map((t,i)=>`<details class="an-type"${open&&i===0?" open":""}><summary><span class="an-tn">${t.n}</span><span class="an-tc mono">${t.ids.length}<small>/${N}</small></span>
       <span class="an-bar" aria-hidden="true"><i style="--w:${Math.round(t.ids.length/N*100)}%"></i></span></summary>
-      <p>${t.d}</p><div class="an-chips">${t.ids.map(trChip).join("")}</div></details>`).join("");
+      <p>${t.d}</p><div class="an-chips">${[...t.ids].sort((a,b)=>byId[b].year-byId[a].year).map(trChip).join("")}</div></details>`).join("");
   const files=[
    {no:"01",q:"왜 유행했나",t:"유행의 공식",teaser:"유행 음식에는 반복되는 이유가 있을까?",body:`
      <p class="an-lead">각 파일의 '왜 유행?'에 적힌 이유를 여섯 가지로 나눠 ${N}개 음식에 붙여 봤어. 이유가 여럿이면 모두 셌어. 줄을 누르면 해당 음식이 나와.</p>
@@ -2045,17 +2082,17 @@ function trend(){
      <div class="an-find"><span class="an-lab mono">발견 4</span><p>남은 음식은 한 번 사고 끝나는 상품이 아니었어. ${trName("cpb")}, ${trName("ysc")}처럼 <b>회사의 정식 제품·시리즈</b>가 되거나, ${trName("crf")}처럼 만드는 방식이 다른 디저트로 변주됐어.</p></div>
      <div class="an-ext"><span class="an-lab mono">외부 자료 · 2026년 2월</span>
       <p>연합뉴스가 네이버 데이터랩 검색량으로 '유행 반감기'(검색량이 정점에서 절반으로 줄기까지 걸린 기간)를 쟀어.</p>
-      <ol class="an-hl">${[["crf","크로플","2020~2021",163],["thl","탕후루","2023",54],["dbc","두바이 초콜릿","2024",13],["dzk","두쫀쿠","2025년 말",17]].map(([id,nm,w,d])=>`<li><span>${byId[id]?trName(id):nm} <small>${w}</small></span><b class="mono">${d}일</b><i style="--w:${Math.round(d/163*100)}%"></i></li>`).join("")}</ol>
+      <ol class="an-hl">${[["dzk","두쫀쿠","2025년 말",17],["dbc","두바이 초콜릿","2024",13],["thl","탕후루","2023",54],["crf","크로플","2020~2021",163]].map(([id,nm,w,d])=>`<li><span>${byId[id]?trName(id):nm} <small>${w}</small></span><b class="mono">${d}일</b><i style="--w:${Math.round(d/163*100)}%"></i></li>`).join("")}</ol>
       <p>크로플과 두쫀쿠를 비교하면 관심이 반으로 줄기까지 걸린 시간이 10분의 1쯤으로 짧아졌어.</p>${trExt("아시아경제, 2026.2.8","https://view.asiae.co.kr/article/2026020810004309195")}</div>
      <p class="an-note">검색량 그래프 대신 기사 기록으로 나눈 이유: 검색량은 관심의 크기일 뿐 판매량이 아니야. 구글 트렌드 값도 실제 검색 횟수가 아니라, 고른 기간·지역에서 관심이 가장 높았던 때를 100으로 둔 상대값이야. ${trExt("Google News Lab","https://medium.com/google-news-lab/what-is-google-trends-data-and-what-does-it-mean-b48f07342ee8")}</p>`},
    {no:"03",q:"무엇이 달라졌나",t:"유행의 진화",teaser:"2014년과 2026년, 음식이 퍼지는 길도 달라졌을까?",body:`
      <p class="an-lead">${N}개를 세 시기로 나눠, 유행을 퍼뜨린 길이 어떻게 바뀌었는지 비교했어.</p>
-     <div class="an-era" role="table" aria-label="시기별 비교"><div class="an-er" role="row"><span role="columnheader"></span>${TR_ERAS.map(e=>`<span class="mono" role="columnheader" aria-label="${e.n}년">${e.a}~${String(e.b).slice(2)}</span>`).join("")}</div>
-      ${rows.map(([n,ids])=>`<div class="an-er" role="row"><span role="rowheader">${n}</span>${TR_ERAS.map(e=>{const c=ids.filter(id=>inEra(id,e)).length,t=eraN(e);return `<span role="cell" aria-label="${t}개 중 ${c}개"><b class="mono">${c}<small>/${t}</small></b><i style="--h:${Math.round(c/t*100)}%"></i></span>`}).join("")}</div>`).join("")}</div>
+     <div class="an-era" role="table" aria-label="시기별 비교"><div class="an-er" role="row"><span role="columnheader"></span>${[...TR_ERAS].reverse().map(e=>`<span class="mono" role="columnheader" aria-label="${e.n}년">${e.a}~${String(e.b).slice(2)}</span>`).join("")}</div>
+      ${rows.map(([n,ids])=>`<div class="an-er" role="row"><span role="rowheader">${n}</span>${[...TR_ERAS].reverse().map(e=>{const c=ids.filter(id=>inEra(id,e)).length,t=eraN(e);return `<span role="cell" aria-label="${t}개 중 ${c}개"><b class="mono">${c}<small>/${t}</small></b><i style="--h:${Math.round(c/t*100)}%"></i></span>`}).join("")}</div>`).join("")}</div>
      <ol class="an-steps">
-      <li><span class="mono">2014~2016</span><b>가게 문 앞의 유행</b><p>전문점과 가맹점이 동네마다 빠르게 생겼고, 품절된 과자는 직접 찾아다녀야 했어. ${trName("cst")}처럼 방송 한 번에 무너진 경우도 있었어.</p></li>
-      <li><span class="mono">2018~2020</span><b>방송과 집콕</b><p>예능 한 장면이나 정상회담 생중계가 유행을 만들었고, 코로나19로 집에 머물면서 ${trName("dgc")}, ${trName("crf")}처럼 집에서 만드는 음식이 퍼졌어.</p></li>
       <li><span class="mono">2022~2026</span><b>편의점 속도전</b><p>해외 SNS나 유명인의 게시물에서 시작해, 편의점이 금세 전용 상품으로 내놓았어. 18년 전 예능 장면이 SNS에서 되살아나 ${trName("bdb")}처럼 제철 채소가 유행하기도 했어. 한 유행이 다음 유행을 낳기도 해. ${trName("dbc")}가 식을 무렵 ${trName("dzk")}가 나온 것처럼.</p></li></ol>
+      <li><span class="mono">2018~2020</span><b>방송과 집콕</b><p>예능 한 장면이나 정상회담 생중계가 유행을 만들었고, 코로나19로 집에 머물면서 ${trName("dgc")}, ${trName("crf")}처럼 집에서 만드는 음식이 퍼졌어.</p></li>
+      <li><span class="mono">2014~2016</span><b>가게 문 앞의 유행</b><p>전문점과 가맹점이 동네마다 빠르게 생겼고, 품절된 과자는 직접 찾아다녀야 했어. ${trName("cst")}처럼 방송 한 번에 무너진 경우도 있었어.</p></li>
      <div class="an-find"><span class="an-lab mono">발견 5</span><p>편의점 전용 상품은 ${TR_ERAS.slice(0,2).map(e=>`${e.n}년 ${eraN(e)}개 중 ${TR_CVS.filter(id=>inEra(id,e)).length}개`).join(', ')}였는데, 2022년 이후엔 <b>${eraN(TR_ERAS[2])}개 중 ${TR_CVS.filter(id=>inEra(id,TR_ERAS[2])).length}개</b>야. 줄 서서 사던 유행이 동네 편의점에서 사는 유행으로 바뀌었어.</p></div>
      <div class="an-ext"><span class="an-lab mono">외부 자료 · 2026년 3월</span><p>이투데이도 비슷하게 봤어. 2014~2017년엔 한 유행이 오래 이어졌고, 2018~2020년엔 해마다 대표 메뉴가 바뀌었고, 2022년 이후엔 몇 달 단위의 '초단기 유행'이 반복된다고 정리했어. 이유로는 짧은 영상의 알고리즘, 인플루언서, 편의점과 팝업스토어의 빠른 상품화를 꼽았어.</p>${trExt("이투데이, 2026.3.9","https://v.daum.net/v/20260309142412586")}</div>`}
   ];
@@ -2284,9 +2321,9 @@ const LK_SUM={dzk:"두쫀쿠는 <b>'이국적 재료 + 새로운 식감 + SNS �
  bdb:"봄동비빔밥은 <b>'옛 방송 장면 + 쉬운 집밥 레시피 + 제철 채소'</b>로, 디저트가 아닌 음식도 유행이 될 수 있다는 걸 보여줬어."};
 const ro=w=>{const m=String(w).match(/[가-힣](?=[^가-힣]*$)/);if(!m)return "(으)로";const j=(m[0].charCodeAt(0)-0xAC00)%28;return j&&j!==8?"으로":"로"};
 const peakOf=id=>CURVE[id]?CURVE[id].pk:(byId[id].year+"-07-01");
-const lkName=id=>S.done[id]||id===Q_CUR?byId[id].name:"■■■■■";
+const lkName=id=>byId[id].name;
 let Q_CUR=null;
-function lkNode(id,sub,me){const g=byId[id],open=me||S.done[id];
+function lkNode(id,sub,me){const g=byId[id],open=true;
   return `<${me?"div":"button"} class="ev-node ${me?"me":""} ${open?"":"hid"}" ${me?"":`data-id="${id}"`}>${open?ic(g.icon):`<span class="qm" aria-hidden="true">?</span>`}<b>${open?g.name:"■■■■■"}</b><small>${sub}</small></${me?"div":"button"}>`}
 function curveSVG(f,o){
   const W=300,H=150,P=14,X=i=>P+i*(W-2*P)/60,Y=v=>H-24-v*(H-44)/100;
@@ -2325,9 +2362,10 @@ function linksHTML(f){
   ${sorted.length>1?sec(++n,"유행의 진화","유행은 어떻게 이어질까?",`<div class="ev">${sorted.map((id,i)=>`${i?`<span class="ev-ar" aria-hidden="true">→</span>`:""}${id===f.id?lkNode(id,"이 음식",true):lkNode(id,(direct.find(x=>x.id===id)||{}).l||"")}`).join("")}</div>
      <ul class="ev-why">${direct.map(x=>`<li><b>${lkName(x.id)}</b> ${x.t}</li>`).join("")}</ul>`):""}
   <div class="lk-sum"><span class="lk-sum-h">💡 분석 한줄 정리</span><p>${sum}</p></div>
-  ${trendLink(f)}`;
+  ${trendLink(f)}
+  <button class="btn lk-go-trend" type="button"><span class="lk-zip" aria-hidden="true"></span>유행분석.zip 바로가기 →</button>`;
 }
-function bindLinks(el){el.querySelectorAll(".lk-file,button.ev-node").forEach(b=>b.onclick=()=>{const g=byId[b.dataset.id];if(!g)return;openYear=g.year;S.done[g.id]?record(g):quiz(g)})}
+function bindLinks(el){el.querySelectorAll(".lk-go-trend").forEach(b=>b.onclick=trend);el.querySelectorAll(".lk-file,button.ev-node").forEach(b=>b.onclick=()=>{const g=byId[b.dataset.id];if(!g)return;openYear=g.year;S.done[g.id]?record(g):quiz(g)})}
 
 /* ===== 기록 마지막 탭: 먹어봤어? (정답 화면에서 옮겨 옴) ===== */
 function ateScreen(f,next){
@@ -2361,6 +2399,58 @@ const COMICS={
 function comicHTML(f){const c=COMICS[f.id];
   return `<figure class="comic"><img src="${c.src}" alt="${f.name} 세컷만화. ${c.alt}" width="${c.w}" height="${c.h}" loading="lazy" decoding="async"></figure>`;
 }
+
+/* ===== 기록 '지금은?' 탭 (팀 시안): 제목 · 타임라인 · 숫자 변화. 숫자는 모두 각 음식 now.t / 출처 기사에 있는 것만 ===== */
+const NOW={
+ dzk:{h:"유행이 지나간 뒤",tl:[["2026년 1월","두쫀쿠 유행 확산","카다이프 값 상승"],["2026년 가을","찹쌀떡 유행 등장","다음 유행으로 이동"]],
+  chg:{t:"원재료 가격 변화",u:"볶은 카다이프 5kg 도매가",a:["유행 전","6만~7만원대"],b:["2026년 1월","14만원 이상"],bd:"약 2배 ↑"}},
+ hjs:{h:"아직 진행 중",tl:[["2026년 9월","검색 관심 최고점","줄 서는 찹쌀떡"],["2026년 10월","브랜드·편의점 확산","GS25 2탄 예고 · 요아정·더벤티 출시"]],
+  nums:[["GS25 협업 찹쌀떡 한 달 누적","60만 개"],["출시 첫날 판매량","10만 개+"]]},
+ bdb:{h:"다시 화제가 된 뒤",tl:[["2008년","'1박 2일' 방송","비빔밥 먹방 장면"],["2026년 2~3월","봄동비빔밥 유행","SNS 인증 · 구매 증가"],["2026년 3월","재료 반전 공개","사실은 얼갈이배추"]],
+  nums:[["B마트 봄동 판매량 (2월 19~25일, 전월 대비)","약 +800%"],["이마트 봄동 매출 (2월 1~24일, 전년 대비)","+42.6%"]]},
+ dbc:{h:"모습을 바꿔 다시",tl:[["2024년 7월","두바이 초콜릿 유행","검색 관심 최고점"],["2025년 말","두쫀쿠로 변신","후속 유행"]]},
+ yaj:{h:"더 커졌다",tl:[["2024년","요아정 유행","매출 471억원"],["2025년 3월","해외 매장","호주 · 홍콩"]],
+  nums:[["2024년 매출","471억원"],["2024년 영업이익","121억원"],["지분 100% 인수가","400억원"]]},
+ btr:{h:"편의점 상품이 됐다",tl:[["2024년 10월 초","방송 레시피 화제","밤 티라미수 따라 만들기"],["2024년 10월 24일","CU 전국 입고","매일 입고"]],
+  nums:[["입고 점포","1만 8천여 개"]]},
+ pkb:{h:"30주년에 또 품절",tl:[["2022년","16년 만의 재출시","띠부씰 열풍"],["2026년 5월","30주년 신제품","매대 또 비었다"]],
+  nums:[["30주년 신제품","5종"],["새 띠부씰","100종"]]},
+ ygw:{h:"유행이 이어졌다",tl:[["2022년","약과 유행","20대가 찾는 간식"],["2023년","편의점·마트 확산","약과 쿠키까지"]],
+  nums:[["GS25 약과 매출 (전년 대비)","+924.5%"],["CU 약과 쿠키 2종 (석 달)","220만 개+"],["홈플러스 1월 온라인 매출","+73%"]]},
+ ysc:{h:"편의점 대표 빵이 됐다",tl:[["2022년","생크림빵 유행","맛 바꾼 시리즈 출시"],["2024년","밤 티라미수 재료","매출 다시 증가"]],
+  chg:{t:"판매량 변화",u:"연세우유 크림빵 한 해 판매량",a:["2022년 (출시 첫해)","1900만 개"],b:["2023년","3000만 개"],bd:"약 1.6배 ↑"}},
+ dgc:{h:"카페 메뉴가 됐다",tl:[["2020년 3월","달고나 커피 유행","400번 젓기"],["2020년 5월","'달고나 라떼' 출시","이디야커피"]]},
+ crf:{h:"새 디저트로 변주",tl:[["2020년","크로플 유행","크루아상 + 와플"],["2022년","베이커리 카페 휩쓸어","계속 인기"],["2023년","크로핀·크붕빵·크룽지","크루아상 생지 변주"]]},
+ gpb:{h:"인기가 다시 폭발",tl:[["2020년","곰표 밀맥주 유행","편의점 수제맥주"],["2021년 5월","인기 재폭발","CU 발주 중단"]],
+  nums:[["2주 판매량","300만 개"]]},
+ sts:{h:"해외로 퍼지는 중",tl:[["2018년","소떡소떡 유행","소시지 + 떡"],["2025년 5월","해외 진출","미국·태국·필리핀·호주"]]},
+ pnm:{h:"여름까지 이어진 열기",tl:[["2018년 봄","평양냉면 열풍","냉면집 줄"],["2018년 7월","간편 냉면 최고 기록","CJ제일제당"]],
+  nums:[["서울 냉면값 (4~6월, 전년 대비)","+7% 이상"],["CJ 간편 냉면 7월 매출","100억 원"]]},
+ smc:{h:"재배 농가가 몰렸다",tl:[["2018년","샤인머스캣 유행","비싼 프리미엄 포도"],["2019년","재배 면적 늘어남","농가가 몰림"]],
+  chg:{t:"재배 비중 변화",u:"전체 포도 재배 면적 중 샤인머스캣",a:["2018년","7.4%"],b:["2019년","12.9%"],bd:"약 1.7배 ↑"}},
+ cst:{h:"줄폐업의 대표 사례",chg:{t:"매출 변화",u:"한 점주의 하루 매출 (라디오 인터뷰 주장)",a:["방송 전","170만원+"],b:["방송 다음 날","12만원"],bd:"약 93% ↓",dn:1},tl:[["2016년","대왕카스테라 유행","가게 급증"],["2017년 3월","방송 뒤 급격히 꺾임","줄폐업"],["2024년 4월","탕후루 때 다시 언급","'반짝 유행' 사례"]]},
+ cpb:{h:"정식 라인업으로 남았다",tl:[["2016년","초코파이 바나나 유행","품절 대란"],["2020년 8월","리뉴얼 제품 출시","정식 라인업"]]},
+ jcy:{h:"겨울이 숙제",tl:[["2016년","생과일주스 유행","가맹점 급증"],["2017년","겨울 매출 고민","여름 음료의 약점"]]},
+ hbc:{h:"열풍은 식었다",tl:[["2014년","허니버터칩 열풍","품귀"],["2016년","감자스낵 매출 감소","기저효과"]],
+  chg:{t:"매출 증감률 변화",u:"한 편의점 감자스낵 매출, 전년 대비",a:["2015년","+57.8%"],b:["2016년","−17.3%"],bd:"꺾임 ↓",dn:1}},
+ bhi:{h:"방송 뒤 꺾였다",tl:[["2014년 초","벌집 아이스크림 유행","가게 급증"],["2014년 5월","고발 방송","한 업체 판매 잠정 중단"]],
+  nums:[["양봉협회 주장: 기준 미달 꿀","80% 이상"]]},
+ sbg:{h:"겨울 매출이 숙제",tl:[["2015년","매장 480여 곳",""],["2016년","매장 470곳",""],["2017년","매장 452곳",""]],
+  chg:{t:"매장 수 변화",u:"설빙 매장 수",a:["2015년","480여 곳"],b:["2017년","452곳"],bd:"조금씩 ↓",dn:1}}
+};
+function nowHTML(f){
+  const n=NOW[f.id]||{};
+  const tl=n.tl&&n.tl.length>1?`<div class="nw-box"><div class="nw-bh"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>유행 흐름 타임라인</div>
+    <ol class="nw-tl" style="--n:${n.tl.length}">${n.tl.map((x,i)=>`<li class="${i===0?"on":""}"><i aria-hidden="true"></i><b>${x[0]}</b><span>${x[1]}</span>${x[2]?`<small>${x[2]}</small>`:""}</li>`).join("")}</ol></div>`:"";
+  const c=n.chg;
+  const chg=c?`<div class="nw-box"><div class="nw-bh"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="9" cy="7" rx="5" ry="2.5"/><path d="M4 7v4c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V7M4 11v4c0 1.4 2.2 2.5 5 2.5"/><ellipse cx="16" cy="14" rx="5" ry="2.5"/><path d="M11 14v4c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5v-4"/></svg>${c.t}<small>${c.u}</small></div>
+    <div class="nw-chg"><div class="nw-v"><small>${c.a[0]}</small><b>${c.a[1]}</b></div><span class="nw-ar" aria-hidden="true">→</span><div class="nw-v hi ${c.dn?"dn":""}"><em>${c.bd}</em><small>${c.b[0]}</small><b>${c.b[1]}</b></div></div></div>`
+   :n.nums?`<div class="nw-box"><div class="nw-bh"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>숫자로 보는 지금</div>
+    <div class="nw-nums">${n.nums.map(x=>`<div class="nw-v"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("")}</div></div>`:"";
+  return `<div class="nw-card"><div class="nw-when">${f.year}년 → ${f.now.when}</div>
+    <h3 class="nw-h">지금은? ${n.h||"그 뒤 이야기"}</h3><p class="nw-t">${f.now.t}</p>${tl}${chg}${(()=>{const lf=typeof trLifeOf==="function"&&trLifeOf(f.id);return lf?`<div class="nw-box nw-life"><div class="nw-bh"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>이 유행의 지금 상태</div><div class="nw-st"><b>${lf.n}</b><p>${lf.d}</p></div></div>`:""})()}</div>
+    <div class="src">출처 · ${f.src.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(" · ")}</div>`;
+}
 /* 5. record */
 function record(f){
   setCat(f.cat);
@@ -2379,8 +2469,7 @@ function record(f){
       <div class="stats">${f.stats.map(s=>`<div class="stat t${s[2]} ${s[3]?"wide":""}"><div class="l">${s[0]}</div><div class="v" data-v="${s[1]}">${s[1]}</div></div>`).join("")}</div>
       <p class="note">${f.note}</p>${searchChart(f)}</div>
     <div class="panel">${COMICS[f.id]?comicHTML(f):`<ul class="points">${f.why.map((w,i)=>`<li><i>${i+1}</i><span>${w}</span></li>`).join("")}</ul>`}</div>
-    <div class="panel"><div class="now-card"><div class="when">${f.now.when}</div><p class="body-text" style="margin-top:8px">${f.now.t}</p></div>
-      <div class="src">출처 · ${f.src.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(" · ")}</div></div>
+    <div class="panel">${nowHTML(f)}</div>
     ${f.cat==="food"?`<div class="panel">${linksHTML(f)}</div>`:""}
    </div>
    <div class="swipe-hint"><span class="ar">←</span> 탭을 누르거나 옆으로 넘겨봐 <span class="ar r">→</span></div>
