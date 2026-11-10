@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="그 시절, 우리가 열광했던 음식들 — 2014~2026 한국 유행 아카이브">
 <meta name="theme-color" content="#FFF8F2">
-<link rel="icon" type="image/png" sizes="32x32" href="icon3-favicon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icon3-apple-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icon4-favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon4-apple-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-title" content="먹어봤.zip">
 <meta name="application-name" content="먹어봤.zip">
@@ -805,6 +805,13 @@ button.ev-node{transition:transform .15s}button.ev-node:active{transform:scale(.
 .nw-st b{width:fit-content;font-size:15px;font-weight:900;padding:4px 12px;border-radius:999px;background:var(--ink);color:#fff}
 .nw-st p{margin:4px 0 0;font-size:13.5px;line-height:1.6;color:var(--sub)}
 .nw-nn{margin:8px 0 0;font-size:11.5px;color:var(--mute);line-height:1.5}
+
+/* 태블릿(터치 화면, 폭 700px 이상): 폰 화면을 통째로 크게 키움. 글씨·버튼이 같이 커져서 얇아 보이지 않음 */
+@media (min-width:700px) and (pointer:coarse){
+ .app,.namebox>*,.imgview>*,.toast,.stamp{zoom:1.4}.app{max-width:500px}
+ .screen{min-height:calc(100vh / 1.4);min-height:calc(100dvh / 1.4)}
+}
+@media (min-width:1000px) and (pointer:coarse){.app,.namebox>*,.imgview>*,.toast,.stamp{zoom:1.5}.app{max-width:560px}.screen{min-height:calc(100vh / 1.5);min-height:calc(100dvh / 1.5)}}
 </style>
 </head>
 <body>
@@ -1804,7 +1811,7 @@ function sendReceipt(st){
   try{cid=localStorage.getItem("meogeobwat.cid");
     if(!cid){cid=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)).replace(/[^A-Za-z0-9_-]/g,"").slice(0,64);localStorage.setItem("meogeobwat.cid",cid)}}catch(e){return}
   const items=st.opened.map(f=>{const d=S.done[f.id];return {id:f.id,hints:Math.min(3,Math.max(1,d.hints||1)),ms:d.ms==null?null:Math.round(d.ms),solved:!!d.solved,wrong:Math.min(99,d.wrong||0),ate:d.ate||null}});
-  const body=JSON.stringify({clientId:cid,receipt:{items,total:st.N,sens:st.sens,rank:st.sens==null?null:st.rank,ate:st.exp.food}});
+  const body=JSON.stringify({clientId:cid,receipt:{items,total:st.N,sens:st.sens,rank:null,ate:st.exp.food}});
   try{if(sessionStorage.getItem("meogeobwat.rsig")===body)return}catch(e){}
   fetch(API_BASE+"/api/receipts",{method:"POST",headers:{"Content-Type":"application/json"},body,keepalive:true})
     .then(r=>{if(r.ok)try{sessionStorage.setItem("meogeobwat.rsig",body)}catch(e){}}).catch(()=>{});
@@ -2597,7 +2604,6 @@ function result(){
     <div class="r-dbl"></div>
     <div class="r-kv r-total"><span>유행 민감도</span><span>${st.sens==null?"-":st.sens+" / 100"}</span></div>
     ${st.sens==null?`<div class="r-c r-small">파일을 ${st.MIN}개 이상 열면 측정돼요 (${st.opened.length}/${st.MIN})</div>`:`<div class="r-gauge" aria-hidden="true"><i style="width:${st.sens}%"></i></div>`}
-    <div class="r-kv r-total"><span>칭 호</span><span>${st.rank}</span></div>
     <div class="r-c r-small">※ 경험 50% + 정답 50%로 계산한 재미용 지표</div>
     <div class="r-dbl"></div>
     <div class="r-kv"><span>결제수단</span><span>추억(일시불)</span></div>
@@ -2616,7 +2622,7 @@ function result(){
   nm.addEventListener("input",()=>{S.name=nm.value.trim();save()});
   el.querySelector("#cp").onclick=()=>{
     const all=CAT_KEYS.flatMap(c=>D[c]);
-    const txt=`[먹어봤.zip 영수증${S.name?" · "+S.name:""}]\n`+(all.length?all.map(x=>`${x.f.year} ${x.f.name} - 힌트 ${x.h} · ${x.t} · ${x.r}${x.w} · ${x.ate}`).join("\n"):"열어본 파일 없음")+`\n먹어본 음식 ${st.exp.food}/${FOODS.length}${SHOW_CULTURE?` · 경험한 문화 ${st.exp.culture}/${CULTURE.length}`:""}\n유행 민감도 ${st.sens==null?"측정 중":st.sens+"/100"} · ${st.rank}`;
+    const txt=`[먹어봤.zip 영수증${S.name?" · "+S.name:""}]\n`+(all.length?all.map(x=>`${x.f.year} ${x.f.name} - 힌트 ${x.h} · ${x.t} · ${x.r}${x.w} · ${x.ate}`).join("\n"):"열어본 파일 없음")+`\n먹어본 음식 ${st.exp.food}/${FOODS.length}${SHOW_CULTURE?` · 경험한 문화 ${st.exp.culture}/${CULTURE.length}`:""}\n유행 민감도 ${st.sens==null?"측정 중":st.sens+"/100"}`;
     (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast("결과를 복사했어")).catch(()=>toast("복사가 안 돼. 화면을 캡처해줘"));
   };
   el.querySelector("#dl").onclick=()=>saveImage(st,now);
@@ -2650,7 +2656,7 @@ function signPad(){
   const w=wrap.clientWidth,h=wrap.clientHeight;cv.width=w*r;cv.height=h*r;cv.style.width=w+"px";cv.style.height=h+"px";
   const x=cv.getContext("2d");x.scale(r,r);x.lineCap="round";x.lineJoin="round";x.strokeStyle="#111";x.lineWidth=2.6;
   let drawing=false,has=false,last=null;
-  const pos=e=>{const b=cv.getBoundingClientRect();return {x:e.clientX-b.left,y:e.clientY-b.top}};
+  const pos=e=>{const b=cv.getBoundingClientRect(),k=cv.offsetWidth/(b.width||1);return {x:(e.clientX-b.left)*k,y:(e.clientY-b.top)*k}};
   cv.addEventListener("pointerdown",e=>{e.preventDefault();cv.setPointerCapture(e.pointerId);drawing=true;last=pos(e);x.beginPath();x.arc(last.x,last.y,1.3,0,7);x.fillStyle="#111";x.fill();has=true;o.querySelector("#sgHint").hidden=true;o.querySelector("#sgErr").hidden=true});
   cv.addEventListener("pointermove",e=>{if(!drawing)return;e.preventDefault();const p=pos(e);const m={x:(last.x+p.x)/2,y:(last.y+p.y)/2};x.beginPath();x.moveTo(last.lastMid?last.lastMid.x:last.x,last.lastMid?last.lastMid.y:last.y);x.quadraticCurveTo(last.x,last.y,m.x,m.y);x.stroke();last={x:p.x,y:p.y,lastMid:m}});
   const end=()=>{drawing=false;last=null};cv.addEventListener("pointerup",end);cv.addEventListener("pointercancel",end);cv.addEventListener("pointerleave",end);
@@ -2725,7 +2731,7 @@ async function drawReceipt(st,now){
   if(st.sens==null){t(`파일을 ${st.MIN}개 이상 열면 측정돼요 (${st.opened.length}/${st.MIN})`,W/2,y+6,16,700,"center",gray);y+=30;}
   else{x.strokeStyle=ink;x.lineWidth=2;x.strokeRect(L,y,CW,20);x.fillStyle=ink;x.fillRect(L+3,y+3,(CW-6)*st.sens/100,14);
     for(let i=1;i<10;i++){x.fillStyle=i*10<st.sens?"#FCFCFA":ink;x.fillRect(L+CW*i/10-1,y+3,2,14)}y+=46;}
-  kv("칭 호",st.rank,y,26,700);y+=26;
+  y+=6;
   t("※ 경험 50% + 정답 50%로 계산한 재미용 지표",W/2,y,15,700,"center",gray);y+=8;
   dbl(y);y+=38;
   kv("결제수단","추억(일시불)",y);y+=30;
