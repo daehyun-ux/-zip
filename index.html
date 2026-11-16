@@ -811,6 +811,38 @@ button.ev-node{transition:transform .15s}button.ev-node:active{transform:scale(.
 
 .rec-real{width:100%;aspect-ratio:1;margin:18px 0 20px;border-radius:24px;overflow:hidden;background:var(--tint);box-shadow:0 10px 28px rgba(80,40,10,.14);animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
 .rec-real img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* 유행 닮은꼴 테스트 */
+.an-check>p b{color:var(--acc-deep)}
+.lk-start{display:flex;flex-direction:column;gap:8px}
+.lk-start input{width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);padding:0 14px;font:inherit;font-size:15px}
+.lk-start input:focus{outline:none;border-color:var(--acc)}
+.lk-q{text-align:center;padding:4px 0}
+.lk-bar{height:6px;border-radius:3px;background:var(--bg);overflow:hidden}.lk-bar i{display:block;height:100%;background:var(--acc);border-radius:3px;transition:width .3s}
+.lk-n{display:block;margin-top:8px;font-size:11px;color:var(--mute)}
+.lk-emo{font-size:42px;margin:10px 0 4px;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+.lk-q>b{display:block;font-size:17px;font-weight:800;line-height:1.45;word-break:keep-all;min-height:50px}
+.lk-yn{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.lk-back{margin-top:10px;font-size:12px;color:var(--sub);text-decoration:underline}
+.lk-res{text-align:center;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+.lk-res .lk-tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px;background:var(--ink);color:#fff}
+.lk-who{margin:10px 0 6px;font-size:15px;font-weight:700}
+.lk-match{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--bg);border-radius:18px;padding:12px;border:2px solid var(--acc)}
+.lk-art{width:84px;height:84px;flex-shrink:0;border-radius:16px;overflow:hidden;background:var(--acc-soft);display:flex;align-items:center;justify-content:center}
+.lk-art img{width:100%;height:100%;object-fit:cover}.lk-art svg{width:74px;height:74px}
+.lk-match small{display:block;font-size:11px;color:var(--mute)}
+.lk-match strong{display:block;font-size:32px;font-weight:900;color:var(--acc);line-height:1.1}
+.lk-match b{display:block;font-size:17px;font-weight:900}
+.lk-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
+.lk-chips span{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--acc-soft);color:var(--acc-deep)}
+.lk-fate{margin-top:14px;background:var(--ink);color:#fff;border-radius:16px;padding:14px;text-align:left}
+.lk-fate span{font-size:11px;opacity:.7}.lk-fate b{display:block;font-size:20px;font-weight:900;margin:4px 0}
+.lk-fate p{margin:0;font-size:13px;line-height:1.6;opacity:.9}
+.lk-more{margin-top:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px}
+.lk-more>span{flex-basis:100%;font-size:11px;color:var(--mute)}
+.lk-more button{font-size:13px;font-weight:700;padding:6px 10px;border-radius:10px;background:var(--bg)}
+.lk-more i{font-style:normal;color:var(--acc);margin-left:3px}
+.lk-act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
 </style>
 </head>
 <body>
@@ -875,7 +907,7 @@ const FOODS = [
  opts:["dzk","hjs","dbc","yaj"],
  desc:"카다이프·피스타치오 크림 속을 코코아 마시멜로로 감싼 디저트",
  tags:["카다이프","피스타치오 크림","마시멜로"],
- remember:"두바이 초콜릿의 속재료를 쫀득쿠키의 마시멜로 반죽으로 감싼 뒤 코코아 가루를 굴려 만든다. 겉은 쫀득하고 안은 바삭해서, 쿠키라고 불리지만 떡에 가깝다는 말도 나왔다.",
+ remember:"두바이 초콜릿의 인기에서 파생된 디저트로, 피스타치오와 바삭한 카다이프를 마시멜로 반죽으로 감싼 것이 특징이다. 쫀득하면서도 바삭한 독특한 식감으로 SNS에서 화제를 모으며 2026년 대표적인 유행 디저트로 떠올랐다.",
  head:{t:"\"한국인 열광, 냉면집에서도 팔더라\"… BBC도 주목한 '두쫀쿠' 열풍",m:"헤럴드경제 · 2026.01.15"},
  stats:[["배민 포장 주문<br>1개월 전 대비","+321%",0],["G마켓 마시멜로<br>판매량 전월 대비","20배",1],["CU 두바이 쫀득 찹쌀떡 누적 판매량","180만 개",2,1]],
  note:"재료가 모자라자 가게별 재고를 알려주는 '두쫀쿠 지도'까지 SNS에 등장했다. 초밥집, 냉면집도 두쫀쿠를 팔았다.",
@@ -891,7 +923,7 @@ const FOODS = [
  opts:["dzk","hjs","yaj","cst"],
  desc:"생과일과 요거트 크림을 넣은 과일 찹쌀떡",
  tags:["찹쌀떡","생과일","요거트 크림"],
- remember:"한정선은 과일 찹쌀떡을 파는 디저트 브랜드다. 딸기 모찌를 떠올리게 하는 알찬 단면으로 처음 화제가 됐다. 매장 가격은 개당 6000~7500원으로 싸지 않다.",
+ remember:"한정선은 신선한 과일을 찹쌀떡으로 감싼 과일모찌를 선보이는 디저트 브랜드다. 과일이 가득 들어간 먹음직스러운 단면과 다양한 과일 조합으로 SNS에서 주목받았다. 개당 6,000~7,500원 수준의 비교적 높은 가격에도 화제를 모았다.",
  head:{t:"한정선이 쏘아올린 찹쌀떡 열풍…편의점도, 카페도 '품절'",m:"헤럴드경제 · 2026.10"},
  stats:[["GS25 협업 찹쌀떡<br>출시 한 달 누적","60만 개",0],["출시 첫날<br>판매량","10만 개+",1],["롯데월드몰점 오픈 10분 만에 대기","141팀",2,1]],
  note:"GS25 제품 가격 3900원으로 단순 계산하면 출시 한 달 매출은 약 23억 4000만원이다(MTN 계산).",
@@ -1712,7 +1744,7 @@ FOODS.push(
 {id:"bdb",year:2026,name:"봄동비빔밥",sub:"18년 만에 다시 뜬 제철 비빔밥",icon:"bomdong",
  hints:[["나는 2026년 2월, '두쫀쿠 다음 유행'으로 불리며 SNS에 퍼졌어요.","화려한 디저트가 아니라 제철 채소가 주인공이에요."],["18년 전 예능에서 한 방송인이 나를 맛있게 먹던 장면이 다시 화제가 됐어요.","그 방송 다음 날 시장에서 재료가 다 팔렸대요."],["겨울을 난 납작한 배추를 고추장, 참기름과 함께 밥에 비벼 먹어요.","재료 이름에 '봄'이 들어가요."]],
  opts:["bdb","dzk","hjs","dbc"],desc:"제철 봄동을 고추장·참기름과 밥에 비벼 먹는 음식",tags:["강호동","1박2일","제철음식","봄동"],
- remember:"봄동비빔밥은 봄철 제철 채소인 봄동을 고추장, 참기름 등과 함께 밥에 비벼 먹는 음식이다. 아삭한 식감과 달큰한 맛이 특징이다. 2026년 초, 과거 강호동이 방송에서 비빔밥을 먹던 장면이 SNS에서 다시 주목받으며 유행했다.",
+ remember:"봄철 제철 채소인 봄동을 양념에 무쳐 밥과 함께 비벼 먹는 음식이다. 과거 예능 프로그램에서 강호동이 비빔밥을 먹던 장면이 SNS에서 재조명되면서 2026년 초 유행했다. 익숙한 제철 음식이 온라인을 통해 다시 주목받은 사례다.",
  head:{t:"18년 전 강호동 먹방이 다시 불러온 봄동비빔밥 열풍",m:"조선일보 · 2026.03.01"},
  stats:[["이마트 봄동 매출<br>2월 1~24일, 전년 동기 대비","+42.6%",0],["B마트 봄동 판매량<br>2월 19~25일, 전월 동기 대비","약 +800%",1],["서울 가락시장 봄동 도매가<br>2월 27일 기준, 전월 동기 대비 · 상 등급","+31.2%",2,1]],
  note:"SNS에서 봄동비빔밥을 직접 만들어 먹는 인증이 확산되면서 실제 구매도 증가했다. 일부 매장에서는 조기 품절이 발생했고, 봄동 도매 가격도 상승했다(가락시장 상 등급 15kg당 36,281원). 다만 가격 상승에는 한파와 폭설에 따른 공급 차질도 영향을 미쳤다.",
@@ -2103,7 +2135,7 @@ function trend(){
      <div class="an-find"><span class="an-lab mono">발견 5</span><p>편의점 전용 상품은 ${TR_ERAS.slice(0,2).map(e=>`${e.n}년 ${eraN(e)}개 중 ${TR_CVS.filter(id=>inEra(id,e)).length}개`).join(', ')}였는데, 2022년 이후엔 <b>${eraN(TR_ERAS[2])}개 중 ${TR_CVS.filter(id=>inEra(id,TR_ERAS[2])).length}개</b>야. 줄 서서 사던 유행이 동네 편의점에서 사는 유행으로 바뀌었어.</p></div>
      <div class="an-ext"><span class="an-lab mono">외부 자료 · 2026년 3월</span><p>이투데이도 비슷하게 봤어. 2014~2017년엔 한 유행이 오래 이어졌고, 2018~2020년엔 해마다 대표 메뉴가 바뀌었고, 2022년 이후엔 몇 달 단위의 '초단기 유행'이 반복된다고 정리했어. 이유로는 짧은 영상의 알고리즘, 인플루언서, 편의점과 팝업스토어의 빠른 상품화를 꼽았어.</p>${trExt("이투데이, 2026.3.9","https://v.daum.net/v/20260309142412586")}</div>`}
   ];
-  const checks=["SNS에서 인증·공유가 활발한가?","품절이나 구매 대기 현상이 보이는가?","직접 만들기나 따라 하기 콘텐츠가 나왔는가?","여러 매체에서 관심이 이어지고 있는가?"];
+
   const el=mount(`
    <div class="top"><button class="back" id="up" aria-label="상위 폴더">←</button><div class="path">먹어봤.zip / <b>유행분석.zip</b> /</div></div>
    <h2 class="h">유행분석.zip</h2>
@@ -2113,11 +2145,9 @@ function trend(){
    <div class="folders an-folders">${files.map((x,i)=>`<div class="folder an-file" data-i="${i}">
      <button class="fhead" aria-expanded="false"><span class="ficon"></span><span class="an-ht"><small class="mono">FILE ${x.no} · ${x.q}</small><b>${x.t}</b><span>${x.teaser}</span></span><span class="cnt mono" aria-hidden="true">열기</span></button>
      <div class="files"><div><div class="an-body">${x.body}</div></div></div></div>`).join("")}</div>
-   <div class="an-check"><span class="an-lab mono">직접 해보기</span><b>다음 유행, 얼마나 닮았을까?</b>
-    <p>요즘 뜨는 음식을 하나 떠올려 봐. ${N}개 사례에서 자주 보인 특징을 몇 개나 가졌을까?</p>
-    <div class="an-cks">${checks.map((c,i)=>`<label><input type="checkbox" data-k="${i}"><span>${c}</span></label>`).join("")}</div>
-    <div class="an-ckr"><span class="mono"><b id="ckn">0</b> / 4 일치</span><button class="an-reset" id="ckr">초기화</button></div>
-    <p class="an-note" id="ckt">유행을 맞히는 검증된 모델은 아니야. 과거 사례와 얼마나 닮았는지 보는 체크리스트야.</p></div>
+   <div class="an-check" id="lk"><span class="an-lab mono">직접 해보기</span><b>요즘 뜨는 그 음식, 누구랑 닮았을까?</b>
+    <p>질문 6개에 답하면 ${N}개 유행 중에 <b>가장 닮은 음식</b>을 찾아주고, 그 음식이 어떻게 됐는지로 앞날을 점쳐 봐.</p>
+    <div id="lkBox"></div></div>
    <div class="bottom"><button class="btn dark" id="goFood">음식 파일 열러 가기</button></div>`,"trend");
   el.querySelector("#up").onclick=root;
   el.querySelector("#goFood").onclick=()=>archive("food");
@@ -2128,11 +2158,53 @@ function trend(){
         setTimeout(()=>{const r=fd.getBoundingClientRect();if(r.top<0)window.scrollBy({top:r.top-12,behavior:"smooth"})},320)}};
   });
   el.addEventListener("click",e=>{const b=e.target.closest("[data-id]");if(!b||!byId[b.dataset.id])return;const f=byId[b.dataset.id];S.done[f.id]?record(f):quiz(f)});
-  const cks=[...el.querySelectorAll(".an-cks input")],n=el.querySelector("#ckn"),t=el.querySelector("#ckt"),base=t.textContent;
-  const upd=()=>{const k=cks.filter(c=>c.checked).length;n.textContent=k;
-    t.textContent=k===4?"네 가지가 다 보여! 과거 유행 음식들과 많이 닮았어. 그래도 유행은 아무도 장담 못 해.":k>=2?"과거 유행 음식들과 닮은 점이 꽤 있어. 몇 주 뒤에 다시 체크해 봐.":base};
-  cks.forEach(c=>c.onchange=upd);el.querySelector("#ckr").onclick=()=>{cks.forEach(c=>c.checked=false);upd()};
+  lookalike(el.querySelector("#lkBox"));
   archiveTouch(el);
+}
+
+/* ===== 유행분석.zip '직접 해보기': 유행 닮은꼴 테스트 =====
+   질문 6개 = TR_TYPES 6유형. 21개 음식의 유형 조합과 6칸이 몇 개 같은지로 닮은 정도를 계산(예·아니오 모두 비교) */
+const LK_Q=[["sns","SNS에 인증샷이 쏟아지고 있어?","📸"],["rare","사려면 줄 서거나 품절 걱정을 해야 해?","⏳"],["new","처음 보는 맛이나 모양이야?","✨"],
+ ["star","연예인이나 방송에서 먹는 걸 봤어?","📺"],["diy","집에서 따라 만드는 영상이 나왔어?","🍳"],["shop","그걸 파는 가게가 동네에 빠르게 늘고 있어?","🏪"]];
+const LK_FATE={stay:["오래 가는 쪽!","닮은 음식은 유행이 끝나고도 일상에 남았어. 이 음식도 '정식 메뉴'가 될지 몰라."],
+ fade:["반짝 주의!","닮은 음식은 크게 떴다가 빠르게 식었어. 지금 먹어 두는 게 좋을지도?"],
+ live:["아직 모르는 쪽","닮은 음식도 2026년에 막 시작된 유행이라 결말이 안 나왔어. 같이 지켜보자."],
+ open:["결말은 미스터리","닮은 음식이 그 뒤에 어떻게 됐는지는 기록 밖이야. 이 음식이 첫 기록이 될 수도."]};
+function lookalike(box){
+  let name="",ans=[];
+  const foods=FOODS.filter(f=>byId[f.id]&&f.cat==="food");
+  const vec=id=>LK_Q.map(q=>trType(q[0]).ids.includes(id));
+  const start=()=>{ans=[];box.innerHTML=`<div class="lk-start"><input id="lkName" maxlength="14" placeholder="음식 이름 (예: 요즘 그 디저트)" value="${name.replace(/"/g,"")}" aria-label="떠올린 음식 이름"><button class="btn p" id="lkGo">테스트 시작 →</button></div>`;
+    const go=()=>{name=box.querySelector("#lkName").value.trim().replace(/[<>&"]/g,"");ask()};box.querySelector("#lkGo").onclick=go;box.querySelector("#lkName").onkeydown=e=>{if(e.key==="Enter")go()}};
+  const ask=()=>{const i=ans.length,q=LK_Q[i];
+    box.innerHTML=`<div class="lk-q"><div class="lk-bar"><i style="width:${i/LK_Q.length*100}%"></i></div><span class="lk-n mono">Q${i+1} / ${LK_Q.length}</span>
+      <div class="lk-emo" aria-hidden="true">${q[2]}</div><b>${name?`${name}, `:""}${q[1]}</b>
+      <div class="lk-yn"><button class="btn p" data-v="1">응!</button><button class="btn s" data-v="0">아니</button></div>${i?`<button class="lk-back" id="lkBack">← 이전 질문</button>`:""}</div>`;
+    box.querySelectorAll(".lk-yn .btn").forEach(b=>b.onclick=()=>{ans.push(b.dataset.v==="1");ans.length===LK_Q.length?show():ask()});
+    const bk=box.querySelector("#lkBack");if(bk)bk.onclick=()=>{ans.pop();ask()};
+    const y=box.getBoundingClientRect().top;if(y<60||y>innerHeight-200)box.scrollIntoView({behavior:"smooth",block:"center"})};
+  const show=()=>{
+    const r=foods.map(f=>{const v=vec(f.id);const same=v.filter((x,j)=>x===ans[j]).length;const both=v.filter((x,j)=>x&&ans[j]).length;return {f,same,both,pct:Math.round(same/LK_Q.length*100)}})
+      .sort((a,b)=>b.same-a.same||b.both-a.both||b.f.year-a.f.year);
+    const top=r[0],g=top.f,lf=trLifeOf(g.id),fate=LK_FATE[lf?lf.k:"open"];
+    const shared=LK_Q.filter((q,j)=>ans[j]&&trType(q[0]).ids.includes(g.id)).map(q=>trType(q[0]).n);
+    const who=name||"네가 떠올린 음식";
+    const art=PHOTOS&&PHOTOS[g.id]?`<img src="${PHOTOS[g.id].src}" alt="">`:ic(g.icon);
+    box.innerHTML=`<div class="lk-res"><span class="lk-tag mono">닮은꼴 결과</span>
+      <p class="lk-who">${who}${josa(who,"은","는")}</p>
+      <button class="lk-match" data-id="${g.id}"><span class="lk-art">${art}</span><span><small class="mono">${g.year} · 일치율</small><strong>${top.pct}%</strong><b>${g.name}</b></span></button>
+      <p class="lk-who">${josa(g.name,"과","와")} 가장 닮았어!</p>
+      ${shared.length?`<div class="lk-chips">${shared.map(x=>`<span>${x}</span>`).join("")}</div>`:""}
+      <div class="lk-fate"><span class="mono">${g.name}의 결말 → 이 음식의 앞날은?</span><b>${fate[0]}</b><p>${fate[1]}</p></div>
+      <div class="lk-more"><span class="mono">이 음식들도 닮았어</span>${r.slice(1,4).map(x=>`<button data-id="${x.f.id}">${x.f.name} <i class="mono">${x.pct}%</i></button>`).join("")}</div>
+      <div class="lk-act"><button class="btn s" id="lkAgain">다시 하기</button><button class="btn p" id="lkCopy">결과 복사</button></div>
+      <p class="an-note">재미로 보는 테스트야. ${foods.length}개 사례의 특징을 비교했을 뿐, 유행을 맞히는 검증된 모델은 아니야.</p></div>`;
+    box.querySelector("#lkAgain").onclick=start;
+    box.querySelector("#lkCopy").onclick=()=>{const txt=`[먹어봤.zip 유행 닮은꼴] ${who}${josa(who,"은","는")} ${g.name}(${g.year})${josa(g.name,"과","와")} ${top.pct}% 닮았대! 결말 예측: ${fate[0]} ${location.href.split("#")[0]}`;
+      (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast("결과를 복사했어")).catch(()=>toast("복사가 안 돼. 화면을 캡처해 줘"))};
+    box.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+  start();
 }
 /* 기록 화면 '지금은?' 탭 끝: 이 음식이 유행분석.zip에서 어디에 속하는지 */
 function trendLink(f){
