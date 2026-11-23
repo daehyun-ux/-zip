@@ -862,6 +862,22 @@ button.ev-node{transition:transform .15s}button.ev-node:active{transform:scale(.
 
 /* ===== M-04 퀴즈 '힌트 보기' 버튼: 높이 44px, 글자 15px ===== */
 .link{min-height:var(--tap);font-size:var(--fs-btn);padding:12px 0 4px;display:flex;align-items:center;justify-content:center}
+
+/* ===== M-02 기록(얼마나 인기?·지금은?·유행 연결하기) / M-03 유행분석.zip 글자 크기 — 기준표(design-mobile 3장) 값만 사용 ===== */
+/* 본문 16 */
+.note,.lk-lead,.an-intro p,.an-lead,.an-find p,.an-ext p,#trend .sub{font-size:var(--fs-body);line-height:1.6}
+/* 카드 안 설명 15 */
+.lk-hero p,.lk-card p,.lf-card p,.ev-why li,.nw-st p,.lk-sum p,.sc-x,.sc-sub,.nw-tl li>span,.an-type p,.an-steps li p,.an-check p,.fhead .an-ht>span,.an-hl li>span{font-size:var(--fs-card);line-height:1.5}
+/* 라벨 13 */
+.stat .l,.sc-badge,.nw-tl small,.ev-node small,.an-tags span,.fm-h,.fm-ic span,.lf-lg span,.nw-v small,.lk-why,.lk-tag,.scrap-go,.lk-q,
+.an-lab,.an-ht small,.an-tc small,.an-er span,.an-steps li span.mono,.an-chip,.an-nm,.now-card .when,.lk-sum-h,.lf-h{font-size:var(--fs-label)}
+/* 출처·각주 12 (12px보다 작은 글자 없음) */
+.src,.sc-meta,.lf-note,.scrap small,.sc-hint,.an-link small.mono,.an-note,.an-src,.an-scope,.sc-n em,.an-chip .qm,.an-scope .qm,b.mono small,li>span>small{font-size:var(--fs-note);line-height:1.4}
+/* 칩 14 */
+.chip{font-size:var(--fs-tab)}
+/* 12px보다 작은 글자 정리 (위 규칙보다 구체적인 기존 규칙 덮기) */
+.an-hl li small,.an-er span[role=cell] small,.an-er .mono,.fm-c,.file .fname small,.peek .qm,.an-intro .qm,.an-chip .qm,.r-privacy,svg.lc text{font-size:var(--fs-note)}
+@media (max-width:359px){.an-er>span:first-child{font-size:var(--fs-note)}}
 </style>
 </head>
 <body>
