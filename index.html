@@ -844,6 +844,19 @@ button.ev-node{transition:transform .15s}button.ev-node:active{transform:scale(.
 .lk-more i{font-style:normal;color:var(--acc);margin-left:3px}
 .lk-act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
 
+/* ===== 모바일 글자 크기 기준표 (design-mobile 3장) — 새로 고치는 화면은 이 값만 쓴다 ===== */
+:root{--fs-title:20px;--fs-subtitle:17px;--fs-body:16px;--fs-card:15px;--fs-btn:15px;--fs-tab:14px;--fs-label:13px;--fs-note:12px;--fs-num:24px;--tap:44px}
+
+/* ===== M-01 기록 탭 줄: 높이 44px, 글자 14px(선택 탭만 굵게), 가려진 탭 '더 있음' 표시 ===== */
+.tab{min-height:var(--tap);font-size:var(--fs-tab);font-weight:600;display:inline-flex;align-items:center}
+.tab.on{font-weight:800}
+@media (max-width:359px){.tab{font-size:var(--fs-tab)}}
+.tabs-wrap{position:relative}
+.tabs-wrap::before,.tabs-wrap::after{position:absolute;bottom:4px;width:40px;height:52px;display:flex;align-items:center;font-size:22px;font-weight:800;color:var(--sub);pointer-events:none;opacity:0;transition:opacity .2s;z-index:2}
+.tabs-wrap::after{content:"›";right:-4px;justify-content:flex-end;padding-right:4px;background:linear-gradient(to right,color-mix(in srgb,var(--bg) 0%,transparent),var(--bg) 65%)}
+.tabs-wrap::before{content:"‹";left:-4px;justify-content:flex-start;padding-left:4px;background:linear-gradient(to left,color-mix(in srgb,var(--bg) 0%,transparent),var(--bg) 65%)}
+.tabs-wrap.more-r::after,.tabs-wrap.more-l::before{opacity:1}
+
 </style>
 </head>
 <body>
@@ -2557,7 +2570,7 @@ function record(f){
   const el=mount(`
    <div class="top"><button class="back" id="bk" aria-label="아카이브로">←</button><div class="path">${f.id}.${f.cat==="food"?"food":"clip"} / record</div></div>
    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><h2 class="h" style="margin:0">${f.name}</h2><span class="mono" style="font-size:13px;color:var(--mute)">${f.year}</span></div>
-   <div class="tabs" role="tablist">${tabs.map((t,i)=>`<button class="tab ${i===0?"on seen":""}" role="tab" data-i="${i}" aria-selected="${i===0}"><span class="tab-clip"></span>${t}${i?`<span class="dot" aria-hidden="true"></span>`:""}</button>`).join("")}</div>
+   <div class="tabs-wrap"><div class="tabs" role="tablist">${tabs.map((t,i)=>`<button class="tab ${i===0?"on seen":""}" role="tab" data-i="${i}" aria-selected="${i===0}"><span class="tab-clip"></span>${t}${i?`<span class="dot" aria-hidden="true"></span>`:""}</button>`).join("")}</div></div>
    <div class="panels" id="panels">
     <div class="panel">${f.photo?`<figure class="rec-photo"><img src="${imgUrl(f.photo.id)}" alt="${f.photo.alt||f.name}" loading="lazy" decoding="async"><figcaption>사진 · ${f.photo.url?`<a href="${f.photo.url}" target="_blank" rel="noopener">${f.photo.credit}</a>`:f.photo.credit}</figcaption></figure>`:PHOTOS[f.id]?`<figure class="rec-real"><img src="${PHOTOS[f.id].src}" alt="${PHOTOS[f.id].alt}" width="640" height="640" decoding="async"></figure>`:ic(f.icon,"big-icon")}<p class="body-text">${f.remember}</p>
       <div class="chips" style="justify-content:flex-start">${f.tags.map(t=>`<span class="chip">#${t}</span>`).join("")}</div></div>
@@ -2577,7 +2590,11 @@ function record(f){
   const P=el.querySelector("#panels"),T=[...el.querySelectorAll(".tab")];
   let counted=false;
   let lastAct=Date.now();
-  let seenT=0;const TB=el.querySelector(".tabs");const setTab=i=>{T.forEach((t,j)=>{t.classList.toggle("on",j===i);t.setAttribute("aria-selected",j===i)});if(T[i]){const r=T[i].offsetLeft-TB.offsetLeft,w=T[i].offsetWidth;if(r<TB.scrollLeft+8||r+w>TB.scrollLeft+TB.clientWidth-8)TB.scrollTo({left:r-TB.clientWidth/2+w/2,behavior:"smooth"})}clearTimeout(seenT);seenT=setTimeout(()=>{if(T[i]&&!T[i].classList.contains("seen")){T[i].classList.add("seen");lastAct=Date.now()}},260);if(i===1&&!counted){counted=true;countUp(el)}};
+  let seenT=0;const TB=el.querySelector(".tabs");
+  /* M-01 탭 줄 '더 있음' 표시: 가려진 쪽에 흐림 + ›/‹ (design-mobile 4-2) */
+  const TW=TB.parentElement,updMore=()=>{const max=TB.scrollWidth-TB.clientWidth;TW.classList.toggle("more-r",TB.scrollLeft<max-4);TW.classList.toggle("more-l",TB.scrollLeft>4)};
+  TB.addEventListener("scroll",updMore,{passive:true});requestAnimationFrame(updMore);setTimeout(updMore,900);
+  if(window.ResizeObserver)new ResizeObserver(updMore).observe(TB);const setTab=i=>{T.forEach((t,j)=>{t.classList.toggle("on",j===i);t.setAttribute("aria-selected",j===i)});if(T[i]){const r=T[i].offsetLeft-TB.offsetLeft,w=T[i].offsetWidth;if(r<TB.scrollLeft+8||r+w>TB.scrollLeft+TB.clientWidth-8)TB.scrollTo({left:r-TB.clientWidth/2+w/2,behavior:"smooth"})}clearTimeout(seenT);seenT=setTimeout(()=>{if(T[i]&&!T[i].classList.contains("seen")){T[i].classList.add("seen");lastAct=Date.now()}},260);if(i===1&&!counted){counted=true;countUp(el)}};
   T.forEach(t=>{
     t.onclick=()=>{lastAct=Date.now();P.scrollTo({left:P.clientWidth*+t.dataset.i,behavior:"smooth"})};
     /* 누르는 순간 눌림 + 물결 */
