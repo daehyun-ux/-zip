@@ -892,6 +892,50 @@ p.intro,#root .sub,.ate-page .ate-note{font-size:var(--fs-body);line-height:1.6}
 /* ===== M-08 영수증 이름 칸: 글자·모양 그대로, 누르는 영역만 44px (위로 투명하게 넓힘) ===== */
 .r-name input{padding-top:25px;margin-top:-24px}
 .nb-card input{min-height:var(--tap)}
+
+/* ===== 음식 파일 검색 (design-search.md 4-4 글자 크기) ===== */
+.sr-open{margin-left:auto;width:var(--tap);height:var(--tap);flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:12px;color:var(--ink)}
+.sr-open:active{background:var(--line)}
+.sr-top{gap:6px}
+.sr-box{flex:1;min-width:0;display:flex;align-items:center;gap:6px;background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:0 4px 0 12px;min-height:var(--tap);color:var(--sub)}
+.sr-box:focus-within{border-color:var(--acc)}
+.sr-box input{flex:1;min-width:0;border:0;outline:none;background:transparent;font:400 16px var(--f-sans);color:var(--ink);padding:10px 0;-webkit-appearance:none;appearance:none}
+.sr-box input::-webkit-search-cancel-button{display:none}
+.sr-x{width:var(--tap);height:var(--tap);margin:-2px 0;flex-shrink:0;font-size:15px;color:var(--sub);border-radius:10px}
+.sr-sec{margin-top:18px}
+.sr-lab{margin:0 0 8px;font-size:var(--fs-label);font-weight:800;color:var(--sub)}
+.sr-lab-row{display:flex;justify-content:space-between;align-items:center}
+.sr-clear{font-size:var(--fs-label);color:var(--sub);min-height:var(--tap);padding:0 4px;margin-top:-12px}
+.sr-chips{display:flex;flex-wrap:wrap;gap:6px}
+.sr-scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:8px -16px 0;padding:0 16px}
+.sr-scroll::-webkit-scrollbar{display:none}
+.sr-chip{flex-shrink:0;min-height:var(--tap);padding:0 14px;border-radius:22px;background:var(--paper);border:1.5px solid var(--line);font-size:var(--fs-tab);font-weight:600;color:var(--ink)}
+.sr-chip.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:800}
+.sr-rc{display:inline-flex;align-items:center;background:var(--paper);border:1.5px solid var(--line);border-radius:22px}
+.sr-rc .sr-chip{border:0;background:transparent;padding-right:2px}
+.sr-del{min-width:36px;min-height:var(--tap);font-size:13px;color:var(--mute);border-radius:22px}
+.sr-sum{margin:22px 0 0;font-size:var(--fs-card);color:var(--sub)}
+.sr-count{margin:16px 0 0;font-size:var(--fs-card);font-weight:800}
+.sr-note{margin-top:16px;background:var(--paper);border-radius:16px;padding:14px 16px}
+.sr-note p{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--sub)}
+.sr-note p b{color:var(--ink)}
+.sr-note .sr-chip{margin-top:10px}
+.sr-hint{margin:14px 0 0;font-size:var(--fs-label);color:var(--acc-deep);font-weight:800}
+.sr-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-bottom:24px}
+.sr-row{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;text-align:left;background:var(--paper);border:1.5px solid transparent;border-radius:16px;padding:10px 12px}
+.sr-row:focus-visible{border-color:var(--acc)}
+.sr-ic{width:44px;height:44px;flex-shrink:0;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--tint)}
+.sr-ic img{width:100%;height:100%;object-fit:cover}
+.sr-ic svg{width:40px;height:40px}
+.sr-ic .qm{width:100%;height:100%;font-size:18px}
+.sr-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sr-t b{font-size:16px;font-weight:800;line-height:1.35;word-break:keep-all}
+.sr-t b mark{background:var(--acc-soft);color:var(--acc-deep);border-radius:4px;padding:0 1px}
+.sr-t small{font-size:var(--fs-label);color:var(--sub);line-height:1.4}
+.sr-y{font-size:var(--fs-label);color:var(--mute);flex-shrink:0;align-self:flex-start;margin-top:3px}
+.sr-go{font-size:var(--fs-label);font-weight:800;color:var(--acc);flex-shrink:0}
+.sr-row.open .sr-go{white-space:nowrap}
+.sr-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -2061,7 +2105,7 @@ function receiptStuff(){
 function root(){
   setCat(null);openYear=null;
   const el=mount(`
-   <div class="top"><button class="back" id="home" aria-label="처음 화면">←</button><div class="path">먹어봤.zip /</div></div>
+   <div class="top"><button class="back" id="home" aria-label="처음 화면">←</button><div class="path">먹어봤.zip /</div><button class="sr-open" id="srOpen" aria-label="음식 파일 검색"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
    <h2 class="h">압축 해제 완료</h2>
    <p class="sub" style="margin:6px 0 0">${SHOW_CULTURE?"폴더가 두 개 나왔어. 어디부터 열어볼래?":"음식 폴더가 나왔어. 연도별로 하나씩 열어봐!"}</p>
    <div class="cats">${CAT_KEYS.map(c=>{const d=doneIn(c);return `
@@ -2268,7 +2312,7 @@ function archive(cat,focusYear){
   const list=CATS[cat].list,N=list.length,n=doneIn(cat),pct=Math.round(n/N*100);
   if(focusYear!==undefined)openYear=focusYear;
   const el=mount(`
-   <div class="top"><button class="back" id="up" aria-label="상위 폴더">←</button><div class="path">먹어봤.zip / <b>${CATS[cat].name}</b> /</div></div>
+   <div class="top"><button class="back" id="up" aria-label="상위 폴더">←</button><div class="path">먹어봤.zip / <b>${CATS[cat].name}</b> /</div>${cat==="food"?`<button class="sr-open" id="srOpen" aria-label="음식 파일 검색"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>`:""}</div>
    <div style="display:flex;align-items:center;gap:8px"><h2 class="h">${CATS[cat].name} 아카이브</h2></div>
    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px">
      <span class="sub">연도 폴더를 눌러 파일을 열어봐</span><span class="tag acc">${n} / ${N} 열람</span></div>
@@ -3115,9 +3159,151 @@ function setRoute(r,replace){
   W("quiz",f=>`quiz/${f.id}`);W("reveal",f=>`quiz/${f.id}`);W("record",f=>`record/${f.id}`);
   W("result",()=>"result");W("trend",()=>"trend");W("board",()=>"board");W("writePost",()=>"write");W("postView",id=>`post/${id}`);
 })();
+/* ===== 음식 파일 검색 (design-search.md v1.2 · 1차 S-01~S-17) — 브라우저 안에서만, 서버 요청 없음 ===== */
+/* 별칭: 기사에서 쓰인 것만 (뺀 것: dbc 두바이 초코, ysc 연세빵, sts 소떡, hjs 딸기모찌 → WORKLOG) */
+const ALIAS={dzk:["두바이 쫀득 쿠키","두바이쫀득쿠키"],hjs:["한정선","과일 찹쌀떡"],yaj:["요거트 아이스크림의 정석"],ysc:["연세우유 크림빵"],
+  gpb:["곰표 맥주"],cst:["대왕 카스텔라"],jcy:["쥬씨"],bhi:["벌꿀 아이스크림","소프트리"],sbg:["설빙"]};
+const SR_KEYWORDS=["편의점","품절","방송","직접 만들기","식었다","2014"];
+const SR_STORE="meogeobwat.search",SR_CHO="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+const srNorm=t=>String(t).toLowerCase().replace(/\s+/g,"");
+const srCho=t=>[...String(t)].map(c=>{const k=c.charCodeAt(0)-0xAC00;return k>=0&&k<11172?SR_CHO[Math.floor(k/588)]:c}).join("");
+const srClean=t=>String(t||"").replace(/\s+/g," ").trim().slice(0,20);
+const srYear=w=>{const m=/^(?:20)?(\d{2})년?$/.exec(w);if(!m)return null;const y=2000+ +m[1];return FOOD_YEARS.includes(y)?y:null};
+let SR_RET=null,SR_T=0;
+function srParse(h){
+  let raw=location.hash.slice(1);if(!raw.startsWith("search"))raw=String(h||"");
+  let p;try{p=new URLSearchParams(raw.split("?")[1]||"")}catch(e){p=new URLSearchParams()}
+  const y=+p.get("y"),s=p.get("s");
+  return {q:srClean(p.get("q")),y:FOOD_YEARS.includes(y)?y:"all",s:["done","open"].includes(s)?s:"all"};
+}
+const srRoute=st=>{const p=new URLSearchParams();if(st.q)p.set("q",st.q);if(st.y!=="all")p.set("y",st.y);if(st.s!=="all")p.set("s",st.s);const t=p.toString();return "search"+(t?"?"+t:"")};
+function srRecent(){try{const v=JSON.parse(localStorage.getItem(SR_STORE)||"[]");return Array.isArray(v)?v.filter(x=>typeof x==="string").slice(0,5):[]}catch(e){return null}}
+function srSaveRecent(list){try{localStorage.setItem(SR_STORE,JSON.stringify(list.slice(0,5)))}catch(e){}}
+/* 한 단어가 한 음식의 어느 칸에 맞는지: 가장 점수 높은 칸 하나 */
+function srMatchWord(f,w){
+  const nw=srNorm(w);if(!nw)return null;
+  const names=[f.name,...(ALIAS[f.id]||[])];
+  if(/^[ㄱ-ㅎ]+$/.test(nw)){const n=names.find(n=>srCho(srNorm(n)).includes(nw));return n?{sc:5,kind:"이름 일치",lab:n===f.name?"이름 일치":`별칭 '${n}' 일치`}:null}
+  const y=srYear(nw);if(y&&y===f.year)return {sc:2,kind:"연도 일치",lab:`${f.year}년`};
+  const n=names.find(n=>srNorm(n).includes(nw));if(n)return {sc:5,kind:"이름 일치",lab:n===f.name?"이름 일치":`별칭 '${n}' 일치`};
+  if(f.sub&&srNorm(f.sub).includes(nw))return {sc:3,kind:"부제 일치",lab:"부제 일치"};
+  const tg=(f.tags||[]).find(t=>srNorm(t).includes(nw));if(tg)return {sc:3,kind:"태그 일치",lab:`#${tg} 일치`};
+  const ty=TR_TYPES.find(t=>t.ids.includes(f.id)&&srNorm(t.n).includes(nw));if(ty)return {sc:1,kind:"유형 일치",lab:`유형: ${ty.n}`};
+  const lf=TR_LIFE.find(t=>t.ids.includes(f.id)&&srNorm(t.n).includes(nw));if(lf)return {sc:1,kind:"상태 일치",lab:`지금: ${lf.n}`};
+  return null;
+}
+function srFind(st){
+  const words=st.q?st.q.split(" ").filter(Boolean):[],qn=srNorm(st.q);
+  const all=[];
+  FOODS.forEach((f,i)=>{
+    let sc=0;const ms=[];
+    for(const w of words){const m=srMatchWord(f,w);if(!m)return;sc+=m.sc;ms.push(m)}
+    const exact=qn&&[f.name,...(ALIAS[f.id]||[])].find(n=>srNorm(n)===qn);
+    all.push({f,i,sc,ms,exact,done:!!S.done[f.id]});
+  });
+  all.sort((a,b)=>st.q?(b.sc-a.sc||b.f.year-a.f.year||a.i-b.i):(b.f.year-a.f.year||a.i-b.i));
+  const pass=r=>(st.y==="all"||r.f.year===st.y)&&(st.s==="all"||(st.s==="done"?r.done:!r.done));
+  return {all,list:all.filter(pass)};
+}
+/* 검색어 부분 굵게: 글자는 모두 esc()로 바꾼 뒤 조각만 <mark>로 감쌈 (HTML 해석 없음) */
+function srMark(name,q){
+  const lo=name.toLowerCase(),on=new Array(name.length).fill(false);
+  q.split(" ").filter(w=>w&&!/^[ㄱ-ㅎ]+$/.test(w)).forEach(w=>{let k=lo.indexOf(w.toLowerCase());while(k>=0){for(let j=k;j<k+w.length;j++)on[j]=true;k=lo.indexOf(w.toLowerCase(),k+1)}});
+  let out="",cur=false,buf="";
+  for(let j=0;j<name.length;j++){if(on[j]!==cur){out+=cur?`<mark>${esc(buf)}</mark>`:esc(buf);buf="";cur=on[j]}buf+=name[j]}
+  return out+(cur?`<mark>${esc(buf)}</mark>`:esc(buf));
+}
+function srRow(r,q){
+  const f=r.f,ph=PHOTOS[f.id];
+  if(r.done){
+    const why=[...new Set(r.ms.map(m=>m.lab))].join(" · ");
+    return `<button class="sr-row" data-id="${f.id}"><span class="sr-ic">${ph?`<img src="${ph.src}" alt="" width="44" height="44" loading="lazy" decoding="async">`:ic(f.icon)}</span>
+      <span class="sr-t"><b>${srMark(f.name,q)}</b><small>${esc([why,f.sub].filter(Boolean).join(" · "))}</small></span>
+      <span class="sr-y mono">${f.year}</span><span class="sr-go" aria-hidden="true">→</span></button>`;
+  }
+  const kinds=[...new Set(r.ms.map(m=>m.kind))].filter(k=>!r.exact||k==="이름 일치");
+  return `<button class="sr-row open" data-id="${f.id}"><span class="sr-ic"><span class="qm">?</span></span>
+    <span class="sr-t"><b>${r.exact?esc(r.exact):`<span aria-hidden="true">■■■■■</span><span class="sr-vh">아직 안 연 파일</span>`}</b><small>${esc([...kinds,"아직 안 연 파일"].join(" · "))}</small></span>
+    <span class="sr-y mono">${f.year}</span><span class="sr-go">퀴즈 풀기 →</span></button>`;
+}
+function search(st0){
+  st0=st0||{};SR_RET=null;setCat("food");
+  const st={q:srClean(st0.q),y:FOOD_YEARS.includes(+st0.y)?+st0.y:"all",s:["done","open"].includes(st0.s)?st0.s:"all"};
+  const el=mount(`
+   <div class="top sr-top"><button class="back" id="bk" aria-label="뒤로">←</button>
+    <div class="sr-box"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+     <input id="srq" type="search" inputmode="search" enterkeyhint="search" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="음식, 재료, 연도로 검색" aria-label="음식 파일 검색" aria-controls="srBody">
+     <button class="sr-x" id="srx" aria-label="검색어 지우기" hidden>✕</button></div></div>
+   <div id="srBody"></div>`,"search");
+  setRoute(srRoute(st));
+  const inp=el.querySelector("#srq"),xb=el.querySelector("#srx"),body=el.querySelector("#srBody");
+  inp.value=st.q;
+  const go=(replace=true)=>{setRoute(srRoute(st),replace);draw()};
+  const chip=(lab,on,attr)=>`<button class="sr-chip${on?" on":""}" ${attr} aria-pressed="${on}">${esc(lab)}</button>`;
+  const kw=()=>`<div class="sr-sec"><p class="sr-lab">이런 걸로 찾아봐</p><div class="sr-chips">${SR_KEYWORDS.map(k=>chip("#"+k,false,`data-kw="${esc(k)}"`)).join("")}</div></div>`;
+  function draw(){
+    xb.hidden=!st.q;
+    const {all,list}=srFind(st),doneN=FOODS.filter(f=>S.done[f.id]).length;
+    if(!st.q&&st.y==="all"&&st.s==="all"){
+      const rec=srRecent();
+      body.innerHTML=`${rec&&rec.length?`<div class="sr-sec"><div class="sr-lab-row"><p class="sr-lab">최근 검색어</p><button class="sr-clear" id="srClr">전체 삭제</button></div>
+        <div class="sr-chips">${rec.map((r,k)=>`<span class="sr-rc"><button class="sr-chip" data-kw="${esc(r)}">${esc(r)}</button><button class="sr-del" data-del="${k}" aria-label="${esc(r)} 지우기">✕</button></span>`).join("")}</div></div>`:""}
+        ${kw()}<p class="sr-sum" aria-live="polite">${FOODS.length}개 파일 · 맞힌 파일 ${doneN}개</p>`;
+      return;
+    }
+    const yl=st.y==="all"?"":`${st.y}년`,sl={done:"맞힌 파일",open:"안 연 파일"}[st.s]||"";
+    const head=st.q?`'${esc(st.q)}' 파일 ${list.length}개`:sl?`${[yl,sl].filter(Boolean).join(" · ")} ${list.length}개`:`${yl} 파일 ${list.length}개`;
+    let note="";
+    if(!list.length&&st.q&&all.filter(r=>r.ms.length===st.q.split(" ").filter(Boolean).length).length&&(st.y!=="all"||st.s!=="all")){
+      note=`<div class="sr-note"><p>'${esc([yl,sl].filter(Boolean).join(" · "))}'에는 없어. 전체에서 ${all.length}개 찾았어</p><button class="sr-chip" id="srAll">전체 보기</button></div>`;
+    }else if(!list.length&&st.q){
+      note=`<div class="sr-note"><p><b>'${esc(st.q)}'에 맞는 파일이 없어</b></p><p>음식 이름, 재료, 연도로 찾아봐</p></div>${kw()}`;
+    }else if(list.length&&list.every(r=>!r.done)){note=`<p class="sr-hint">다 아직 안 연 파일이야. 맞히면 열려!</p>`}
+    body.innerHTML=`<p class="sr-count" aria-live="polite">${head}</p>
+      <div class="sr-chips sr-scroll" role="group" aria-label="연도">${chip("전체",st.y==="all",'data-y="all"')}${[...FOOD_YEARS].reverse().map(y=>chip(String(y),st.y===y,`data-y="${y}"`)).join("")}</div>
+      <div class="sr-chips sr-scroll" role="group" aria-label="상태">${[["all","전체"],["done","맞힌 파일"],["open","안 연 파일"]].map(([k,l])=>chip(l,st.s===k,`data-s="${k}"`)).join("")}</div>
+      ${note}<div class="sr-list">${list.map(r=>srRow(r,st.q)).join("")}</div>`;
+  }
+  /* 검색어 입력: 멈춘 뒤 150ms (마지막 입력만 반영) */
+  inp.addEventListener("input",()=>{clearTimeout(SR_T);SR_T=setTimeout(()=>{st.q=srClean(inp.value);go()},150)});
+  inp.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){e.preventDefault();if(inp.value){inp.value="";st.q="";go()}else el.querySelector("#bk").click()}
+    else if(e.key==="ArrowDown"){const r=body.querySelector(".sr-row");if(r){e.preventDefault();r.focus()}}
+    else if(e.key==="Enter"){e.preventDefault();clearTimeout(SR_T);st.q=srClean(inp.value);go();inp.blur()}
+  });
+  xb.onclick=()=>{inp.value="";st.q="";go();inp.focus()};
+  el.querySelector("#bk").onclick=()=>{if(NAV.stack.length>1)history.back();else root()};
+  body.addEventListener("click",e=>{
+    const t=e.target.closest("button");if(!t)return;
+    if(t.dataset.kw!=null){inp.value=t.dataset.kw;st.q=srClean(t.dataset.kw);go();return}
+    if(t.dataset.del!=null){const r=srRecent()||[];r.splice(+t.dataset.del,1);srSaveRecent(r);draw();return}
+    if(t.id==="srClr"){srSaveRecent([]);draw();return}
+    if(t.id==="srAll"){st.y="all";st.s="all";go();return}
+    if(t.dataset.y){st.y=t.dataset.y==="all"?"all":+t.dataset.y;go();return}
+    if(t.dataset.s){st.s=t.dataset.s;go();return}
+    if(t.dataset.id){const f=byId[t.dataset.id];if(!f)return;
+      if(st.q){const r=(srRecent()||[]).filter(x=>x!==st.q);r.unshift(st.q);srSaveRecent(r)}
+      setRoute(srRoute(st),true);SR_RET=f.id;S.done[f.id]?record(f):quiz(f)}
+  });
+  body.addEventListener("keydown",e=>{
+    const r=e.target.closest(".sr-row");if(!r||(e.key!=="ArrowDown"&&e.key!=="ArrowUp"))return;
+    e.preventDefault();const rows=[...body.querySelectorAll(".sr-row")],k=rows.indexOf(r)+(e.key==="ArrowDown"?1:-1);
+    if(k<0)inp.focus();else if(rows[k])rows[k].focus();
+  });
+  draw();
+  try{inp.focus({preventScroll:true})}catch(e){inp.focus()}
+  return el;
+}
+/* 검색 버튼(루트·음식 폴더 목록) */
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#srOpen"))search()});
+/* 검색에서 연 파일은 화면 속 ← 도 검색으로 돌아감 */
+["quiz","reveal","record"].forEach(n=>{const f0=window[n];window[n]=function(...a){const out=f0.apply(this,a);
+  try{if(SR_RET&&a[0]&&a[0].id===SR_RET){const b=document.querySelector(".screen.in #bk");if(b)b.onclick=()=>history.back()}}catch(e){}return out}});
+{const a0=window.archive,r0=window.root;window.archive=function(...a){SR_RET=null;return a0.apply(this,a)};window.root=function(...a){SR_RET=null;return r0.apply(this,a)}}
 function render(h,fromPop){
   const [a,b,c]=decodeURIComponent(h||"").split("/");
   try{
+    if(a.startsWith("search"))return search(srParse(h));
     if(a==="root")return root();
     if(a==="archive"&&CAT_KEYS.includes(b))return archive(b,c?+c:null);
     if((a==="quiz"||a==="record")&&byId[b])return S.done[b]?record(byId[b]):quiz(byId[b]);
