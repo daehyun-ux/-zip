@@ -1,0 +1,21 @@
+# Upstream attribution and modification notice
+
+This package is a renamed derivative of Sunghyun Sans KR.
+
+Original project: https://github.com/anaclumos/sunghyun-sans
+
+The original copyright and OFL 1.1 notice are included verbatim in
+`LICENSE-OFL-1.1.txt` and retained in each TTF's name table. The upstream
+notice identifies its foundations, including Pretendard, Source, Inter and
+M PLUS 1. Their copyright and reserved font name notices remain intact.
+
+Changes made in this package:
+
+- changed operational family, full, typographic-family and PostScript names
+  to `먹어봄체 / Meogeobom Type`;
+- normalised style names and weight metadata to the five included weights;
+- added Korean-language Windows name records;
+- did not alter glyph outlines, hinting, layout tables or character coverage.
+
+`Meogeobom Type` must not be presented as the original work of the upstream
+authors, and the upstream authors do not endorse this renamed package.
