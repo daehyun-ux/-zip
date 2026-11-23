@@ -936,6 +936,19 @@ p.intro,#root .sub,.ate-page .ate-note{font-size:var(--fs-body);line-height:1.6}
 .sr-go{font-size:var(--fs-label);font-weight:800;color:var(--acc);flex-shrink:0}
 .sr-row.open .sr-go{white-space:nowrap}
 .sr-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ===== 유행 연결하기 ④ 유행의 파생 (design-links-02) ===== */
+.dv-flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:12px}
+.dv-chip{font-size:var(--fs-tab);font-weight:700;padding:6px 12px;border-radius:16px;line-height:1.3}
+.dv-chip.dv-me{background:var(--acc);color:#fff}
+.dv-chip.dv-file{background:var(--paper);border:1.5px solid var(--acc-mid);color:var(--ink)}
+.dv-chip.dv-new{background:transparent;border:1.5px dashed var(--mute);color:var(--sub)}
+.dv-ar{color:var(--mute);font-size:var(--fs-tab)}
+.dv-list{display:flex;flex-direction:column;gap:10px}
+.dv-card{background:var(--bg);border-radius:16px;padding:14px}
+.dv-card b{display:block;font-size:16px;font-weight:800}
+.dv-card p{margin:6px 0 8px;font-size:var(--fs-card);line-height:1.5}
+.dv-src{font-size:var(--fs-note);color:var(--sub)}
 </style>
 </head>
 <body>
@@ -2490,7 +2503,39 @@ const TYPE_S={new:"새로운 맛·모양",rare:"품절·한정",sns:"SNS 인증"
 const TYPE_W={new:"새로운 맛",rare:"구하기 어려움",sns:"SNS 인증",star:"방송·유명인 효과",shop:"빠른 가게 확산",diy:"따라 만들기"};
 const LK_SUM={dzk:"두쫀쿠는 <b>'이국적 재료 + 새로운 식감 + SNS 확산'</b>이라는 반복되는 유행 공식 속에서 태어난 디저트야.",
  hjs:"한정선은 <b>'익숙한 찹쌀떡 + 생과일·요거트 + 줄 서는 가게'</b>로 쫀득한 간식 유행의 바통을 이어받았어.",
- bdb:"봄동비빔밥은 <b>'옛 방송 장면 + 쉬운 집밥 레시피 + 제철 채소'</b>로, 디저트가 아닌 음식도 유행이 될 수 있다는 걸 보여줬어."};
+ bdb:"봄동비빔밥은 <b>'옛 방송 장면 + 쉬운 집밥 레시피 + 제철 채소'</b>로, 디저트가 아닌 음식도 유행이 될 수 있다는 걸 보여줬어.",
+ /* design-links-02 4-3 (팀 자료 '핵심 특징') */
+ dbc:"두바이 초콜릿은 <b>'해외 디저트가 국내로 들어와 다시 만들어지는'</b> 흐름을 처음 크게 보여 준 유행이야.",
+ yaj:"요아정은 <b>'소비자가 직접 조합하고 공유하는 참여형 디저트'</b>로 유행이 됐어.",
+ btr:"밤 티라미수는 <b>'방송 속 음식이 실제 편의점 상품이 되는'</b> 흐름을 보여 줬어."};
+/* ===== 유행의 파생 (design-links-02.md) — 출처(이름·URL)가 없는 카드는 화면에 안 나옴. 카드가 0개면 칸 전체 숨김 =====
+   flow: [글자, "me"(이 음식) | "file"(사이트에 있는 음식) | "new"(파일 없는 파생)]  /  cards: {t, d, src:["출처 이름 · 날짜","URL"] 또는 null(확인 필요)} */
+const LK_DERIV={
+ dbc:{flow:[["두바이 초콜릿","me"],["직접 만들기","new"],["두쫀쿠","file"]],cards:[
+  {t:"집에서 만드는 두바이 초콜릿",d:"원조를 구하기 어려워 피스타치오 스프레드와 카다이프로 직접 만드는 영상이 퍼졌어. 만드는 과정과 자른 단면을 보여 주는 게 공식이었어.",src:null},
+  {t:"재고 찾기 경쟁",d:"출시 뒤 편의점 앱으로 매장 재고를 확인하려는 사람이 몰려 접속이 늦어지기도 했어.",src:null}]},
+ yaj:{flow:[["연예인 추천 조합","new"],["요아정","me"],["따라 주문·SNS 인증","new"]],cards:[
+  {t:"'성찬 5억 정식'",d:"라이즈 성찬이 추천한 조합(골드망고·벌집꿀·초코쉘·샤인머스캣 등)이 토핑이 많아 비싸다는 걸 부풀린 별명으로 불리며 밈이 됐어. 실제로 5억 원이라는 뜻은 아니야.",src:null},
+  {t:"연예인 조합 따라 먹기",d:"연예인이 추천한 조합을 그대로 주문해 맛을 평가하는 숏폼이 많이 나왔어.",src:null /* 이데일리 · 2024.07 — URL 확인 필요 */}]},
+ btr:{flow:[["흑백요리사","new"],["밤 티라미수","me"],["CU 협업 컵","new"],["밤 티라미수 생크림빵","new"]],cards:[
+  {t:"밤 디저트로 번짐",d:"CU가 '연세우유 밤 티라미수 생크림빵'을 기획해 2024년 10월 30일 출시 예정이라고 발표했어. 컵 디저트에서 빵으로 모양이 바뀌었어.",src:null}]},
+ dzk:{flow:[["두바이 초콜릿","file"],["두쫀쿠","me"],["김밥·베이글","new"],["짭쫀쿠","new"]],cards:[
+  {t:"김밥·베이글까지",d:"두쫀쿠 재료와 모양을 빌린 '두바이 쫀득 김밥', '두바이 쫀득 베이글'이 나왔어.",src:null},
+  {t:"가성비 '짭쫀쿠'",d:"재료값이 오르자 찰떡파이·초코파이·라이스페이퍼로 겉을, 쌀국수 면·콘플레이크로 바삭함을 대신한 레시피가 퍼졌어.",src:null},
+  {t:"#두쫀쿠 3만 건",d:"2026년 1월 12일 기준 인스타그램 '#두쫀쿠' 게시물이 3만 건을 넘었어.",src:null /* 연합뉴스 · 2026.01.12 — URL 확인 필요 */}]},
+ bdb:{flow:[],cards:[
+  {t:"시장에서 사서 같이 비벼 먹기",d:"평소 배달 음식을 먹던 사람들이 시장에서 봄동을 사서 친구들과 직접 만들어 먹는 모습도 소개됐어.",src:null /* 연합뉴스 — 날짜·URL 확인 필요 */}]},
+ hjs:{flow:[["한정선","me"],["짭정선","new"],["고디바 모찌","new"]],cards:[
+  {t:"맛 점수를 춤으로",d:"종류별로 먹어 보고 맛 점수를 춤으로 표현하는 영상이 '한정선 찹쌀떡 종류별로 점수 매기기'라는 제목으로 퍼졌어.",src:null},
+  {t:"고디바 모찌로 확장",d:"2026년 가을 고디바가 초콜릿 가나슈와 생과일을 넣은 모찌를 냈어. 새벽 오픈런, 조기 품절에 구매 대행 글까지 나왔어.",src:null}]}
+};
+function derivHTML(f,sec,n){
+  const D=LK_DERIV[f.id];if(!D)return "";
+  const cards=(D.cards||[]).filter(c=>c&&c.src&&c.src[0]&&/^https?:\/\//.test(c.src[1]||"")).slice(0,3);
+  if(!cards.length)return "";
+  const flow=(D.flow||[]).length?`<div class="dv-flow">${D.flow.map(([t,k],i)=>`${i?`<span class="dv-ar" aria-hidden="true">→</span>`:""}<span class="dv-chip dv-${k==="me"?"me":k==="file"?"file":"new"}">${esc(t)}</span>`).join("")}</div>`:"";
+  return sec(n,"유행의 파생","어디까지 번졌을까?",`${flow}<div class="dv-list">${cards.map(c=>`<div class="dv-card"><b>${esc(c.t)}</b><p>${esc(c.d)}</p><a class="dv-src" href="${esc(c.src[1])}" target="_blank" rel="noopener">${esc(c.src[0])} ↗</a></div>`).join("")}</div>`);
+}
 const ro=w=>{const m=String(w).match(/[가-힣](?=[^가-힣]*$)/);if(!m)return "(으)로";const j=(m[0].charCodeAt(0)-0xAC00)%28;return j&&j!==8?"으로":"로"};
 const peakOf=id=>CURVE[id]?CURVE[id].pk:(byId[id].year+"-07-01");
 const lkName=id=>byId[id].name;
@@ -2533,6 +2578,7 @@ function linksHTML(f){
    :`<div class="lf-card solo"><span class="lf-h">⏳ 그 뒤의 모습</span><strong>${life?life.n:"기록 밖"}</strong><p>${life?life.d:""} 이 음식은 비교할 일간 검색 데이터가 없어서 기사 기록으로 판단했어.</p></div>`)}
   ${sorted.length>1?sec(++n,"유행의 진화","유행은 어떻게 이어질까?",`<div class="ev">${sorted.map((id,i)=>`${i?`<span class="ev-ar" aria-hidden="true">→</span>`:""}${id===f.id?lkNode(id,"이 음식",true):lkNode(id,(direct.find(x=>x.id===id)||{}).l||"")}`).join("")}</div>
      <ul class="ev-why">${direct.map(x=>`<li><b>${lkName(x.id)}</b> ${x.t}</li>`).join("")}</ul>`):""}
+  ${derivHTML(f,sec,n+1)}
   <div class="lk-sum"><span class="lk-sum-h">💡 분석 한줄 정리</span><p>${sum}</p></div>
   ${trendLink(f)}
   <button class="btn lk-go-trend" type="button"><span class="lk-zip" aria-hidden="true"></span>유행분석.zip 바로가기 →</button>`;
