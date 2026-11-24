@@ -1,0 +1,8 @@
+# 빌드할 때 생기는 파일 (GitHub에 올리지 않음)
+node_modules/
+dist/
+
+# 조립스페이스 연결 정보 (내 컴퓨터에만 둠)
+.env.joripspace
+
+.DS_Store
