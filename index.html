@@ -2063,7 +2063,7 @@ function splash(back){
     TC=T.map(t=>{const r=t.getBoundingClientRect();return {t,x:r.left+r.width/2,y:r.top+r.height/2,r:r.width*.55}})};
   const setV=(k,v)=>stage.style.setProperty(k,v);
   const poke=(t,dx,dy)=>{if(!t.dataset.ready||t.dataset.cool)return;t.dataset.cool=1;
-    const l=Math.hypot(dx,dy)||1,f=RM?0:26,r=(Math.random()<.5?-1:1)*(18+Math.random()*22);
+    const l=Math.hypot(dx,dy)||1,f=RM?0:13,r=(Math.random()<.5?-1:1)*(18+Math.random()*22);
     t.classList.add("poked");t.style.transition="transform .2s cubic-bezier(.2,.8,.3,1)";t.style.transform=`translate(${dx/l*f}px,${dy/l*f}px) rotate(${r}deg) scale(1.14)`;
     try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}
     setTimeout(()=>{if(busy)return;t.style.transition="transform .75s cubic-bezier(.2,.9,.3,1.5)";t.style.transform="";},220);
