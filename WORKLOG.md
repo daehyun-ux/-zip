@@ -99,7 +99,17 @@
 - 확인: 21개 음식 유행 연결하기 HTML을 바꾸기 전과 비교 → dbc·yaj·btr 한줄 정리만 다름. 다른 4개 탭은 전부 같음. 시험용 출처를 넣어 ④ 칸 모양·줄바꿈 확인(320·360px 가로 스크롤 없음)
 - 다음: 설계서 8장 표의 출처(매체·날짜·URL)를 받으면 해당 카드 `src`만 채우면 바로 보임
 
+## 2026-11-25 — 조립스페이스 배포 전환 + 방 3개 나누기
+- 조립스페이스 프로젝트 `mukubowzip` 연결, 배포 파일 추가(cfb21d7): `joripspace/src/index.js`(Hono 서버, index.html·폰트·icon5 아이콘을 번들 안에 넣음), `package.json`(build·joripspace:deploy 스크립트), `.gitignore`(node_modules·dist·.env.joripspace 제외)
+- 교안 1부대로 설계·개발·검증 방(세션 3개) 만들고 역할 프롬프트 ①②③ 넣음. 공통 작업 규칙(프롬프트 A 5단계, Mac 터미널용)을 AGENTS.md에 추가(e191a70)
+- GitHub 토큰(fine-grained, `-zip` 저장소만, Contents 읽기·쓰기) 만들고 push 완료: ef306d4..e191a70
+- 배포: `npm run joripspace:deploy` → dep_mwvrpcys19kchs87 success, https://mukubowzip.joripspace.run
+- 확인: 운영 사이트 파일 8개(index.html, 폰트 3개, icon5, manifest, og)가 내 PC 파일과 똑같음. 브라우저에서 먹어봄체·주황 아이콘 확인
+- 메모: dist/worker.js 3.8MB(경고만, 배포 정상). 토큰은 캡처로 한 번 노출됐음
+
 ## 다음에 할 일
+- [ ] GitHub 토큰 `meogeobwat-push-1125` Regenerate로 새 값 받기(노출됨), 안 쓰는 `meogeobwat-push` 토큰 Delete
+- [ ] 교안 2부: [설계] 방에서 모바일 화면 점검(360/390/430px)부터 시작
 - [ ] 관리자 페이지(design-admin.md) — Supabase 화면에서 사용자가 직접 해야 하는 단계부터
 - [ ] 유행의 파생 카드 출처 11개 받기
 - [ ] 실제 아이폰: 먹어봄체·새 아이콘(홈 화면 추가)·탭 줄 밀기·검색 입력창 확대 안 되는지
