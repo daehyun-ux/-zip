@@ -3,9 +3,10 @@
 // strict=false(임시저장)면 비어 있어도 통과, strict=true(발행)면 필수 칸·개수까지 검사한다.
 
 export class InputError extends Error {
-  constructor(field, message) {
+  constructor(field, message, extra = {}) {
     super(message);
     this.field = field;
+    this.extra = extra; // 응답에 같이 실을 것 (예: 겹친 음식 편집 링크)
   }
 }
 const bad = (field, msg) => {
@@ -105,8 +106,41 @@ function sources(v, strict) {
     .filter(([n, l]) => strict || n || l);
 }
 
+// ── 검색 별칭 (design-alias.md 5장) ──
+// 비교는 사이트 검색 srNorm과 같게: 띄어쓰기 지우고 소문자
+export const aliasNorm = (t) => String(t).toLowerCase().replace(/\s+/g, "");
+export const ALIAS_MAX = 5;
+const ALIAS_LEN = 20; // 사이트 검색 칸이 20자까지만 받음(srClean)
+const ALIAS_OK = /^[가-힣A-Za-z0-9 \-·&']+$/; // 한글·영문·숫자·띄어쓰기·- · & '
+// 돌려주는 값: { list: 정리한 별칭들, merged: 같은 음식 안에서 합친 개수 }
+// 오류 칸 이름은 data.alias.<보낸 순서 번호> → 화면이 그 칩에 빨간 테두리를 그림
+export function aliasList(v, title) {
+  if (v == null) return { list: [], merged: 0 };
+  if (!Array.isArray(v)) bad("data.alias", "별칭은 목록이어야 해");
+  if (v.length > 20) bad("data.alias", `별칭은 ${ALIAS_MAX}개까지야`);
+  const own = aliasNorm(title || "");
+  const seen = new Set(), list = [];
+  let merged = 0;
+  v.forEach((a, i) => {
+    const f = `data.alias.${i}`;
+    if (typeof a !== "string") bad(f, "별칭은 글자여야 해");
+    const s = a.replace(/\s+/g, " ").trim(); // 여러 칸 띄어쓰기 → 한 칸
+    if (!s) return; // 빈 칸은 그냥 뺌
+    if (s.length > ALIAS_LEN) bad(f, `별칭은 ${ALIAS_LEN}자까지야`);
+    if (/^[ㄱ-ㅎ ]+$/.test(s)) bad(f, "초성 검색은 자동으로 돼. 글자로 넣어줘");
+    if (!ALIAS_OK.test(s)) bad(f, `쓸 수 없는 글자가 있어: ${[...s].find((ch) => !ALIAS_OK.test(ch))}`);
+    const n = aliasNorm(s);
+    if (n === own) bad(f, "이름과 같은 별칭은 필요 없어");
+    if (seen.has(n)) return void merged++; // 띄어쓰기·대소문자만 다른 별칭 → 하나만 남김
+    seen.add(n);
+    list.push(s);
+  });
+  if (list.length > ALIAS_MAX) bad("data.alias", `별칭은 ${ALIAS_MAX}개까지야`);
+  return { list, merged };
+}
+
 // 음식 전용 칸 (data). 옛 validate.js의 food() 규칙
-function foodData(d, strict) {
+function foodData(d, strict, title) {
   if (d == null) d = {};
   if (typeof d !== "object") bad("data", "형식 오류");
   const f = {};
@@ -155,6 +189,10 @@ function foodData(d, strict) {
   const now = d.now || {};
   f.now = { when: plain(now.when, "data.now.when", 40, strict), t: rich(now.t, "data.now.t", 1200, strict) };
   if (!empty(d.verb)) f.verb = plain(d.verb, "data.verb", 8, false);
+  // 별칭: 있을 때만 저장 (없는 음식은 칸 자체가 없음 → 003 옮기기가 '아직 없음'으로 알아봄)
+  const al = aliasList(d.alias, title);
+  if (al.list.length) f.alias = al.list;
+  Object.defineProperty(f, "aliasMerged", { value: al.merged, enumerable: false }); // DB에는 안 들어감, 응답 알림용
   return f;
 }
 
@@ -185,7 +223,7 @@ export function content(input, { strict }) {
   out.sources = sources(input.sources, strict);
   out.ord = input.ord == null || input.ord === "" ? null : int(input.ord, "ord", 0, 9999);
   out.published_at = input.published_at == null || input.published_at === "" ? null : int(input.published_at, "published_at", 0, 4102444800000);
-  out.data = foodData(input.data, strict);
+  out.data = foodData(input.data, strict, out.title);
   return out;
 }
 

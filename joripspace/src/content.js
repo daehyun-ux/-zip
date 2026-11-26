@@ -57,6 +57,9 @@ export function toFood(r) {
     now: d.now || { when: "", t: "" },
     src: parse(r.sources, []),
   };
+  // 검색 별칭 (design-alias.md): 있을 때만 넣음. 모양이 깨졌으면(목록 아님·이상한 글자) 0개로 봄 → 검색은 이름으로 계속 됨
+  const alias = Array.isArray(d.alias) ? d.alias.filter((a) => typeof a === "string" && /^[가-힣A-Za-z0-9 \-·&']{1,20}$/.test(a)).slice(0, 5) : [];
+  if (alias.length) f.alias = alias;
   if (d.hintsAlt) f.hintsAlt = d.hintsAlt;
   if (d.verb) f.verb = d.verb;
   if (r.ord != null) f.ord = r.ord;

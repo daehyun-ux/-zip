@@ -3223,7 +3223,9 @@ function setRoute(r,replace){
   W("result",()=>"result");W("trend",()=>"trend");W("board",()=>"board");W("writePost",()=>"write");W("postView",id=>`post/${id}`);
 })();
 /* ===== 음식 파일 검색 (design-search.md v1.2 · 1차 S-01~S-17) — 브라우저 안에서만, 서버 요청 없음 ===== */
-/* 별칭: 기사에서 쓰인 것만 (뺀 것: dbc 두바이 초코, ysc 연세빵, sts 소떡, hjs 딸기모찌 → WORKLOG) */
+/* 별칭: 기사에서 쓰인 것만 (뺀 것: dbc 두바이 초코, ysc 연세빵, sts 소떡, hjs 딸기모찌 → WORKLOG)
+   design-alias.md: 원본은 DB(관리자 페이지 음식 편집 화면). 서버가 보낸 데이터(MZ)가 있으면 음식마다 들어 있는 alias를 씀.
+   아래 ALIAS는 파일을 직접 열었을 때(서버 없음)만 쓰는 비상용 → 더 이상 고치지 않음 */
 const ALIAS={dzk:["두바이 쫀득 쿠키","두바이쫀득쿠키"],hjs:["한정선","과일 찹쌀떡"],yaj:["요거트 아이스크림의 정석"],ysc:["연세우유 크림빵"],
   gpb:["곰표 맥주"],cst:["대왕 카스텔라"],jcy:["쥬씨"],bhi:["벌꿀 아이스크림","소프트리"],sbg:["설빙"]};
 const SR_KEYWORDS=["편의점","품절","방송","직접 만들기","식었다","2014"];
@@ -3231,6 +3233,8 @@ const SR_STORE="meogeobwat.search",SR_CHO="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇ�
 const srNorm=t=>String(t).toLowerCase().replace(/\s+/g,"");
 const srCho=t=>[...String(t)].map(c=>{const k=c.charCodeAt(0)-0xAC00;return k>=0&&k<11172?SR_CHO[Math.floor(k/588)]:c}).join("");
 const srClean=t=>String(t||"").replace(/\s+/g," ").trim().slice(0,20);
+/* 이 음식을 찾는 이름들: 이름 + 별칭. 서버 데이터가 있으면 f.alias(목록이 아니면 0개), 없으면 내장 ALIAS */
+const srNames=f=>[f.name,...(MZ?(Array.isArray(f.alias)?f.alias.filter(a=>typeof a==="string"):[]):(ALIAS[f.id]||[]))];
 const srYear=w=>{const m=/^(?:20)?(\d{2})년?$/.exec(w);if(!m)return null;const y=2000+ +m[1];return FOOD_YEARS.includes(y)?y:null};
 let SR_RET=null,SR_T=0;
 function srParse(h){
@@ -3245,7 +3249,7 @@ function srSaveRecent(list){try{localStorage.setItem(SR_STORE,JSON.stringify(lis
 /* 한 단어가 한 음식의 어느 칸에 맞는지: 가장 점수 높은 칸 하나 */
 function srMatchWord(f,w){
   const nw=srNorm(w);if(!nw)return null;
-  const names=[f.name,...(ALIAS[f.id]||[])];
+  const names=srNames(f);
   if(/^[ㄱ-ㅎ]+$/.test(nw)){const n=names.find(n=>srCho(srNorm(n)).includes(nw));return n?{sc:5,kind:"이름 일치",lab:n===f.name?"이름 일치":`별칭 '${n}' 일치`}:null}
   const y=srYear(nw);if(y&&y===f.year)return {sc:2,kind:"연도 일치",lab:`${f.year}년`};
   const n=names.find(n=>srNorm(n).includes(nw));if(n)return {sc:5,kind:"이름 일치",lab:n===f.name?"이름 일치":`별칭 '${n}' 일치`};
@@ -3261,7 +3265,7 @@ function srFind(st){
   FOODS.forEach((f,i)=>{
     let sc=0;const ms=[];
     for(const w of words){const m=srMatchWord(f,w);if(!m)return;sc+=m.sc;ms.push(m)}
-    const exact=qn&&[f.name,...(ALIAS[f.id]||[])].find(n=>srNorm(n)===qn);
+    const exact=qn&&srNames(f).find(n=>srNorm(n)===qn);
     all.push({f,i,sc,ms,exact,done:!!S.done[f.id]});
   });
   all.sort((a,b)=>st.q?(b.sc-a.sc||b.f.year-a.f.year||a.i-b.i):(b.f.year-a.f.year||a.i-b.i));

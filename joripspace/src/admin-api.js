@@ -3,7 +3,7 @@
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { requireAdmin } from "./auth.js";
-import { content as checkContent, InputError, ID_RE } from "./validate.js";
+import { content as checkContent, InputError, ID_RE, aliasNorm } from "./validate.js";
 import { toAdmin, imageIdsOf, purgeContent } from "./content.js";
 
 export const adminApi = new Hono();
@@ -49,7 +49,7 @@ async function guard(c, fn) {
   try {
     return await fn();
   } catch (e) {
-    if (e instanceof InputError) return fail(c, 400, "invalid", e.message, { field: e.field });
+    if (e instanceof InputError) return fail(c, 400, "invalid", e.message, { field: e.field, ...e.extra });
     if (/UNIQUE constraint failed: contents\.slug/.test(String(e && e.message))) {
       return fail(c, 409, "slug_taken", "이 주소는 이미 쓰고 있어", { field: "slug" });
     }
@@ -79,6 +79,35 @@ async function checkNewOpts(env, v, oldOpts) {
   if (i >= 0) throw new InputError(`data.opts.${i}`, "오답 보기는 발행된 음식 중에서만 고를 수 있어");
 }
 
+// 이름·별칭 겹침 (design-alias.md 5장·10장): 휴지통 아닌 다른 음식(발행 + 임시저장)의 이름·별칭과 같으면 막음.
+// 별칭이 0개여도 이름은 항상 검사함 (새로 만들 때·이름을 바꿀 때 모두). 이 저장 요청 안에서 DB를 한 번만 읽음 (HTTP 요청 추가 없음)
+const josa = (w) => { const k = w.charCodeAt(w.length - 1) - 0xac00; return k >= 0 && k < 11172 ? (k % 28 ? "은" : "는") : "은(는)"; };
+async function checkNameConflict(env, v, exceptId, sentAlias) {
+  const mine = v.data.alias || [];
+  const { results } = await env.DB.prepare("SELECT id, slug, title, data FROM contents WHERE deleted_at IS NULL AND id != ?").bind(exceptId || "").all();
+  const byTitle = new Map(), byAlias = new Map(); // 비교용 글자 → 그 이름(또는 별칭)을 가진 음식
+  for (const r of results) {
+    let al = [];
+    try { const d = JSON.parse(r.data); if (Array.isArray(d.alias)) al = d.alias.filter((x) => typeof x === "string"); } catch (e) {}
+    if (!byTitle.has(aliasNorm(r.title))) byTitle.set(aliasNorm(r.title), r);
+    for (const n of al) if (!byAlias.has(aliasNorm(n))) byAlias.set(aliasNorm(n), r);
+  }
+  // 1) 이름 칸
+  const t = v.title, tn = aliasNorm(t);
+  const sameTitle = byTitle.get(tn);
+  if (sameTitle) throw new InputError("title", `'${t}'${josa(t)} 이미 ${sameTitle.slug} 파일의 이름이야. 다른 이름을 써줘`, { link: `/admin/edit/${sameTitle.id}` });
+  const sameAlias = byAlias.get(tn);
+  if (sameAlias) throw new InputError("title", `'${t}'${josa(t)} 이미 ${sameAlias.slug} ${sameAlias.title} 파일의 별칭이야. 다른 이름을 쓰거나 그 파일의 별칭을 먼저 빼줘`, { link: `/admin/edit/${sameAlias.id}` });
+  // 2) 별칭 칸
+  const sent = (Array.isArray(sentAlias) ? sentAlias : []).map((x) => (typeof x === "string" ? aliasNorm(x) : "")); // 화면에서 보낸 순서 (칩 번호)
+  for (const a of mine) {
+    const o = byTitle.get(aliasNorm(a)) || byAlias.get(aliasNorm(a));
+    if (!o) continue;
+    const i = Math.max(0, sent.indexOf(aliasNorm(a)));
+    throw new InputError(`data.alias.${i}`, `'${a}'${josa(a)} 이미 ${o.slug} ${o.title} 파일에 있어`, { link: `/admin/edit/${o.id}` });
+  }
+}
+
 const slugConflict = async (c, env, slug, id) =>
   fail(c, 409, "slug_taken", "이 주소는 이미 쓰고 있어", { field: "slug", suggestion: await suggestSlug(env, slug, id) });
 
@@ -91,7 +120,8 @@ async function versionProblem(c, env, id) {
 }
 
 const getRow = (env, id) => env.DB.prepare("SELECT * FROM contents WHERE id = ?").bind(id).first();
-const sendRow = async (c, id, status = 200) => c.json({ content: toAdmin(await getRow(c.env, id)) }, status);
+// merged: 같은 음식 안에서 띄어쓰기만 다른 별칭을 합친 개수 → 화면이 "겹치는 별칭 1개를 합쳤어" 알림
+const sendRow = async (c, id, status = 200, merged = 0) => c.json({ content: toAdmin(await getRow(c.env, id)), ...(merged ? { merged } : {}) }, status);
 
 // ── 목록 (휴지통 아닌 것) ──
 // 거르기: q(이름), year(연도), status(임시저장/발행). 정렬: year(기본, 연도 최신순 → 같은 해 안 순서) / updated(고친 날짜순)
@@ -116,6 +146,7 @@ adminApi.get("/contents", async (c) => {
     try { d = JSON.parse(r.data); } catch (e) {}
     const opts = Array.isArray(d.opts) ? d.opts : [];
     return { id: r.id, slug: r.slug, title: r.title, category: r.category, status: r.status, ord: r.ord, icon: d.icon || "",
+      alias: Array.isArray(d.alias) ? d.alias.filter((x) => typeof x === "string") : [], // 편집 화면이 별칭 겹침을 바로 알려 줄 때 씀
       published_at: r.published_at, updated_at: r.updated_at, opts_warn: r.status === "published" && opts.some((x) => x !== r.slug && !ok.has(x)) };
   });
   return c.json({ items });
@@ -156,6 +187,7 @@ adminApi.post("/contents", jsonLimit, async (c) => {
     const publish = input.publish === true;
     const v = checkContent(input, { strict: publish });
     if (await slugTaken(env, v.slug, "")) return slugConflict(c, env, v.slug, "");
+    await checkNameConflict(env, v, "", input.data && input.data.alias);
     if (publish) await checkImagesExist(env, v), await checkNewOpts(env, v, []);
     const id = newId(), now = Date.now();
     await env.DB.batch([
@@ -167,7 +199,7 @@ adminApi.post("/contents", jsonLimit, async (c) => {
         JSON.stringify(v.data), now, now),
       ...claimImages(env, id, v),
     ]);
-    return sendRow(c, id, 201);
+    return sendRow(c, id, 201, v.data.aliasMerged);
   });
 });
 
@@ -188,6 +220,7 @@ async function saveContent(c, { publish }) {
     // 한 번이라도 발행한 음식은 고유 주소를 못 바꿈 (영수증 기록·사이트 주소가 이 값을 씀)
     if (row.published_at != null && v.slug !== row.slug) throw new InputError("slug", "발행한 뒤에는 고유 주소를 못 바꿔");
     if (await slugTaken(env, v.slug, id)) return slugConflict(c, env, v.slug, id);
+    await checkNameConflict(env, v, id, input.data && input.data.alias);
     if (publish) {
       await checkImagesExist(env, v);
       let oldOpts = [];
@@ -206,7 +239,7 @@ async function saveContent(c, { publish }) {
       ...claimImages(env, id, v),
     ]);
     if (!res.meta.changes) return versionProblem(c, env, id);
-    return sendRow(c, id);
+    return sendRow(c, id, 200, v.data.aliasMerged);
   });
 }
 adminApi.put("/contents/:id", jsonLimit, (c) => saveContent(c, { publish: false }));

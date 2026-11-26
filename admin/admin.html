@@ -105,6 +105,18 @@ legend{font-weight:800;padding:0 6px;font-size:16px}
 .err{color:var(--wrong);font-size:13px;font-weight:700;margin-top:6px}
 .has-err input,.has-err textarea,.has-err select,input.has-err,textarea.has-err,select.has-err{border-color:var(--wrong)}
 .hint{font-size:12px;color:var(--sub);margin-top:4px}
+/* 검색 별칭 칩 (design-alias.md 6-1): 칩이 넘치면 다음 줄로, 모바일도 가로로 안 밀림. [추가]·✕는 44px 이상 */
+.al-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.al-chips:empty{display:none}
+.al-chip{display:inline-flex;align-items:center;max-width:100%;min-height:44px;padding:0 0 0 12px;border-radius:99px;border:1.5px solid var(--line);background:var(--tint);font-size:14px;font-weight:700}
+.al-chip>span{overflow-wrap:anywhere;min-width:0}
+.al-chip.bad{border-color:var(--wrong);background:var(--paper)}
+.al-x{flex:0 0 44px;width:44px;height:44px;border:0;background:transparent;border-radius:99px;cursor:pointer;color:var(--sub);font-size:15px}
+.al-row{display:flex;gap:8px}
+.al-row input{flex:1 1 auto;min-width:0}
+.al-row .btn{flex:0 0 auto;min-width:64px}
+/* "그 음식 열기" 링크: 누르는 높이 44px 이상 (별칭 안내 + 이름 겹침 안내) */
+.al-msg a,.err-link{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;color:var(--wrong)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .tool{display:flex;gap:6px;margin-bottom:6px}
 .tool .btn{min-height:44px;padding:0 12px;font-size:13px}
@@ -152,6 +164,10 @@ legend{font-weight:800;padding:0 6px;font-size:16px}
 <script>
 "use strict";
 /* ===== 설정 ===== */
+// 검색 별칭 규칙 (서버 joripspace/src/validate.js와 같게). 비교는 사이트 검색 srNorm처럼 띄어쓰기 지우고 소문자
+const ALIAS_MAX = 5, ALIAS_OK = /^[가-힣A-Za-z0-9 \-·&']+$/;
+const aliasNorm = (t) => String(t || "").toLowerCase().replace(/\s+/g, "");
+const josa = (w) => { const k = w.charCodeAt(w.length - 1) - 0xac00; return k >= 0 && k < 11172 ? (k % 28 ? "은" : "는") : "은(는)"; };
 const AUTHOR_DEFAULT = "관리자";               // 필자 기본값 (design-admin.md 5-1. 사이트엔 안 보이고 기록용)
 const FOOD_YEARS = [2026, 2024, 2022, 2020, 2018, 2016, 2014];   // 짝수 해만 (서버 validate.js와 같게)
 const ICONS = ["cookie","mochi","choco","yogurt","bread","coffee","sotteok","castella","chips","note","heart","phone","target","apt","bowl","shark","mic","bucket","retro","croffle","yakgwa","gopchang","chocopie","honeycomb","globe","flame","film","pin","snow","jjamppong","jjajang","hotdog","pho","bubbletea","mala","kkobuk","rose","tanghulu","snackbag","bingsu","towel","tv","mask","trophy","penguin","shapes","megaphone","arrow","stone","star","tangerine","naengmyeon","subakbar","whale","receipt","injeolmi","soju","juice","grape","chickenskin","beer","zerocan","creambread","donut","bagel","tiramisu","matcha","buttermochi","bomdong","trend","magnify"];
@@ -419,6 +435,7 @@ const ROWS = {
 
 function editPage(id) {
   let C = null;          // 서버에 저장된 마지막 상태
+  let ALL_FOODS = [];    // 화면이 이미 받아 둔 음식 목록 (새 요청 안 만듦)
   let dirty = false;
   const bkKey = () => "mz-admin:" + (C && C.id ? C.id : "new-food");
   app.innerHTML = `<div class="wrap"><p class="muted">불러오는 중…</p></div>`;
@@ -429,7 +446,7 @@ function editPage(id) {
       catch (e) { app.innerHTML = `<div class="wrap">${topBar("먹어봤.zip 관리자")}<div class="empty">${esc(e.message)}</div></div>`; bindLogout(); return; }
     } else C = BLANK();
     let foods = [];
-    try { foods = (await api("GET", "/api/admin/contents?status=published")).items; } catch (e) {}
+    try { foods = (await api("GET", "/api/admin/contents")).items; } catch (e) {}
     render(C, foods);
   })();
 
@@ -452,14 +469,17 @@ function editPage(id) {
         ${help ? `<div class="hint">${help}</div>` : ""}</div>`;
 
     // 오답 보기 후보: 발행된 음식(자기 자신 빼고). 예전에 골라 둔 것 중 발행 안 된 음식도 보여 줘서 뺄 수 있게
-    const pubSlugs = new Set(foods.map((x) => x.slug));
-    const optItems = [...foods.filter((x) => x.slug !== c.slug).map((x) => ({ slug: x.slug, title: x.title, ok: true })),
+    ALL_FOODS = foods;   // 휴지통 아닌 음식 전부 (별칭 겹침을 바로 알려 줄 때 씀)
+    const pubFoods = foods.filter((x) => x.status === "published");
+    const pubSlugs = new Set(pubFoods.map((x) => x.slug));
+    const optItems = [...pubFoods.filter((x) => x.slug !== c.slug).map((x) => ({ slug: x.slug, title: x.title, ok: true })),
       ...(d.opts || []).filter((x) => x !== c.slug && !pubSlugs.has(x)).map((x) => ({ slug: x, title: x, ok: false }))];
 
     const parts = `
       <fieldset><legend>① 기본 정보</legend>
         ${fld({ label: "음식 이름", path: "title", value: c.title, max: 40, req: true, ph: "두쫀쿠" })}
         ${fld({ label: "부제", path: "subtitle", value: c.subtitle, max: 80, ph: "두바이 쫀득 쿠키" })}
+        ${aliasBox(Array.isArray(d.alias) ? d.alias.filter((x) => typeof x === "string") : [])}
         <div class="two">${fld({ label: "연도", path: "category", value: c.category, req: true, kind: "select", opts: [["", "골라줘"], ...FOOD_YEARS.map((y) => [y, y + "년"])] })}
         ${fld({ label: "같은 해 안 순서", path: "ord", value: c.ord ?? "", kind: "number", attrs: 'min="0" max="9999" inputmode="numeric"', hint: "작을수록 앞" })}</div>
         <div class="f" style="margin-bottom:6px"><div class="lab"><span>아이콘 모양</span></div><div id="icon-view">${iconHtml(d.icon)}</div></div>
@@ -599,6 +619,24 @@ function editPage(id) {
       catch (e) { showErr("data.icon", e.message); }
     };
 
+    // 검색 별칭 칩: Enter 또는 [추가]로 넣고 ✕로 뺌 (design-alias.md 6-1·10장)
+    const alIn = $("#al-in"), alChips = $("#al-chips");
+    const alAdd = () => {
+      const s = alIn.value.replace(/\s+/g, " ").trim();
+      if (!s) return;   // 빈 칸·공백만 → 아무 일도 안 일어남
+      const why = aliasProblem(s, $$("[data-alias]", alChips).length);
+      if (why) return aliasMsg(why);
+      alChips.insertAdjacentHTML("beforeend", chipHtml(s));
+      alIn.value = "";
+      aliasRefresh(); changed();
+    };
+    alIn.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); alAdd(); } });
+    alIn.addEventListener("input", () => aliasRefresh());
+    $("#al-add").onclick = alAdd;
+    alChips.onclick = (e) => { const x = e.target.closest(".al-x"); if (!x) return; x.closest("[data-alias]").remove(); aliasRefresh(); changed(); if (!alIn.disabled) alIn.focus(); };
+    $('[data-path="title"]').addEventListener("input", () => aliasRefresh());
+    aliasRefresh();
+
     // 미리보기
     const pv = $("#pv");
     $$(".pv-head [data-w]").forEach((b) => b.onclick = () => {
@@ -627,6 +665,53 @@ function editPage(id) {
     offerBackup();
   }
 
+  /* --- 검색 별칭 (design-alias.md 5·6·10장). 서버 validate.js aliasList와 같은 규칙 --- */
+  function aliasBox(list) {
+    return `<div class="f" data-wrap="data.alias"><div class="lab"><label for="al-in">검색 별칭</label><span class="small muted" id="al-cnt" aria-live="polite">${list.length} / ${ALIAS_MAX}</span></div>
+      <div class="al-chips" id="al-chips">${list.map(chipHtml).join("")}</div>
+      <div class="al-row"><input id="al-in" type="text" autocomplete="off" enterkeyhint="done" placeholder="예: 두바이 쫀득 쿠키"><button class="btn" type="button" id="al-add">추가</button></div>
+      <div class="err al-msg hide" id="al-msg" role="alert"></div>
+      <div class="hint">기사에서 실제로 쓰인 다른 이름만 넣어줘. 띄어쓰기만 다른 이름은 안 넣어도 돼.</div></div>`;
+  }
+  function chipHtml(a) { return `<span class="al-chip" data-alias="${esc(a)}"><span>${esc(a)}</span><button class="al-x" type="button" aria-label="별칭 '${esc(a)}' 빼기">✕</button></span>`; }
+  // 칩을 만들기 전에 막는 것: 5개·20자·초성·글자·자기 이름
+  function aliasProblem(s, n) {
+    if (n >= ALIAS_MAX) return "별칭은 5개까지야";
+    if (s.length > 20) return "별칭은 20자까지야";
+    if (/^[ㄱ-ㅎ ]+$/.test(s)) return "초성 검색은 자동으로 돼. 글자로 넣어줘";
+    if (!ALIAS_OK.test(s)) return `쓸 수 없는 글자가 있어: ${[...s].find((ch) => !ALIAS_OK.test(ch))}`;
+    if (aliasNorm(s) === aliasNorm($('[data-path="title"]').value)) return "이름과 같은 별칭은 필요 없어";
+    return "";
+  }
+  // 받아 둔 음식 목록에서 다른 음식의 이름·별칭과 겹치는지 (새 요청 없음. 목록이 없으면 저장할 때 서버가 알려 줌)
+  function aliasOwner(a) {
+    const n = aliasNorm(a);
+    return ALL_FOODS.find((x) => x.id !== C.id && [x.title, ...(x.alias || [])].some((t) => aliasNorm(t) === n));
+  }
+  function aliasMsg(msg, link, soft) {
+    const m = $("#al-msg"); if (!m) return;
+    m.className = (soft ? "hint" : "err") + " al-msg" + (msg ? "" : " hide");
+    m.innerHTML = msg ? esc(msg) + (link ? ` <a href="${esc(link)}" target="_blank" rel="noopener">그 음식 열기</a>` : "") : "";
+  }
+  // 개수 표시·5개면 입력 잠금·겹치는 칩 빨간 테두리
+  function aliasRefresh() {
+    const chips = $$("#al-chips [data-alias]"), n = chips.length, alIn = $("#al-in");
+    $("#al-cnt").textContent = `${n} / ${ALIAS_MAX}`;
+    const frozen = $("#al-add").style.pointerEvents === "none";   // 휴지통에 있는 음식: 화면 전체가 잠겨 있음
+    alIn.disabled = $("#al-add").disabled = frozen || n >= ALIAS_MAX;
+    alIn.placeholder = n >= ALIAS_MAX ? "별칭은 5개까지야" : "예: 두바이 쫀득 쿠키";
+    let msg = "", link = "";
+    const own = aliasNorm($('[data-path="title"]').value);
+    chips.forEach((ch) => {
+      const a = ch.dataset.alias, o = aliasOwner(a);
+      const why = o ? `'${a}'${josa(a)} 이미 ${o.slug} ${o.title} 파일에 있어` : aliasNorm(a) === own ? "이름과 같은 별칭은 필요 없어" : "";
+      ch.classList.toggle("bad", !!why);
+      if (why && !msg) { msg = why; link = o ? "/admin/edit/" + o.id : ""; }
+    });
+    if (msg) aliasMsg(msg, link);
+    else aliasMsg(n >= ALIAS_MAX ? "별칭은 5개까지야" : "", "", true);
+  }
+
   /* --- 입력 칸 → 저장할 내용 --- */
   function collect() {
     const f = $("#ef");
@@ -647,6 +732,7 @@ function editPage(id) {
       const orig = (C.data && C.data.opts) || [];
       out.data.opts = [...orig.filter((x) => x === C.slug || picked.includes(x)), ...picked.filter((x) => !orig.includes(x))];
     }
+    out.data.alias = $$("#al-chips [data-alias]").map((x) => x.dataset.alias);   // 검색 별칭 (칩 순서대로)
     if (!out.cover || !out.cover.id) out.cover = null;
     for (const k of ["sources", "data.hints", "data.hintsAlt", "data.why", "data.stats"]) { const a = getPath(out, k); if (Array.isArray(a)) setPath(out, k, a.filter((x) => x !== undefined)); }
     if (out.data.hintsAlt && !out.data.hintsAlt.length) delete out.data.hintsAlt;
@@ -674,9 +760,16 @@ function editPage(id) {
     }
     return null;
   }
-  function showErr(path, msg) {
+  function showErr(path, msg, link) {
     document.body.classList.remove("tab-preview");
     $$(".tabs [data-tab]").forEach((x) => x.setAttribute("aria-selected", x.dataset.tab === "form"));
+    if (/^data\.alias(\.|$)/.test(path) && $("#al-msg")) {   // 별칭: 그 칩을 빨간 테두리로, 아래에 이유
+      const chip = $$("#al-chips [data-alias]")[+path.split(".")[2]];
+      if (chip) chip.classList.add("bad");
+      aliasMsg(msg, link);
+      $('[data-wrap="data.alias"]').scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     const el = findField(path);
     if (!el) return toast(msg);
     const wrap = el.closest(".f") || el;
@@ -684,13 +777,22 @@ function editPage(id) {
     let e = $(":scope>.err", wrap);
     if (!e) { e = document.createElement("div"); e.className = "err"; e.setAttribute("role", "alert"); wrap.appendChild(e); }
     e.textContent = msg;
+    if (link) e.insertAdjacentHTML("beforeend", ` <a class="err-link" href="${esc(link)}" target="_blank" rel="noopener">그 음식 열기</a>`);   // 이름 겹침: 겹친 음식 편집 화면
     const d = el.closest("details"); if (d) d.open = true;
     wrap.scrollIntoView({ behavior: "smooth", block: "center" });
     const focusable = el.matches("input,textarea,select") ? el : $("input,textarea,select", wrap);
     if (focusable) setTimeout(() => focusable.focus({ preventScroll: true }), 300);
   }
   function clearErr(el) { const w = el.closest(".has-err"); if (w) { w.classList.remove("has-err"); const e = $(":scope>.err", w); if (e) e.remove(); } }
-  function clearAllErr() { $$(".has-err").forEach((w) => { w.classList.remove("has-err"); const e = $(":scope>.err", w); if (e) e.remove(); }); }
+  function clearAllErr() { if ($("#al-msg")) aliasRefresh(); $$(".has-err").forEach((w) => { w.classList.remove("has-err"); const e = $(":scope>.err", w); if (e) e.remove(); }); }
+
+  // 빨간 칩으로 이동: 쓰기 탭으로 돌아가서 그 칩을 화면 가운데에, 칩의 ✕에 초점 (이유 문구는 aliasRefresh가 이미 보여 줌)
+  function goBadChip(chip) {
+    document.body.classList.remove("tab-preview");
+    $$(".tabs [data-tab]").forEach((x) => x.setAttribute("aria-selected", x.dataset.tab === "form"));
+    chip.scrollIntoView({ behavior: "smooth", block: "center" });
+    const x = $(".al-x", chip); if (x) setTimeout(() => x.focus({ preventScroll: true }), 300);
+  }
 
   // 발행 전 빈 필수 칸: 화면 위에서부터 첫 번째 칸으로 이동
   function firstEmptyRequired() {
@@ -711,6 +813,9 @@ function editPage(id) {
     if (what === "save" || what === "publish") {
       if (!body.title.trim()) return showErr("title", "이름이랑 고유 주소는 있어야 저장돼");
       if (!body.slug.trim()) return showErr("slug", "이름이랑 고유 주소는 있어야 저장돼");
+      // 빨간 칩(겹침·자기 이름)이 있으면 서버로 안 보내고 그 칩으로 이동만 (요청 아끼기)
+      const bad = $("#al-chips .al-chip.bad");
+      if (bad) return goBadChip(bad);
       if (what === "publish") { const miss = firstEmptyRequired(); if (miss) return showErr(miss, miss === "data.opts" ? "오답 보기를 하나 이상 골라줘" : "비어 있어"); }
     }
     if (what === "trash" && !confirm("휴지통으로 옮길까? 사이트에서도 바로 사라져.")) return;
@@ -725,16 +830,16 @@ function editPage(id) {
       const wasNew = !C.id;
       dropBackup();
       C = r.content; dirty = false;
-      toast({ save: "저장했어", publish: "발행했어", unpublish: "발행을 취소했어", trash: "휴지통으로 옮겼어" }[what]);
+      toast({ save: "저장했어", publish: "발행했어", unpublish: "발행을 취소했어", trash: "휴지통으로 옮겼어" }[what] + (r.merged ? ` · 겹치는 별칭 ${r.merged}개를 합쳤어` : ""));
       if (what === "trash") { leaveGuard = null; return go("/admin"); }
       if (wasNew) history.replaceState({}, "", "/admin/edit/" + C.id), (lastUrl = location.pathname);
       let foods = [];
-      try { foods = (await api("GET", "/api/admin/contents?status=published")).items; } catch (e) {}
+      try { foods = (await api("GET", "/api/admin/contents")).items; } catch (e) {}
       const y = scrollY; render(C, foods); scrollTo(0, y);
     } catch (e) {
       if (e.error === "conflict") showConflict();
       else if (e.error === "slug_taken") { showErr("slug", e.message + (e.suggestion ? ` (추천: ${e.suggestion})` : "")); }
-      else if (e.field) showErr(e.field, e.message);
+      else if (e.field) showErr(e.field, e.message, e.link);
       else { saveBackup(); toast(e.message || "저장 못 했어. 잠시 뒤 다시 해줘"); }
     } finally {
       busy = false; $$("#bar .btn").forEach((b) => (b.disabled = false));
@@ -749,7 +854,7 @@ function editPage(id) {
       try { C = (await api("GET", `/api/admin/contents/${C.id}`)).content; } catch (e) { return toast(e.message); }
       dirty = false;
       let foods = [];
-      try { foods = (await api("GET", "/api/admin/contents?status=published")).items; } catch (e) {}
+      try { foods = (await api("GET", "/api/admin/contents")).items; } catch (e) {}
       render(C, foods);
     };
   }
@@ -766,7 +871,7 @@ function editPage(id) {
       <button class="btn primary" type="button" id="bk-load">불러오기</button><button class="btn" type="button" id="bk-drop">버리기</button></div>`;
     $("#bk-load").onclick = async () => {
       let foods = [];
-      try { foods = (await api("GET", "/api/admin/contents?status=published")).items; } catch (e) {}
+      try { foods = (await api("GET", "/api/admin/contents")).items; } catch (e) {}
       const merged = { ...C, ...bk.form, data: { ...(C.data || {}), ...(bk.form.data || {}) } };
       render(merged, foods); dirty = true; $("#banners").innerHTML = ""; toast("불러왔어. 저장하거나 발행해야 반영돼");
     };
