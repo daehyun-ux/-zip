@@ -4,10 +4,13 @@
   "type": "module",
   "scripts": {
     "build": "esbuild joripspace/src/index.js --bundle --format=esm --platform=browser --target=es2022 --loader:.html=text --loader:.webmanifest=text --loader:.png=binary --loader:.woff2=binary --outfile=dist/worker.js",
+    "dev": "npm run build && wrangler dev -c wrangler.local.toml --local --port 8787",
+    "db:local": "wrangler d1 execute DB -c wrangler.local.toml --local --file migrations/001_admin.sql && wrangler d1 execute DB -c wrangler.local.toml --local --file migrations/002_seed_foods.sql",
     "joripspace:deploy": "npm run build && npx --yes @joripspace/cli@latest deploy --cwd . --dir \"dist\" --entrypoint \"worker.js\""
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
-    "hono": "^4.7.0"
+    "hono": "^4.7.0",
+    "wrangler": "^4.168.0"
   }
 }

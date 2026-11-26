@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFF8F2">
+<title>관리자 · 먹어봤.zip</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/icon5-favicon-32.png">
+<link rel="preload" href="/fonts/meogeobom-400.woff2" as="font" type="font/woff2" crossorigin>
+<!-- 먹어봤.zip 관리자 페이지 (design-admin.md 7장). 화면 4개: 로그인 · 목록 · 쓰기/편집 · 휴지통
+     서버(joripspace/src/admin-pages.js)가 /admin 아래 모든 주소에 이 파일을 보내고, 아래 스크립트가 주소를 보고 화면을 그린다. -->
+<style>
+@font-face{font-family:"Meogeobom";src:url(/fonts/meogeobom-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Meogeobom";src:url(/fonts/meogeobom-700.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Meogeobom";src:url(/fonts/meogeobom-800.woff2) format("woff2");font-weight:800;font-display:swap}
+:root{--bg:#FFF8F2;--paper:#fff;--ink:#1B1A19;--sub:#6E6A64;--mute:#A39D94;--line:#F0E6DB;--acc:#FF5A36;--acc-soft:#FFE4D6;--acc-deep:#C2391B;
+  --mint:#DDF1E4;--mint-ink:#1F5C38;--gray:#EDE8E2;--gray-ink:#5E5850;--wrong:#E0412F;--tint:#F6EFE7;
+  --f:"Meogeobom",-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:16px 16px 120px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--paper);font-weight:700;font-size:15px;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.danger{color:var(--wrong);border-color:#F4C7BF}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--sub)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--acc-soft);outline-offset:1px}
+input[type=text],input[type=search],input[type=password],input[type=url],input[type=date],input[type=number],select,textarea{width:100%;min-height:44px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);font-size:16px}
+textarea{min-height:96px;resize:vertical;line-height:1.55}
+label{display:block}
+.muted{color:var(--sub)}
+.small{font-size:13px}
+.hide{display:none!important}
+/* 위쪽 */
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0 14px;flex-wrap:wrap}
+.top h1{margin:0;font-size:20px;font-weight:800}
+.top h1 a{text-decoration:none}
+.top nav{display:flex;gap:6px;flex-wrap:wrap}
+/* 로그인 */
+.login{min-height:100dvh;display:grid;place-items:center;padding:16px}
+.card{width:100%;max-width:380px;background:var(--paper);border:1.5px solid var(--line);border-radius:20px;padding:24px}
+.card h1{margin:0 0 4px;font-size:22px}
+.card .btn{width:100%;margin-top:12px}
+.msg{min-height:22px;margin-top:8px;font-size:14px;color:var(--wrong)}
+.msg.ok{color:var(--mint-ink)}
+/* 목록 */
+.newrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.newrow .btn{flex:1 1 140px}
+.filters{display:grid;gap:8px;margin-bottom:12px}
+.filters details summary{min-height:44px;display:flex;align-items:center;font-weight:700;cursor:pointer;color:var(--sub)}
+.filters .fsel{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:4px}
+.filters .fsel .sort{grid-column:1/-1}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.row{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center}
+.row .title{grid-column:2;font-weight:700;font-size:17px;text-decoration:none;min-height:44px;display:flex;align-items:center;word-break:break-all}
+.row .meta{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--sub)}
+.row .view{grid-column:1/-1}
+.row .view a{display:inline-flex;align-items:center;min-height:44px;font-size:14px;color:var(--acc-deep)}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:700;background:var(--tint);color:var(--sub)}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700}
+.badge.draft{background:var(--gray);color:var(--gray-ink)}
+.badge.published{background:var(--mint);color:var(--mint-ink)}
+.empty{padding:40px 16px;text-align:center;color:var(--sub);background:var(--paper);border:1.5px dashed var(--line);border-radius:16px}
+.thead{display:none}
+.ico{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;font-size:24px;line-height:1;border-radius:10px;background:var(--tint);object-fit:cover}
+.warn{display:inline-block;margin-left:4px;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:700;background:#FFF1C2;color:#7A5300}
+@media (min-width:768px){
+  .filters{grid-template-columns:1fr auto;align-items:start}
+  .filters details summary{display:none}
+  .filters .fsel{padding:0;grid-template-columns:150px 150px 160px}
+  .filters .fsel .sort{grid-column:auto}
+  .thead{display:grid;grid-template-columns:44px 1fr 70px 150px 100px 130px;gap:10px;padding:0 14px 4px;font-size:13px;color:var(--mute)}
+  .row{grid-template-columns:44px 1fr 70px 150px 100px 130px;gap:10px;padding:6px 14px}
+  .row .title,.row .meta,.row .view{grid-column:auto}
+  .row .meta{display:contents}
+}
+/* 편집 */
+.banner{background:var(--acc-soft);border-radius:14px;padding:12px 14px;margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.banner p{margin:0;flex:1 1 200px;font-weight:700}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.tabs button{min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--paper);font-weight:700}
+.tabs button[aria-selected=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.editor{display:grid;gap:16px}
+.pane-form{min-width:0}
+.pane-preview{min-width:0}
+body.tab-preview .pane-form{display:none}
+body:not(.tab-preview) .pane-preview{display:none}
+@media (min-width:1024px){
+  .tabs{display:none}
+  .editor{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  body .pane-form,body .pane-preview{display:block!important}
+  .pane-preview{position:sticky;top:12px;align-self:start}
+}
+fieldset{border:1.5px solid var(--line);border-radius:18px;background:var(--paper);margin:0 0 14px;padding:14px}
+legend{font-weight:800;padding:0 6px;font-size:16px}
+.f{margin:0 0 14px}
+.f:last-child{margin-bottom:0}
+.f>.lab{display:flex;justify-content:space-between;gap:8px;font-weight:700;font-size:14px;margin-bottom:6px}
+.req::after{content:" *";color:var(--acc)}
+.cnt{font-size:12px;color:var(--mute);margin-top:4px;text-align:right}
+.cnt.over{color:var(--wrong);font-weight:700}
+.err{color:var(--wrong);font-size:13px;font-weight:700;margin-top:6px}
+.has-err input,.has-err textarea,.has-err select,input.has-err,textarea.has-err,select.has-err{border-color:var(--wrong)}
+.hint{font-size:12px;color:var(--sub);margin-top:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tool{display:flex;gap:6px;margin-bottom:6px}
+.tool .btn{min-height:44px;padding:0 12px;font-size:13px}
+.li{border:1.5px dashed var(--line);border-radius:14px;padding:10px;margin-bottom:8px;display:grid;gap:8px}
+.li-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:var(--sub)}
+.li-head .btn{min-height:44px;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border:1.5px solid var(--line);border-radius:99px;font-size:14px;cursor:pointer;background:var(--paper)}
+.chips input{width:18px;height:18px}
+.check{display:flex;align-items:center;gap:8px;min-height:44px;font-size:14px}
+.check input{width:20px;height:20px}
+.img-box{display:grid;gap:8px}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:16px;text-align:center;color:var(--sub);font-size:14px}
+.drop.over{border-color:var(--acc);background:var(--acc-soft)}
+.img-box img{display:block;max-width:100%;max-height:240px;border-radius:12px;background:var(--tint)}
+.progress{height:8px;border-radius:99px;background:var(--tint);overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--acc);transition:width .15s}
+.slug-msg{font-size:13px;margin-top:4px}
+.slug-msg.ok{color:var(--mint-ink)}
+.slug-msg.bad{color:var(--wrong);font-weight:700}
+/* 고정 버튼 줄 */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(255,248,242,.96);border-top:1.5px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;flex-wrap:wrap;justify-content:center;backdrop-filter:blur(6px)}
+.bar .btn{flex:1 1 120px;max-width:260px}
+/* 미리보기 */
+.pv-head{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+.pv-head .btn{min-height:44px;padding:0 12px;font-size:14px}
+.pv-head .btn[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pv-stage{background:var(--tint);border-radius:18px;padding:10px;overflow:auto;height:calc(100dvh - 200px);min-height:420px;display:flex;justify-content:center}
+.pv-stage iframe{border:0;background:#fff;border-radius:12px;height:100%;width:100%;max-width:100%;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.pv-note{font-size:12px;color:var(--sub);margin-top:6px}
+/* 휴지통 */
+.trow{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;gap:8px}
+.trow .tt{font-weight:700;word-break:break-all}
+.trow .acts{display:flex;gap:8px;flex-wrap:wrap}
+.trow .acts .btn{flex:1 1 120px}
+/* 알림·창 */
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;z-index:50;opacity:0;transition:opacity .2s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(27,26,25,.45);display:grid;place-items:center;z-index:60;padding:16px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+/* ===== 설정 ===== */
+const AUTHOR_DEFAULT = "관리자";               // 필자 기본값 (design-admin.md 5-1. 사이트엔 안 보이고 기록용)
+const FOOD_YEARS = [2026, 2024, 2022, 2020, 2018, 2016, 2014];   // 짝수 해만 (서버 validate.js와 같게)
+const ICONS = ["cookie","mochi","choco","yogurt","bread","coffee","sotteok","castella","chips","note","heart","phone","target","apt","bowl","shark","mic","bucket","retro","croffle","yakgwa","gopchang","chocopie","honeycomb","globe","flame","film","pin","snow","jjamppong","jjajang","hotdog","pho","bubbletea","mala","kkobuk","rose","tanghulu","snackbag","bingsu","towel","tv","mask","trophy","penguin","shapes","megaphone","arrow","stone","star","tangerine","naengmyeon","subakbar","whale","receipt","injeolmi","soju","juice","grape","chickenskin","beer","zerocan","creambread","donut","bagel","tiramisu","matcha","buttermochi","bomdong","trend","magnify"];
+const MAX_IMG_W = 1600, MAX_IMG_BYTES = 2 * 1024 * 1024;
+const PV_WIDTHS = [["PC", 0], ["430", 430], ["390", 390], ["360", 360]];
+
+/* ===== 작은 도구 ===== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const app = $("#app");
+const fmtDate = (ms) => { if (!ms) return "-"; const d = new Date(ms); return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`; };
+const siteUrl = (c) => "/#quiz/" + encodeURIComponent(c.slug || "");   // 사이트의 음식 번호 = 고유 주소
+// 음식 아이콘 그리기: 목록 이름(cookie) → 사이트 아이콘 그림 / emoji:🍩 → 이모지 / img:번호 → 올린 사진
+function iconHtml(icon) {
+  const v = String(icon || "");
+  if (v.startsWith("emoji:")) return `<span class="ico" aria-hidden="true">${esc(v.slice(6))}</span>`;
+  if (v.startsWith("img:")) return `<img class="ico" src="/images/${esc(v.slice(4))}" alt="">`;
+  if (/^[a-z]+$/.test(v)) return `<svg class="ico" viewBox="0 0 100 100" aria-hidden="true"><use href="/admin/icons.svg#${v}"></use></svg>`;
+  return `<span class="ico" aria-hidden="true"></span>`;
+}
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2000); }
+function debounce(fn, ms) { let h; return (...a) => { clearTimeout(h); h = setTimeout(() => fn(...a), ms); }; }
+
+/* ===== 서버 요청 =====
+   로그인이 풀리면(401) 입력 내용은 그대로 두고 "다시 로그인해줘" 창을 띄운 뒤, 로그인하면 같은 요청을 다시 보낸다. */
+async function api(method, path, body) {
+  const opt = { method, headers: {}, credentials: "same-origin" };
+  if (body !== undefined) { opt.headers["Content-Type"] = "application/json"; opt.body = JSON.stringify(body); }
+  let r;
+  try { r = await fetch(path, opt); } catch (e) { throw { network: true, message: "저장 못 했어. 잠시 뒤 다시 해줘" }; }
+  let j = null;
+  try { j = await r.json(); } catch (e) {}
+  if (r.status === 401 && !path.startsWith("/api/admin/login")) { await relogin(); return api(method, path, body); }
+  if (!r.ok) throw { status: r.status, ...(j || {}), message: (j && j.message) || "저장 못 했어. 잠시 뒤 다시 해줘" };
+  return j;
+}
+let reloginWait = null;
+function relogin() {
+  if (reloginWait) return reloginWait;
+  reloginWait = new Promise((done) => {
+    const m = document.createElement("div");
+    m.className = "modal";
+    m.innerHTML = `<form class="card" role="dialog" aria-modal="true" aria-labelledby="rl-t">
+      <h1 id="rl-t">다시 로그인해줘</h1><p class="muted small">로그인이 풀렸어. 쓰던 내용은 그대로 있어.</p>
+      <label class="f"><span class="lab">비밀번호</span><input type="password" name="pw" autocomplete="current-password"></label>
+      <div class="msg" role="alert"></div><button class="btn primary">로그인</button></form>`;
+    document.body.appendChild(m);
+    const f = $("form", m), msg = $(".msg", m);
+    $("input", m).focus();
+    f.onsubmit = async (e) => {
+      e.preventDefault();
+      const ok = await doLogin(f.pw.value, msg);
+      if (ok) { m.remove(); reloginWait = null; done(); }
+    };
+  });
+  return reloginWait;
+}
+async function doLogin(pw, msgEl) {
+  msgEl.textContent = "";
+  if (!pw) { msgEl.textContent = "비밀번호를 넣어줘"; return false; }  // 서버로 보내지 않음
+  try {
+    const r = await fetch("/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ password: pw }) });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok) return true;
+    msgEl.textContent = j.message || "로그인 못 했어. 잠시 뒤 다시 해줘";
+  } catch (e) { msgEl.textContent = "인터넷 연결을 확인해줘"; }
+  return false;
+}
+
+/* ===== 화면 이동 (주소마다 화면이 따로 있어서 새로고침해도 같은 화면) ===== */
+let leaveGuard = null;   // 저장 안 한 내용이 있으면 나가기 전에 물어봄
+function go(url, replace) {
+  if (leaveGuard && !leaveGuard()) return;
+  history[replace ? "replaceState" : "pushState"]({}, "", url);
+  route();
+}
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("a[data-link]");
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault();
+  go(a.getAttribute("href"));
+});
+let lastUrl = location.pathname + location.search;
+window.addEventListener("popstate", () => {
+  if (leaveGuard && !leaveGuard()) { history.pushState({}, "", lastUrl); return; }
+  route();
+});
+window.addEventListener("beforeunload", (e) => { if (leaveGuard && leaveGuard.dirty && leaveGuard.dirty()) { e.preventDefault(); e.returnValue = ""; } });
+
+function route() {
+  leaveGuard = null;
+  document.body.className = "";
+  lastUrl = location.pathname + location.search;
+  const p = location.pathname.replace(/\/+$/, "") || "/admin";
+  let m;
+  if (p === "/admin/login") return loginPage();
+  if (p === "/admin") return listPage();
+  if (p === "/admin/trash") return trashPage();
+  if (p === "/admin/new") return editPage(null);
+  if ((m = /^\/admin\/edit\/([a-z0-9-]{2,24})$/.exec(p))) return editPage(m[1]);
+  app.innerHTML = `<div class="wrap"><p>없는 화면이야. <a data-link href="/admin">목록으로</a></p></div>`;
+}
+
+const topBar = (title) => `<header class="top"><h1><a data-link href="/admin">${esc(title)}</a></h1>
+  <nav><a class="btn ghost" data-link href="/admin">목록</a><a class="btn ghost" data-link href="/admin/trash">휴지통</a><button class="btn ghost" id="logout" type="button">로그아웃</button></nav></header>`;
+function bindLogout() {
+  const b = $("#logout");
+  if (b) b.onclick = async () => {
+    if (leaveGuard && !leaveGuard()) return;
+    leaveGuard = null;
+    try { await fetch("/api/admin/logout", { method: "POST", credentials: "same-origin" }); } catch (e) {}
+    location.href = "/admin/login";
+  };
+}
+
+/* ===== 1. 로그인 ===== */
+async function loginPage() {
+  document.title = "로그인 · 먹어봤.zip 관리자";
+  app.innerHTML = `<main class="login"><form class="card" id="lf">
+    <h1>먹어봤.zip 관리자</h1><p class="muted small">관리자 비밀번호를 넣어줘.</p>
+    <label class="f"><span class="lab">비밀번호</span><input type="password" name="pw" autocomplete="current-password" autofocus></label>
+    <div class="msg" id="lmsg" role="alert"></div>
+    <button class="btn primary" id="lbtn">로그인</button></form></main>`;
+  const f = $("#lf"), msg = $("#lmsg"), btn = $("#lbtn");
+  try {
+    const s = await (await fetch("/api/admin/status", { credentials: "same-origin" })).json();
+    if (!s.configured) { msg.textContent = "관리자 비밀번호가 아직 설정되지 않았어"; btn.disabled = true; f.pw.disabled = true; return; }
+  } catch (e) {}
+  f.onsubmit = async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    const ok = await doLogin(f.pw.value, msg);
+    btn.disabled = false;
+    if (ok) {
+      const next = new URLSearchParams(location.search).get("next") || "";
+      go(/^\/admin(\/|$|\?)/.test(next) && !next.startsWith("/admin/login") ? next : "/admin", true);
+    }
+  };
+}
+
+/* ===== 2. 음식 파일 목록 ===== */
+async function listPage() {
+  document.title = "음식 파일 목록 · 먹어봤.zip 관리자";
+  const qs = new URLSearchParams(location.search);
+  const st = { q: qs.get("q") || "", year: qs.get("year") || "", status: qs.get("status") || "", sort: qs.get("sort") === "updated" ? "updated" : "" };
+  const wide = matchMedia("(min-width:768px)").matches;
+  app.innerHTML = `<div class="wrap">${topBar("먹어봤.zip 관리자")}
+    <div class="newrow"><a class="btn primary" data-link href="/admin/new">+ 새 음식 파일</a></div>
+    <form class="filters" id="ff" role="search">
+      <input type="search" name="q" placeholder="이름으로 찾기" value="${esc(st.q)}" aria-label="이름으로 찾기">
+      <details ${wide || st.year || st.status || st.sort ? "open" : ""}><summary>거르기 · 정렬</summary><div class="fsel">
+        <select name="year" aria-label="연도"><option value="">연도: 전체</option>${FOOD_YEARS.map((y) => `<option value="${y}" ${st.year === String(y) ? "selected" : ""}>${y}년</option>`).join("")}</select>
+        <select name="status" aria-label="상태"><option value="">상태: 전체</option><option value="draft" ${st.status === "draft" ? "selected" : ""}>임시저장</option><option value="published" ${st.status === "published" ? "selected" : ""}>발행</option></select>
+        <select name="sort" class="sort" aria-label="정렬"><option value="">정렬: 연도순</option><option value="updated" ${st.sort ? "selected" : ""}>정렬: 고친 날짜순</option></select>
+      </div></details></form>
+    <div class="thead" aria-hidden="true"><span>아이콘</span><span>이름</span><span>연도</span><span>상태</span><span>고친 날짜</span><span></span></div>
+    <ul class="list" id="list"><li class="empty">불러오는 중…</li></ul></div>`;
+  bindLogout();
+  const f = $("#ff");
+  const apply = () => {
+    const p = new URLSearchParams();
+    if (f.q.value.trim()) p.set("q", f.q.value.trim());
+    if (f.year.value) p.set("year", f.year.value);
+    if (f.status.value) p.set("status", f.status.value);
+    if (f.sort.value) p.set("sort", f.sort.value);
+    history.replaceState({}, "", "/admin" + (p.toString() ? "?" + p : ""));
+    lastUrl = location.pathname + location.search;
+    load(p);
+  };
+  f.onsubmit = (e) => { e.preventDefault(); apply(); };
+  f.q.oninput = debounce(apply, 300);
+  f.year.onchange = f.status.onchange = f.sort.onchange = apply;
+  async function load(p) {
+    const list = $("#list");
+    try {
+      const { items } = await api("GET", "/api/admin/contents?" + p);
+      if (!items.length) { list.innerHTML = `<li class="empty">찾는 음식 파일이 없어</li>`; return; }
+      list.innerHTML = items.map((c) => `<li class="row">${iconHtml(c.icon)}
+        <a class="title" data-link href="/admin/edit/${esc(c.id)}">${esc(c.title)}</a>
+        <span class="meta"><span>${esc(c.category ? c.category + "년" : "연도 없음")}</span>
+          <span><span class="badge ${c.status}">${c.status === "published" ? "발행" : "임시저장"}</span>${c.opts_warn ? `<span class="warn" title="오답 보기로 고른 음식 중 발행 안 된 것이 있어">오답 보기 확인 필요</span>` : ""}</span>
+          <span>${fmtDate(c.updated_at)}</span></span>
+        <span class="view">${c.status === "published" ? `<a href="${esc(siteUrl(c))}" target="_blank" rel="noopener">사이트에서 보기 ↗</a>` : ""}</span></li>`).join("");
+    } catch (e) { list.innerHTML = `<li class="empty">${esc(e.message)}</li>`; }
+  }
+  load(new URLSearchParams(location.search));
+}
+
+/* ===== 4. 휴지통 ===== */
+async function trashPage() {
+  document.title = "휴지통 · 먹어봤.zip 관리자";
+  app.innerHTML = `<div class="wrap">${topBar("먹어봤.zip 관리자")}<h2 style="margin:0 0 4px">휴지통</h2>
+    <p class="muted small" style="margin:0 0 12px">30일이 지나면 자동으로 완전히 지워져. 되살리면 임시저장 상태로 돌아와.</p>
+    <div class="list" id="tl"><div class="empty">불러오는 중…</div></div></div>`;
+  bindLogout();
+  const tl = $("#tl");
+  async function load() {
+    try {
+      const { items } = await api("GET", "/api/admin/trash");
+      if (!items.length) { tl.innerHTML = `<div class="empty">휴지통이 비어 있어</div>`; return; }
+      tl.innerHTML = items.map((c) => {
+        const left = Math.max(0, Math.ceil((c.purge_at - Date.now()) / 864e5));
+        return `<div class="trow" data-id="${esc(c.id)}"><div class="tt">${esc(c.title)}</div>
+          <div class="small muted">버린 날짜 ${fmtDate(c.deleted_at)} · <b>${left}일 남음</b></div>
+          <div class="acts"><button class="btn" data-act="restore" type="button">되살리기</button><button class="btn danger" data-act="purge" type="button">영구 삭제</button></div></div>`;
+      }).join("");
+    } catch (e) { tl.innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+  }
+  tl.onclick = async (e) => {
+    const b = e.target.closest("button[data-act]");
+    if (!b) return;
+    const id = b.closest(".trow").dataset.id;
+    try {
+      if (b.dataset.act === "restore") { await api("POST", `/api/admin/contents/${id}/restore`, {}); toast("되살렸어 (임시저장)"); }
+      else {
+        if (!confirm("되돌릴 수 없어. 정말 지울까?")) return;
+        await api("DELETE", `/api/admin/contents/${id}`); toast("완전히 지웠어");
+      }
+      load();
+    } catch (err) { toast(err.message); }
+  };
+  load();
+}
+
+/* ===== 3. 새로 쓰기 / 편집 ===== */
+const BLANK = () => ({ id: null, type: "food", title: "", subtitle: "", body: "", cover: null, category: "", author: AUTHOR_DEFAULT, status: "draft", slug: "", sources: [], ord: null, published_at: null, version: 0,
+  data: { icon: "", hints: [["", ""], ["", ""], ["", ""]], opts: [], desc: "", tags: [], head: { t: "", m: "" }, stats: [], note: "", why: [""], now: { when: "", t: "" } } });
+const brToNl = (s) => String(s ?? "").replace(/<br\s*\/?>/gi, "\n");
+const countLen = (s) => String(s ?? "").replace(/<\/?b>/g, "").replace(/\r?\n/g, "").trim().length;
+
+// 입력 칸 하나. path는 서버 검사 결과의 field 이름과 같게 맞춤(틀린 칸으로 이동하려고)
+function fld({ label, path, value = "", max, req, kind = "text", rich, bold = true, hint, opts, ph, attrs = "" }) {
+  const id = "f-" + path.replace(/\./g, "-");
+  let input;
+  const v = rich ? brToNl(value) : value ?? "";
+  if (kind === "textarea") input = `${rich && bold ? `<div class="tool"><button class="btn" type="button" data-bold="${id}"><b>굵게</b></button><span class="hint">줄바꿈은 엔터. 다른 꾸밈은 안 돼.</span></div>` : ""}<textarea id="${id}" data-path="${path}" ${max ? `data-max="${max}"` : ""} ${req ? "data-req" : ""} placeholder="${esc(ph || "")}" ${attrs}>${esc(v)}</textarea>`;
+  else if (kind === "select") input = `<select id="${id}" data-path="${path}" ${req ? "data-req" : ""} ${attrs}>${opts.map(([val, name]) => `<option value="${esc(val)}" ${String(val) === String(v) ? "selected" : ""}>${esc(name)}</option>`).join("")}</select>`;
+  else input = `<input id="${id}" type="${kind}" data-path="${path}" value="${esc(v)}" ${max ? `data-max="${max}"` : ""} ${req ? "data-req" : ""} placeholder="${esc(ph || "")}" ${attrs}>`;
+  return `<div class="f" data-wrap="${path}"><label class="lab" for="${id}"><span class="${req ? "req" : ""}">${esc(label)}</span></label>${input}
+    ${max ? `<div class="cnt" data-cnt="${id}">${countLen(v)} / ${max}</div>` : ""}${hint ? `<div class="hint">${hint}</div>` : ""}</div>`;
+}
+
+// 목록 칸(힌트·출처·유행 이유·통계…): 줄 추가/빼기
+function listBox({ path, label, rows, min, max, rowHtml, blank, note }) {
+  return `<div class="f" data-wrap="${path}"><div class="lab"><span class="${min ? "req" : ""}">${esc(label)}</span><span class="small muted">${min === max ? `${max}개` : `${min ? min + "~" : "최대 "}${max}개`}</span></div>
+    ${note ? `<div class="hint" style="margin:-2px 0 8px">${note}</div>` : ""}
+    <div data-list="${path}" data-min="${min}" data-max="${max}" data-blank='${esc(JSON.stringify(blank))}'>${rows.map((r, i) => liWrap(path, i, rowHtml(r, i), min, max === min)).join("")}</div>
+    ${max === min ? "" : `<button class="btn" type="button" data-add="${path}">+ 추가</button>`}</div>`;
+}
+function liWrap(path, i, inner, min, fixed) {
+  return `<div class="li" data-li><div class="li-head"><span>${i + 1}</span>${fixed ? "" : `<button class="btn ghost" type="button" data-del>빼기</button>`}</div>${inner}</div>`;
+}
+
+// 목록 칸 줄 모양들
+const ROWS = {
+  "data.hints": (h, i) => fld({ label: "힌트 본문", path: `data.hints.${i}.0`, value: h[0], max: 200, req: true, kind: "textarea", rich: true, bold: false }) + fld({ label: "보조 문장", path: `data.hints.${i}.1`, value: h[1], max: 140, kind: "textarea", rich: true, bold: false }),
+  "data.hintsAlt": (h, i) => fld({ label: "예비 힌트 본문", path: `data.hintsAlt.${i}.0`, value: h[0], max: 200, kind: "textarea", rich: true, bold: false }) + fld({ label: "보조 문장", path: `data.hintsAlt.${i}.1`, value: h[1], max: 140, kind: "textarea", rich: true, bold: false }),
+  "data.why": (w, i) => fld({ label: "이유", path: `data.why.${i}`, value: w, max: 400, req: true, kind: "textarea", rich: true }),
+  "data.stats": (s, i) => fld({ label: "이름", path: `data.stats.${i}.0`, value: brToNl(s[0]), max: 60, req: true, kind: "textarea", hint: "줄바꿈만 돼", attrs: 'style="min-height:64px"' }) +
+    `<div class="two">${fld({ label: "값", path: `data.stats.${i}.1`, value: s[1], max: 24, req: true, ph: "+42.6%" })}${fld({ label: "색", path: `data.stats.${i}.2`, value: s[2] ?? i % 3, kind: "select", opts: [[0, "색 1"], [1, "색 2"], [2, "색 3"]] })}</div>
+    <label class="check"><input type="checkbox" data-path="data.stats.${i}.3" ${s[3] ? "checked" : ""}> 강조</label>`,
+  sources: (s, i) => fld({ label: "출처 이름", path: `sources.${i}.0`, value: s[0], max: 80, req: true, ph: "조선일보, 2026.3.1" }) + fld({ label: "주소", path: `sources.${i}.1`, value: s[1], req: true, kind: "url", ph: "https://" }),
+};
+
+function editPage(id) {
+  let C = null;          // 서버에 저장된 마지막 상태
+  let dirty = false;
+  const bkKey = () => "mz-admin:" + (C && C.id ? C.id : "new-food");
+  app.innerHTML = `<div class="wrap"><p class="muted">불러오는 중…</p></div>`;
+
+  (async () => {
+    if (id) {
+      try { C = (await api("GET", `/api/admin/contents/${id}`)).content; }
+      catch (e) { app.innerHTML = `<div class="wrap">${topBar("먹어봤.zip 관리자")}<div class="empty">${esc(e.message)}</div></div>`; bindLogout(); return; }
+    } else C = BLANK();
+    let foods = [];
+    try { foods = (await api("GET", "/api/admin/contents?status=published")).items; } catch (e) {}
+    render(C, foods);
+  })();
+
+  function render(content, foods) {
+    const c = content, d = c.data || {};
+    const locked = c.published_at != null;   // 한 번이라도 발행했으면 고유 주소 잠금 (영수증 기록이 이 값을 씀)
+    document.title = (c.id ? "편집" : "새 음식 파일") + " · 먹어봤.zip 관리자";
+    const coverBox = (key, label, cov, help) => `<div class="f img-box" data-wrap="${key}" data-img="${key}">
+        <div class="lab"><span>${label}</span></div>
+        <input type="hidden" data-path="${key}.id" value="${esc(cov && cov.id || "")}">
+        <div data-imgview>${cov && cov.id ? `<img src="/images/${esc(cov.id)}" alt="">` : ""}</div>
+        <div class="drop" data-drop>이미지를 끌어다 놓거나 <b>[이미지 올리기]</b>를 눌러줘<br><span class="small">JPG·PNG·WebP · 가로 1600px로 줄여서 2MB 이하</span></div>
+        <div class="progress hide" data-prog><i></i></div><div class="err hide" data-imgerr></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn" style="flex:1 1 140px">${cov && cov.id ? "이미지 바꾸기" : "이미지 올리기"}<input type="file" accept="image/jpeg,image/png,image/webp" class="hide" data-file></label>
+          <button class="btn ghost ${cov && cov.id ? "" : "hide"}" type="button" data-imgdel>빼기</button><button class="btn hide" type="button" data-retry>업로드 실패, 다시 시도</button></div>
+        <div data-imgmeta class="${cov && cov.id ? "" : "hide"}">
+          ${fld({ label: "대체 글 (사진을 못 보는 사람에게 읽어 줄 설명)", path: `${key}.alt`, value: cov && cov.alt, max: 120, req: true })}
+          ${fld({ label: "사진 출처", path: `${key}.credit`, value: cov && cov.credit, max: 120 })}
+          ${fld({ label: "출처 주소", path: `${key}.url`, value: cov && cov.url, kind: "url", ph: "https://" })}</div>
+        ${help ? `<div class="hint">${help}</div>` : ""}</div>`;
+
+    // 오답 보기 후보: 발행된 음식(자기 자신 빼고). 예전에 골라 둔 것 중 발행 안 된 음식도 보여 줘서 뺄 수 있게
+    const pubSlugs = new Set(foods.map((x) => x.slug));
+    const optItems = [...foods.filter((x) => x.slug !== c.slug).map((x) => ({ slug: x.slug, title: x.title, ok: true })),
+      ...(d.opts || []).filter((x) => x !== c.slug && !pubSlugs.has(x)).map((x) => ({ slug: x, title: x, ok: false }))];
+
+    const parts = `
+      <fieldset><legend>① 기본 정보</legend>
+        ${fld({ label: "음식 이름", path: "title", value: c.title, max: 40, req: true, ph: "두쫀쿠" })}
+        ${fld({ label: "부제", path: "subtitle", value: c.subtitle, max: 80, ph: "두바이 쫀득 쿠키" })}
+        <div class="two">${fld({ label: "연도", path: "category", value: c.category, req: true, kind: "select", opts: [["", "골라줘"], ...FOOD_YEARS.map((y) => [y, y + "년"])] })}
+        ${fld({ label: "같은 해 안 순서", path: "ord", value: c.ord ?? "", kind: "number", attrs: 'min="0" max="9999" inputmode="numeric"', hint: "작을수록 앞" })}</div>
+        <div class="f" style="margin-bottom:6px"><div class="lab"><span>아이콘 모양</span></div><div id="icon-view">${iconHtml(d.icon)}</div></div>
+        ${fld({ label: "아이콘", path: "data.icon", value: d.icon, req: true, attrs: 'list="icon-list" autocomplete="off"', hint: "목록 이름(예: cookie), 이모지는 <b>emoji:🍩</b>, 사진은 아래 [사진 아이콘 올리기]" })}
+        <datalist id="icon-list">${ICONS.map((n) => `<option value="${n}">`).join("")}</datalist>
+        <label class="btn" style="margin:-6px 0 14px">사진 아이콘 올리기<input type="file" accept="image/jpeg,image/png,image/webp" class="hide" data-iconfile></label>
+        ${fld({ label: "고유 주소", path: "slug", value: c.slug, req: true, ph: "dzk", attrs: locked ? 'readonly aria-readonly="true"' : 'autocapitalize="none" autocomplete="off" spellcheck="false"',
+          hint: locked ? "발행한 적이 있어서 잠겨 있어 (영수증 기록이 이 값을 써)" : "영문 소문자·숫자·- 2~24자. <b>발행하면 바꿀 수 없어</b>" })}<div class="slug-msg" id="slug-msg"></div>
+        ${fld({ label: "동사", path: "data.verb", value: d.verb, max: 8, ph: "먹어봤", hint: "비우면 '먹어봤'" })}
+        ${fld({ label: "필자 (기록용, 사이트엔 안 보여)", path: "author", value: c.author, max: 20, hint: "비우면 '관리자'" })}
+      </fieldset>
+      <fieldset><legend>② 힌트</legend>
+        ${listBox({ path: "data.hints", label: "힌트 3개", rows: (d.hints || []).slice(0, 3).concat([["", ""], ["", ""], ["", ""]]).slice(0, 3), min: 3, max: 3, rowHtml: ROWS["data.hints"], blank: ["", ""] })}
+        <details><summary class="btn ghost" style="justify-content:flex-start">예비 힌트 (선택)</summary>
+        ${listBox({ path: "data.hintsAlt", label: "예비 힌트", rows: d.hintsAlt || [], min: 0, max: 3, rowHtml: ROWS["data.hintsAlt"], blank: ["", ""] })}</details>
+      </fieldset>
+      <fieldset><legend>③ 오답 보기</legend>
+        <div class="f" data-wrap="data.opts"><div class="lab"><span class="req">함께 보여 줄 다른 음식</span><span class="small muted">1~6개 · 발행된 음식 중에서</span></div>
+          <div class="chips">${optItems.map((x) => `<label><input type="checkbox" data-opt value="${esc(x.slug)}" ${(d.opts || []).includes(x.slug) ? "checked" : ""}>${esc(x.title)}${x.ok ? "" : " (발행 안 됨)"}</label>`).join("")}</div>
+          <div class="hint">사이트 퀴즈의 보기는 지금처럼 자동으로 골라져. 여기서 고른 건 기록으로 저장돼.</div></div>
+      </fieldset>
+      <fieldset><legend>④ 설명 · 태그 · 그때 기사</legend>
+        ${fld({ label: "한 줄 설명", path: "data.desc", value: d.desc, max: 200, req: true, kind: "textarea", rich: true })}
+        ${fld({ label: "그 음식 설명 (본문)", path: "body", value: c.body, max: 1200, req: true, kind: "textarea", rich: true, attrs: 'style="min-height:160px"' })}
+        ${fld({ label: "태그 (쉼표로 나눠서, 8개까지)", path: "data.tags", value: (d.tags || []).join(", "), ph: "편의점, 품절" })}
+        ${fld({ label: "그때 기사 제목", path: "data.head.t", value: d.head && d.head.t, max: 200, req: true, kind: "textarea", rich: true })}
+        ${fld({ label: "매체 · 날짜", path: "data.head.m", value: d.head && d.head.m, max: 80, req: true, ph: "조선일보 · 2026.03.01" })}
+        <label class="check"><input type="checkbox" data-path="data.head.sum" ${d.head && d.head.sum ? "checked" : ""}> 기사 원문이 아니라 '보도 요약'이야</label>
+        ${fld({ label: "덧붙임", path: "data.note", value: d.note, max: 800, kind: "textarea", rich: true })}
+      </fieldset>
+      <fieldset><legend>⑤ 숫자 통계</legend>
+        ${listBox({ path: "data.stats", label: "숫자 통계", rows: d.stats || [], min: 0, max: 4, rowHtml: ROWS["data.stats"], blank: ["", "", 0] })}
+      </fieldset>
+      <fieldset><legend>⑥ 유행 이유 · 지금은?</legend>
+        ${listBox({ path: "data.why", label: "유행한 이유", rows: d.why && d.why.length ? d.why : [""], min: 1, max: 6, rowHtml: ROWS["data.why"], blank: "" })}
+        ${fld({ label: "지금은? 시점", path: "data.now.when", value: d.now && d.now.when, max: 40, req: true, ph: "2026년 3월" })}
+        ${fld({ label: "지금은? 본문", path: "data.now.t", value: d.now && d.now.t, max: 1200, req: true, kind: "textarea", rich: true })}
+      </fieldset>
+      <fieldset><legend>⑦ 대표 이미지</legend>${coverBox("cover", "대표 이미지 (선택)", c.cover, "이미지를 넣으면 대체 글은 꼭 써야 발행돼")}</fieldset>
+      <fieldset><legend>⑧ 출처</legend>
+        ${listBox({ path: "sources", label: "출처", rows: c.sources && c.sources.length ? c.sources : [["", ""]], min: 1, max: 12, rowHtml: ROWS.sources, blank: ["", ""], note: "http(s) 주소만 넣을 수 있어" })}</fieldset>`;
+
+    const state = !c.id ? "new" : c.deleted_at ? "trash" : c.status;
+    const btns = {
+      new: `<button class="btn" data-do="save" type="button">임시저장</button><button class="btn primary" data-do="publish" type="button">발행</button>`,
+      draft: `<button class="btn" data-do="save" type="button">임시저장</button><button class="btn primary" data-do="publish" type="button">발행</button><button class="btn danger" data-do="trash" type="button">휴지통으로</button>`,
+      published: `<button class="btn primary" data-do="publish" type="button">변경 내용 발행</button><button class="btn" data-do="unpublish" type="button">발행 취소</button><button class="btn danger" data-do="trash" type="button">휴지통으로</button><a class="btn" href="${esc(siteUrl(c))}" target="_blank" rel="noopener">사이트에서 보기 ↗</a>`,
+      trash: `<a class="btn" data-link href="/admin/trash">휴지통으로 가기</a>`,
+    }[state];
+
+    app.innerHTML = `<div class="wrap">${topBar("먹어봤.zip 관리자")}
+      <h2 style="margin:0 0 10px;font-size:18px">${c.id ? "편집" : "새 음식 파일"} ${c.id ? `<span class="badge ${c.status}">${c.status === "published" ? "발행" : "임시저장"}</span>` : ""}</h2>
+      ${state === "trash" ? `<div class="banner"><p>휴지통에 있는 음식 파일이야. 고치려면 휴지통에서 되살려줘.</p></div>` : ""}
+      <div id="banners"></div>
+      <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-tab="form" type="button">쓰기</button><button role="tab" aria-selected="false" data-tab="preview" type="button">미리보기</button></div>
+      <div class="editor"><form class="pane-form" id="ef" novalidate>${parts}</form>
+        <section class="pane-preview" aria-label="미리보기"><div class="pv-head">${PV_WIDTHS.map(([n, w], i) => `<button class="btn" type="button" data-w="${w}" aria-pressed="${i === 0}">${n}</button>`).join("")}</div>
+          <div class="pv-stage"><iframe id="pv" title="미리보기" src="/admin/preview"></iframe></div>
+          <div class="pv-note">관리자에게만 보이는 미리보기야. 입력하면 1초 안에 바뀌어. 아래 버튼으로 힌트 화면 / 파일 화면을 바꿔 봐.</div></section></div></div>
+      <div class="bar" id="bar">${btns}</div>`;
+    bindLogout();
+    if (state === "trash") $$("#ef input,#ef textarea,#ef select,#ef button,#ef label.btn").forEach((x) => { x.disabled = true; x.style.pointerEvents = "none"; });
+    wire(c);
+  }
+
+  /* --- 화면 동작 연결 --- */
+  function wire(c) {
+    const f = $("#ef");
+    const changed = () => { dirty = true; saveBackup(); sendPreview(); };
+
+    // 글자 수 표시
+    const count = (el) => {
+      const box = $(`[data-cnt="${el.id}"]`);
+      if (!box) return;
+      const n = countLen(el.value), max = +el.dataset.max;
+      box.textContent = `${n} / ${max}`;
+      box.classList.toggle("over", n > max);
+    };
+    f.addEventListener("input", (e) => {
+      if (e.target.matches("[data-max]")) count(e.target);
+      clearErr(e.target);
+      if (e.target.dataset.path === "slug" && !e.target.readOnly) checkSlug();
+      if (e.target.dataset.path === "data.icon") $("#icon-view").innerHTML = iconHtml(e.target.value.trim());
+      changed();
+    });
+    f.addEventListener("change", changed);
+
+    // 굵게: 고른 글자를 <b>…</b>로 감쌈
+    f.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-bold]");
+      if (b) {
+        const ta = $("#" + b.dataset.bold), s = ta.selectionStart, en = ta.selectionEnd;
+        const sel = ta.value.slice(s, en) || "굵은 글자";
+        ta.setRangeText(`<b>${sel}</b>`, s, en, "end"); ta.focus(); count(ta); changed();
+      }
+      const add = e.target.closest("[data-add]");
+      if (add) {
+        const box = $(`[data-list="${add.dataset.add}"]`);
+        const n = $$(":scope>[data-li]", box).length;
+        if (n >= +box.dataset.max) return toast(`${box.dataset.max}개까지 넣을 수 있어`);
+        box.insertAdjacentHTML("beforeend", liWrap(add.dataset.add, n, ROWS[add.dataset.add](JSON.parse(box.dataset.blank), n), +box.dataset.min, false));
+        changed();
+      }
+      const del = e.target.closest("[data-del]");
+      if (del) {
+        const box = del.closest("[data-list]");
+        if ($$(":scope>[data-li]", box).length <= +box.dataset.min) return toast(`${box.dataset.min}개는 있어야 해`);
+        const data = collect();
+        const path = box.dataset.list, i = $$(":scope>[data-li]", box).indexOf(del.closest("[data-li]"));
+        const arr = getPath(data, path) || [];
+        arr.splice(i, 1);
+        box.innerHTML = arr.map((r, k) => liWrap(path, k, ROWS[path](r, k), +box.dataset.min, false)).join("");
+        changed();
+      }
+    });
+
+    // 고유 주소: 직접 넣음(예: dzk). 겹치면 바로 알려 줌. 발행한 적이 있으면 잠겨 있음
+    const slugEl = $('[data-path="slug"]'), slugMsg = $("#slug-msg");
+    const checkSlug = debounce(async () => {
+      const s = slugEl.value.trim();
+      if (!s) { slugMsg.textContent = ""; return; }
+      try {
+        const r = await api("GET", `/api/admin/slug-check?slug=${encodeURIComponent(s)}&id=${encodeURIComponent(c.id || "")}`);
+        slugMsg.className = "slug-msg " + (r.ok ? "ok" : "bad");
+        slugMsg.innerHTML = r.ok ? "쓸 수 있는 주소야" : esc(r.message) + (r.suggestion ? ` <button class="btn" type="button" data-sug="${esc(r.suggestion)}" style="min-height:44px;font-size:13px">${esc(r.suggestion)} 쓰기</button>` : "");
+      } catch (e) {}
+    }, 300);
+    slugMsg.onclick = (e) => { const b = e.target.closest("[data-sug]"); if (b && !slugEl.readOnly) { slugEl.value = b.dataset.sug; checkSlug(); changed(); } };
+
+    // 이미지 올리기 (대표 이미지/음식 사진)
+    $$("[data-img]").forEach((box) => wireImage(box, changed));
+    const iconFile = $("[data-iconfile]");
+    if (iconFile) iconFile.onchange = async () => {
+      const file = iconFile.files[0]; iconFile.value = "";
+      if (!file) return;
+      try { const r = await uploadImage(file, () => {}); $('[data-path="data.icon"]').value = "img:" + r.id; $("#icon-view").innerHTML = iconHtml("img:" + r.id); changed(); toast("사진 아이콘을 올렸어"); }
+      catch (e) { showErr("data.icon", e.message); }
+    };
+
+    // 미리보기
+    const pv = $("#pv");
+    $$(".pv-head [data-w]").forEach((b) => b.onclick = () => {
+      $$(".pv-head [data-w]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+      pv.style.width = +b.dataset.w ? b.dataset.w + "px" : "100%";
+      pv.style.flex = +b.dataset.w ? "0 0 auto" : "";
+    });
+    pv.onload = () => sendPreview.now();
+    $$(".tabs [data-tab]").forEach((b) => b.onclick = () => {
+      $$(".tabs [data-tab]").forEach((x) => x.setAttribute("aria-selected", x === b));
+      document.body.classList.toggle("tab-preview", b.dataset.tab === "preview");
+      if (b.dataset.tab === "preview") sendPreview.now();
+    });
+
+    // 버튼 줄
+    $("#bar").onclick = (e) => {
+      const b = e.target.closest("[data-do]");
+      if (b) act(b.dataset.do, b);
+    };
+
+    // 나가기 전에 확인
+    leaveGuard = () => !dirty || confirm("저장 안 한 내용이 있어. 나갈까?");
+    leaveGuard.dirty = () => dirty;
+
+    // 이 브라우저에 자동 보관된 내용이 있으면 불러올지 물어봄
+    offerBackup();
+  }
+
+  /* --- 입력 칸 → 저장할 내용 --- */
+  function collect() {
+    const f = $("#ef");
+    const out = { type: "food", title: "", subtitle: "", body: "", category: "", author: "", slug: "", sources: [], data: { hints: [], why: [], stats: [], opts: [], head: {}, now: {} } };
+    $$("[data-path]", f).forEach((el) => {
+      const p = el.dataset.path;
+      let v = el.type === "checkbox" ? el.checked : el.value;
+      if (p === "data.tags") v = el.value.split(/[,，]/).map((t) => t.trim()).filter(Boolean);
+      else if (p === "ord") v = el.value === "" ? null : Number(el.value);
+      else if (/^data\.stats\.\d+\.2$/.test(p)) v = Number(el.value);
+      else if (/^data\.stats\.\d+\.3$/.test(p)) v = el.checked ? 1 : 0;
+      else if (p === "data.head.sum") { if (!el.checked) return; v = true; }
+      setPath(out, p, v);
+    });
+    {
+      // 원래 순서는 그대로 두고(자기 자신 번호 포함), 새로 고른 것만 뒤에 붙임. 화면에 없는 자기 자신 번호가 빠지지 않게
+      const picked = $$("[data-opt]", f).filter((x) => x.checked).map((x) => x.value);
+      const orig = (C.data && C.data.opts) || [];
+      out.data.opts = [...orig.filter((x) => x === C.slug || picked.includes(x)), ...picked.filter((x) => !orig.includes(x))];
+    }
+    if (!out.cover || !out.cover.id) out.cover = null;
+    for (const k of ["sources", "data.hints", "data.hintsAlt", "data.why", "data.stats"]) { const a = getPath(out, k); if (Array.isArray(a)) setPath(out, k, a.filter((x) => x !== undefined)); }
+    if (out.data.hintsAlt && !out.data.hintsAlt.length) delete out.data.hintsAlt;
+    if (!out.data.verb) delete out.data.verb;
+    return out;
+  }
+  function setPath(o, path, v) {
+    const ks = path.split(".");
+    let cur = o;
+    ks.forEach((k, i) => {
+      const last = i === ks.length - 1, nextNum = !last && /^\d+$/.test(ks[i + 1]);
+      if (last) cur[k] = v;
+      else { if (cur[k] == null || typeof cur[k] !== "object") cur[k] = nextNum ? [] : {}; cur = cur[k]; }
+    });
+  }
+  function getPath(o, path) { return path.split(".").reduce((a, k) => (a == null ? a : a[k]), o); }
+
+  /* --- 틀린 칸 표시 --- */
+  function findField(path) {
+    let p = path;
+    while (p) {
+      const el = $(`[data-path="${p}"]`) || $(`[data-wrap="${p}"]`);
+      if (el) return el;
+      p = p.includes(".") ? p.slice(0, p.lastIndexOf(".")) : "";
+    }
+    return null;
+  }
+  function showErr(path, msg) {
+    document.body.classList.remove("tab-preview");
+    $$(".tabs [data-tab]").forEach((x) => x.setAttribute("aria-selected", x.dataset.tab === "form"));
+    const el = findField(path);
+    if (!el) return toast(msg);
+    const wrap = el.closest(".f") || el;
+    wrap.classList.add("has-err");
+    let e = $(":scope>.err", wrap);
+    if (!e) { e = document.createElement("div"); e.className = "err"; e.setAttribute("role", "alert"); wrap.appendChild(e); }
+    e.textContent = msg;
+    const d = el.closest("details"); if (d) d.open = true;
+    wrap.scrollIntoView({ behavior: "smooth", block: "center" });
+    const focusable = el.matches("input,textarea,select") ? el : $("input,textarea,select", wrap);
+    if (focusable) setTimeout(() => focusable.focus({ preventScroll: true }), 300);
+  }
+  function clearErr(el) { const w = el.closest(".has-err"); if (w) { w.classList.remove("has-err"); const e = $(":scope>.err", w); if (e) e.remove(); } }
+  function clearAllErr() { $$(".has-err").forEach((w) => { w.classList.remove("has-err"); const e = $(":scope>.err", w); if (e) e.remove(); }); }
+
+  // 발행 전 빈 필수 칸: 화면 위에서부터 첫 번째 칸으로 이동
+  function firstEmptyRequired() {
+    for (const el of $$("#ef [data-req]")) {
+      if (el.closest(".hide")) continue;
+      if (!String(el.value).trim()) return el.dataset.path;
+    }
+    if (!$$("[data-opt]").some((x) => x.checked)) return "data.opts";
+    return null;
+  }
+
+  /* --- 저장·발행·발행 취소·휴지통 --- */
+  let busy = false;
+  async function act(what, btn) {
+    if (busy) return;
+    clearAllErr();
+    const body = collect();
+    if (what === "save" || what === "publish") {
+      if (!body.title.trim()) return showErr("title", "이름이랑 고유 주소는 있어야 저장돼");
+      if (!body.slug.trim()) return showErr("slug", "이름이랑 고유 주소는 있어야 저장돼");
+      if (what === "publish") { const miss = firstEmptyRequired(); if (miss) return showErr(miss, miss === "data.opts" ? "오답 보기를 하나 이상 골라줘" : "비어 있어"); }
+    }
+    if (what === "trash" && !confirm("휴지통으로 옮길까? 사이트에서도 바로 사라져.")) return;
+    if (what === "unpublish" && !confirm("발행을 취소할까? 사이트에서 바로 사라져.")) return;
+    busy = true; $$("#bar .btn").forEach((b) => (b.disabled = true));
+    try {
+      let r;
+      if (!C.id) r = await api("POST", "/api/admin/contents", { ...body, publish: what === "publish" });
+      else if (what === "save") r = await api("PUT", `/api/admin/contents/${C.id}`, { ...body, version: C.version });
+      else if (what === "publish") r = await api("POST", `/api/admin/contents/${C.id}/publish`, { ...body, version: C.version });
+      else r = await api("POST", `/api/admin/contents/${C.id}/${what}`, { version: C.version });
+      const wasNew = !C.id;
+      dropBackup();
+      C = r.content; dirty = false;
+      toast({ save: "저장했어", publish: "발행했어", unpublish: "발행을 취소했어", trash: "휴지통으로 옮겼어" }[what]);
+      if (what === "trash") { leaveGuard = null; return go("/admin"); }
+      if (wasNew) history.replaceState({}, "", "/admin/edit/" + C.id), (lastUrl = location.pathname);
+      let foods = [];
+      try { foods = (await api("GET", "/api/admin/contents?status=published")).items; } catch (e) {}
+      const y = scrollY; render(C, foods); scrollTo(0, y);
+    } catch (e) {
+      if (e.error === "conflict") showConflict();
+      else if (e.error === "slug_taken") { showErr("slug", e.message + (e.suggestion ? ` (추천: ${e.suggestion})` : "")); }
+      else if (e.field) showErr(e.field, e.message);
+      else { saveBackup(); toast(e.message || "저장 못 했어. 잠시 뒤 다시 해줘"); }
+    } finally {
+      busy = false; $$("#bar .btn").forEach((b) => (b.disabled = false));
+    }
+  }
+  function showConflict() {
+    saveBackup();
+    $("#banners").innerHTML = `<div class="banner" role="alert"><p>다른 곳에서 먼저 고쳤어. 새로 불러올까?</p><button class="btn primary" type="button" id="reload">새로 불러오기</button></div>`;
+    $("#banners").scrollIntoView({ behavior: "smooth" });
+    $("#reload").onclick = async () => {
+      // 내 입력은 이 브라우저에 보관돼 있어서, 새로 불러온 뒤 "불러올까?"로 다시 꺼낼 수 있음
+      try { C = (await api("GET", `/api/admin/contents/${C.id}`)).content; } catch (e) { return toast(e.message); }
+      dirty = false;
+      let foods = [];
+      try { foods = (await api("GET", "/api/admin/contents?status=published")).items; } catch (e) {}
+      render(C, foods);
+    };
+  }
+
+  /* --- 브라우저 자동 보관 (저장 전 내용·발행된 음식 파일을 고치는 중인 내용) --- */
+  const saveBackup = debounce(() => { if (!dirty || !C) return; try { localStorage.setItem(bkKey(), JSON.stringify({ at: Date.now(), version: C.version, form: collect() })); } catch (e) {} }, 400);
+  function dropBackup() { try { localStorage.removeItem(bkKey()); } catch (e) {} }
+  function offerBackup() {
+    let bk = null;
+    try { bk = JSON.parse(localStorage.getItem(bkKey()) || "null"); } catch (e) {}
+    if (!bk || !bk.form) return;
+    if (JSON.stringify(bk.form) === JSON.stringify(collect())) return dropBackup();
+    $("#banners").innerHTML = `<div class="banner"><p>저장 안 한 내용이 있어. 불러올까? <span class="small muted">(${fmtDate(bk.at)})</span></p>
+      <button class="btn primary" type="button" id="bk-load">불러오기</button><button class="btn" type="button" id="bk-drop">버리기</button></div>`;
+    $("#bk-load").onclick = async () => {
+      let foods = [];
+      try { foods = (await api("GET", "/api/admin/contents?status=published")).items; } catch (e) {}
+      const merged = { ...C, ...bk.form, data: { ...(C.data || {}), ...(bk.form.data || {}) } };
+      render(merged, foods); dirty = true; $("#banners").innerHTML = ""; toast("불러왔어. 저장하거나 발행해야 반영돼");
+    };
+    $("#bk-drop").onclick = () => { dropBackup(); $("#banners").innerHTML = ""; };
+  }
+
+  /* --- 미리보기: 사이트 화면(/admin/preview)에 지금 입력한 내용을 보냄 --- */
+  function postPreview() {
+    const pv = $("#pv");
+    if (!pv || !pv.contentWindow || !C) return;
+    pv.contentWindow.postMessage({ type: "mz-preview", content: { ...collect(), status: C.status, published_at: C.published_at || Date.now() } }, location.origin);
+  }
+  const sendPreview = debounce(postPreview, 500);
+  sendPreview.now = postPreview;
+}
+
+/* ===== 이미지: 브라우저에서 줄인 뒤 올리기 (진행 % 표시, 실패하면 다시 시도) ===== */
+function wireImage(box, changed) {
+  const key = box.dataset.img;
+  const idEl = $(`[data-path="${key}.id"]`, box), view = $("[data-imgview]", box), meta = $("[data-imgmeta]", box);
+  const prog = $("[data-prog]", box), bar = $("i", prog), err = $("[data-imgerr]", box), retry = $("[data-retry]", box), del = $("[data-imgdel]", box);
+  const fileIn = $("[data-file]", box), drop = $("[data-drop]", box);
+  let lastFile = null;
+  async function start(file) {
+    lastFile = file;
+    err.classList.add("hide"); retry.classList.add("hide"); prog.classList.remove("hide"); bar.style.width = "0";
+    try {
+      const r = await uploadImage(file, (p) => (bar.style.width = Math.round(p * 100) + "%"));
+      idEl.value = r.id;
+      view.innerHTML = `<img src="${r.url}" alt="">`;
+      meta.classList.remove("hide"); del.classList.remove("hide");
+      changed();
+      toast("이미지를 올렸어. 대체 글도 써줘");
+      const alt = $(`[data-path="${key}.alt"]`, box); if (alt && !alt.value) alt.focus();
+    } catch (e) {
+      err.textContent = e.message; err.classList.remove("hide");
+      if (e.retry) retry.classList.remove("hide");
+    } finally { prog.classList.add("hide"); }
+  }
+  fileIn.onchange = () => { const f = fileIn.files[0]; fileIn.value = ""; if (f) start(f); };
+  retry.onclick = () => lastFile && start(lastFile);
+  del.onclick = () => { idEl.value = ""; view.innerHTML = ""; meta.classList.add("hide"); del.classList.add("hide"); changed(); };
+  ["dragenter", "dragover"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", (e) => { const f = e.dataTransfer.files[0]; if (f) start(f); });
+}
+async function shrink(file) {
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) throw { message: "올릴 수 없는 파일이야(JPG·PNG·WebP만 돼)" };
+  let bmp;
+  try { bmp = await createImageBitmap(file); } catch (e) { throw { message: "올릴 수 없는 파일이야(그림을 읽을 수 없어)" }; }
+  const scale = Math.min(1, MAX_IMG_W / bmp.width), w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+  const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+  cv.getContext("2d").drawImage(bmp, 0, 0, w, h);
+  const blob = await new Promise((ok) => cv.toBlob(ok, file.type, 0.85));
+  if (!blob) throw { message: "올릴 수 없는 파일이야(줄이기 실패)" };
+  if (blob.size > MAX_IMG_BYTES) throw { message: "올릴 수 없는 파일이야(줄여도 2MB가 넘어)" };
+  return { blob, w, h };
+}
+async function uploadImage(file, onProgress) {
+  const { blob, w, h } = await shrink(file);
+  const cid = (location.pathname.match(/^\/admin\/edit\/([a-z0-9-]+)/) || [])[1] || "";
+  const send = () => new Promise((ok, no) => {
+    const x = new XMLHttpRequest();
+    x.open("POST", `/api/admin/images?w=${w}&h=${h}${cid ? "&content_id=" + cid : ""}`);
+    x.setRequestHeader("Content-Type", blob.type);
+    x.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded / e.total);
+    x.onload = () => { let j = {}; try { j = JSON.parse(x.responseText); } catch (e) {} x.status === 201 ? ok(j) : no({ status: x.status, ...j }); };
+    x.onerror = () => no({ network: true });
+    x.send(blob);
+  });
+  try { return await send(); }
+  catch (e) {
+    if (e.status === 401) { await relogin(); return uploadImage(file, onProgress); }
+    if (e.network || e.status >= 500) throw { message: "업로드 실패. 인터넷을 확인하고 다시 시도해줘", retry: true };
+    throw { message: e.message || "올릴 수 없는 파일이야" };
+  }
+}
+
+route();
+</script>
+</body>
+</html>

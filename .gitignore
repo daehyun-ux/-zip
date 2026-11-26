@@ -6,3 +6,7 @@ dist/
 .env.joripspace
 
 .DS_Store
+
+# 내 PC 테스트용 (wrangler)
+.dev.vars
+.wrangler/

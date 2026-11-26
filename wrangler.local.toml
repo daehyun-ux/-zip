@@ -1,0 +1,17 @@
+# 내 PC에서만 쓰는 테스트 설정 (운영 배포에는 안 씀)
+# 조립스페이스에 배포하면 프로젝트에 연결된 진짜 DB·저장소를 쓰므로, 아래 이름·번호는 가짜여도 된다.
+# 실행: npm run dev  →  http://localhost:8787
+# 테스트용 비밀값은 .dev.vars 파일(GitHub에 안 올라감)에 둔다.
+name = "mukubowzip-local"
+main = "dist/worker.js"
+compatibility_date = "2026-09-06"
+no_bundle = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mukubowzip-local"
+database_id = "00000000-0000-0000-0000-000000000001"
+
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "mukubowzip-local"

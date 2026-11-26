@@ -17,13 +17,13 @@
 <meta property="og:site_name" content="먹어봤.zip">
 <meta property="og:title" content="먹어봤.zip">
 <meta property="og:description" content="그 시절, 우리가 열광했던 음식들 — 2014~2026 한국 유행 음식 아카이브">
-<meta property="og:url" content="https://daehyun-ux.github.io/-zip/">
-<meta property="og:image" content="https://daehyun-ux.github.io/-zip/og.png">
+<meta property="og:url" content="https://mukubowzip.joripspace.run/">
+<meta property="og:image" content="https://mukubowzip.joripspace.run/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="빨간 폴더와 디저트 아이콘, 먹어봤.zip 로고">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://daehyun-ux.github.io/-zip/og.png">
+<meta name="twitter:image" content="https://mukubowzip.joripspace.run/og.png">
 <title>먹어봤.zip</title>
 <link rel="preload" href="fonts/meogeobom-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/meogeobom-800.woff2" as="font" type="font/woff2" crossorigin>
@@ -949,6 +949,13 @@ p.intro,#root .sub,.ate-page .ate-note{font-size:var(--fs-body);line-height:1.6}
 .dv-card b{display:block;font-size:16px;font-weight:800}
 .dv-card p{margin:6px 0 8px;font-size:var(--fs-card);line-height:1.5}
 .dv-src{font-size:var(--fs-note);color:var(--sub)}
+/* ===== 음식 파일 불러오기 실패·빈 폴더 안내 / 관리자 미리보기 (design-admin.md 8·10장) ===== */
+.rd-empty{margin:28px 0;padding:28px 20px;border-radius:18px;background:var(--paper);border:1px dashed var(--line);text-align:center;color:var(--sub);display:grid;gap:14px;justify-items:center}
+.rd-empty p{margin:0;line-height:1.6}.rd-empty .btn{max-width:260px}
+.files .yr-empty{margin:0;padding:14px 4px;font-size:13px;color:var(--sub);text-align:center}
+.pv-bar{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:90;display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(27,26,25,.86)}
+.pv-bar button{min-height:44px;padding:0 12px;border-radius:10px;color:#fff;font-size:13px;font-weight:700;white-space:nowrap}
+.pv-bar button[aria-pressed=true]{background:#fff;color:#1B1A19}
 </style>
 </head>
 <body>
@@ -1004,6 +1011,13 @@ p.intro,#root .sub,.ate-page .ate-note{font-size:var(--fs-body);line-height:1.6}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="stamp" id="stamp">영수증에 기록!</div>
 <script>
+/* ===== 서버가 끼워 준 콘텐츠 (design-admin.md 9장 선택 A) =====
+   서버(joripspace/src/site.js)가 <script id="mz-data">에 발행된 음식 파일을 넣어 보냄. 있으면 아래 내장 데이터 대신 이걸 씀.
+   파일을 직접 열었을 때(서버 없음)만 아래 내장 데이터를 씀.
+   route: "preview"(관리자 미리보기) / 없음(첫 화면) */
+const MZ=(()=>{try{const e=document.getElementById("mz-data");return e?JSON.parse(e.textContent):null}catch(e){return {error:true,foods:[],articles:[]}}})();
+const PREVIEW=!!(MZ&&MZ.route==="preview");      /* 관리자 미리보기: 내 기록을 읽지도 저장하지도 않음 */
+const CONTENT_ERR=!!(MZ&&MZ.error);               /* 서버가 DB를 못 읽음 → 음식 폴더 자리에 안내 */
 const FOODS = [
 {id:"dzk",year:2026,name:"두쫀쿠",sub:"두바이 쫀득 쿠키",icon:"cookie",
  hints:[
@@ -1872,6 +1886,8 @@ const FOOD_YEARS=[2014,2016,2018,2020,2022,2024,2026];
 /* 목록에서 뺀 음식 (데이터는 남겨 둠). 11/9: 2026 버터떡 → 봄동비빔밥으로 교체 */
 const HIDE_IDS=["btt"];
 for(let i=FOODS.length-1;i>=0;i--)if(!FOOD_YEARS.includes(FOODS[i].year)||HIDE_IDS.includes(FOODS[i].id))FOODS.splice(i,1);
+/* 서버 데이터가 있으면 음식 목록을 DB의 발행된 음식으로 통째로 바꿈 (힌트도 DB 값 그대로. 순서는 서버가 연도·순서대로 정렬해 보냄) */
+if(MZ){FOODS.length=0;if(!CONTENT_ERR)(MZ.foods||[]).forEach(f=>{if(f&&f.id&&f.name&&Array.isArray(f.hints)&&FOOD_YEARS.includes(f.year))FOODS.push(Object.assign(f,{cat:"food",verb:f.verb||"먹어봤"}))})}
 const ITEMS=SHOW_CULTURE?[...FOODS,...CULTURE]:[...FOODS];
 const CAT_KEYS=SHOW_CULTURE?["food","culture"]:["food"];
 const HARD={
@@ -1901,7 +1917,7 @@ pgo:[["나는 2016년 7월 해외에서 먼저 나왔지만, 한국은 서비스
 ibc:[["나는 2014년 8월 한국에 상륙했어요.","첫 주자는 가수 팀."],["지목받은 사람은 24시간 안에 인증하고 다음 3명을 지목해야 해요.","'슬랙티비즘'이라는 비판도 받았죠."],["불치병 환자를 돕기 위해 차가운 물을 뒤집어써요.","미국 루게릭병 협회가 주관."]],
 frz:[["나는 2014년 한국에서 1000만 관객을 넘긴 애니메이션이에요.","시리즈물이 아닌 단독 작품."],["내 주제곡은 개봉 몇 달 전 디즈니 행사에서 먼저 공개돼 좋은 반응을 얻었어요.","골든글로브 주제가상 후보."],["얼음 마법을 가진 공주 자매 이야기예요.","주제곡 제목은 '다 놓아버려'라는 뜻."]]
 };
-ITEMS.forEach(f=>{if(HARD[f.id])f.hints=HARD[f.id]});
+if(!MZ)ITEMS.forEach(f=>{if(HARD[f.id])f.hints=HARD[f.id]});   /* 서버 데이터는 이미 HARD 값이라 바꾸지 않음 */
 
 const CATS={food:{name:"음식",list:FOODS,ds:"줄 서고, 품절되고, 따라 만들던 그 음식들",ico:["cookie","choco","chips"]},
             culture:{name:"문화",list:CULTURE,ds:"따라 부르고, 따라 추던 노래와 챌린지",ico:["apt","phone","bucket"]}};
@@ -1912,13 +1928,13 @@ const periodKey=y=>{if(y==null)return null;const p=PERIODS.find(([a,b])=>y>=a&&y
 const periodLabel=([a,b])=>a===b?String(a):`${a}–${String(b).slice(2)}`;
 const byId=Object.fromEntries(ITEMS.map(f=>[f.id,f]));
 /* ===== 백엔드 서버 연결 =====
-   API_BASE에 서버 주소를 넣으면(예: "https://meogeobwat-api.onrender.com") 음식 데이터를 서버에서 불러오고 영수증을 저장함.
-   비워 두면 지금처럼 이 파일 안의 데이터만 씀. 서버가 꺼져 있거나 느리면 마지막으로 받은 데이터 → 내장 데이터 순서로 보여줌 */
-const API_BASE="https://cxtreex65g.onrender.com";
+   11/25부터: 음식·글은 서버가 페이지에 끼워 보냄(맨 위 MZ). 영수증은 같은 사이트 /api/receipts로 저장. 예전 Render 서버는 더 이상 안 부름.
+   아래 API_BASE·USE_SERVER_FOODS·loadRemoteFoods는 예전 방식이라 꺼 둔 채로 남겨 둠 */
+const API_BASE="";   /* 11/25: Render 대신 같은 사이트(조립스페이스) 서버. 영수증은 /api/receipts, 이미지는 /images/번호 */
 /* 11/9 결정: 음식 데이터는 이 파일 안의 것만 씀(서버에서 안 받아 옴). 서버는 영수증 저장·관리자 통계용으로만 사용.
    다시 서버 데이터를 쓰려면 true로 */
 const USE_SERVER_FOODS=false;
-const imgUrl=(id,v)=>`${API_BASE}/api/images/${encodeURIComponent(id)}${v?"?v="+v:""}`;
+const imgUrl=(id,v)=>`/images/${encodeURIComponent(id)}${v?"?v="+v:""}`;
 const FOODS_CACHE="meogeobwat.foods";
 let FOODS_VER="local";
 function applyFoods(list,ver){
@@ -1943,21 +1959,21 @@ function loadRemoteFoods(){
 }
 /* 영수증 저장: 이름·서명 없이 파일별 기록과 점수만. 같은 브라우저는 같은 번호로 덮어씀 */
 function sendReceipt(st){
-  if(!API_BASE||!st.opened.length)return;
+  if(PREVIEW||!MZ||!st.opened.length)return;   /* 서버 없이 파일로 열었거나 미리보기면 안 보냄 */
   let cid;
   try{cid=localStorage.getItem("meogeobwat.cid");
     if(!cid){cid=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)).replace(/[^A-Za-z0-9_-]/g,"").slice(0,64);localStorage.setItem("meogeobwat.cid",cid)}}catch(e){return}
   const items=st.opened.map(f=>{const d=S.done[f.id];return {id:f.id,hints:Math.min(3,Math.max(1,d.hints||1)),ms:d.ms==null?null:Math.round(d.ms),solved:!!d.solved,wrong:Math.min(99,d.wrong||0),ate:d.ate||null}});
   const body=JSON.stringify({clientId:cid,receipt:{items,total:st.N,sens:st.sens,rank:null,ate:st.exp.food}});
   try{if(sessionStorage.getItem("meogeobwat.rsig")===body)return}catch(e){}
-  fetch(API_BASE+"/api/receipts",{method:"POST",headers:{"Content-Type":"application/json"},body,keepalive:true})
+  fetch("/api/receipts",{method:"POST",headers:{"Content-Type":"application/json"},body,keepalive:true})
     .then(r=>{if(r.ok)try{sessionStorage.setItem("meogeobwat.rsig",body)}catch(e){}}).catch(()=>{});
 }
 const lab=(f,a)=>{const v=f.verb.replace("봤","봄");return a==="y"?v:a==="n"?"안 "+v:a==="m"?"기억 안 남":"응답 전"};
 const KEY="meogeobwat.v1";
 let S={done:{}};
-try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)||S;if(!S.done)S.done={}}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+if(!PREVIEW)try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)||S;if(!S.done)S.done={}}catch(e){}
+const save=()=>{if(PREVIEW)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const app=document.getElementById("app");
 const ic=(n,cls="")=>String(n).startsWith("emoji:")?`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><text x="50" y="56" text-anchor="middle" dominant-baseline="middle" font-size="72" style="font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif">${String(n).slice(6).replace(/[&<>"]/g,"")}</text></svg>`:String(n).startsWith("img:")?`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><image href="${imgUrl(String(n).slice(4),"thumb")}" x="6" y="6" width="88" height="88" preserveAspectRatio="xMidYMid slice" style="clip-path:inset(0 round 20px)"/></svg>`:`<svg class="${cls}" viewBox="0 0 100 100" aria-hidden="true"><use href="#${n}"/></svg>`;
 const doneIn=cat=>CATS[cat].list.filter(f=>S.done[f.id]).length;
@@ -2125,9 +2141,9 @@ function root(){
     <button class="cat ${c}" data-c="${c}"><span class="f-back"></span><span class="f-paper a"></span><span class="f-paper b"></span><span class="f-front">
       <span class="mono" style="font-size:12px;opacity:.85">/${CATS[c].name}</span>
       <span class="nm">${CATS[c].name}</span>
-      <span class="ds">${CATS[c].ds}</span>
+      <span class="ds">${CONTENT_ERR&&c==="food"?"음식 파일을 불러오지 못했어. 눌러서 다시 시도해줘":CATS[c].ds}</span>
       <span class="ft"><span class="mono">${d} / ${CATS[c].list.length} 열람</span><span class="icons">${CATS[c].ico.map(i=>`<span>${ic(i)}</span>`).join("")}</span></span>
-      <span class="meter"><i style="width:${Math.round(d/CATS[c].list.length*100)}%"></i></span>
+      <span class="meter"><i style="width:${CATS[c].list.length?Math.round(d/CATS[c].list.length*100):0}%"></i></span>
     </span></button>`}).join("")}
     <button class="cat trendcat" id="tr"><span class="f-back"></span><span class="f-paper a"></span><span class="f-paper b"></span><span class="f-front">
       <span class="mono" style="font-size:12px;opacity:.75">/분석</span>
@@ -2322,7 +2338,8 @@ function trendLink(f){
 /* 2. archive */
 function archive(cat,focusYear){
   if(cat)setCat(cat);cat=CUR;
-  const list=CATS[cat].list,N=list.length,n=doneIn(cat),pct=Math.round(n/N*100);
+  if(CONTENT_ERR)return loadFail();
+  const list=CATS[cat].list,N=list.length,n=doneIn(cat),pct=N?Math.round(n/N*100):0;
   if(focusYear!==undefined)openYear=focusYear;
   const el=mount(`
    <div class="top"><button class="back" id="up" aria-label="상위 폴더">←</button><div class="path">먹어봤.zip / <b>${CATS[cat].name}</b> /</div>${cat==="food"?`<button class="sr-open" id="srOpen" aria-label="음식 파일 검색"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>`:""}</div>
@@ -2332,11 +2349,11 @@ function archive(cat,focusYear){
    <div class="prog"><div class="track"><div class="fill" style="width:0"></div></div><span>${pct}%</span></div>
    <div class="folders">${PERIODS.map(pr=>{const y=pr[0],isOpen=periodKey(openYear)===y;
      const fs=list.filter(f=>f.year>=pr[0]&&f.year<=pr[1]),d=fs.filter(f=>S.done[f.id]).length;
-     return `<div class="folder ${isOpen?"open":""} ${d===fs.length?"done":""}" data-y="${y}">
+     return `<div class="folder ${isOpen?"open":""} ${fs.length&&d===fs.length?"done":""}" data-y="${y}">
       <button class="fhead" aria-expanded="${isOpen}" aria-label="${pr[0]===pr[1]?pr[0]+"년":pr[0]+"년부터 "+pr[1]+"년까지"}"><span class="ficon"></span><span class="yr">${periodLabel(pr)}</span>
        <span class="peek">${fs.map(f=>S.done[f.id]?ic(f.icon):`<span class="qm">?</span>`).join("")}</span>
        <span class="cnt">${d} / ${fs.length}</span></button>
-      <div class="files"><div>${fs.map(f=>{const dn=S.done[f.id];return `
+      <div class="files"><div>${fs.length?"":`<p class="yr-empty">아직 파일이 없어</p>`}${fs.map(f=>{const dn=S.done[f.id];return `
        <button class="file" data-id="${f.id}"><span class="fimg">${dn?ic(f.icon):"?"}</span>
         <span class="fname"><b>${dn?f.name:"아직 안 연 파일"}</b><small>${dn?f.id+"."+(cat==="food"?"food":"clip")+" · "+lab(f,dn.ate):"file_"+fileNo(f)+".???"}</small></span>
         <span class="go">${dn?"기록 보기":"열기 →"}</span></button>`}).join("")}</div></div></div>`}).join("")}</div>
@@ -3361,6 +3378,65 @@ function render(h,fromPop){
   const cur=document.querySelector(".screen");
   return splash(!!(fromPop&&cur&&cur.id==="root"));   /* 압축 해제 화면에서 뒤로 → 줌아웃 연출 */
 }
+/* ===== 음식 파일을 불러오지 못했을 때 (design-admin.md 10장): 음식 폴더 자리에 안내 + [다시 시도]. 게시판 등 다른 기능은 그대로 ===== */
+const safeUrl=u=>/^https?:\/\//i.test(String(u||""))?String(u):"";
+function loadFail(){
+  setCat(null);
+  const el=mount(`
+   <div class="top"><button class="back" id="up" aria-label="뒤로">←</button><div class="path">먹어봤.zip / <b>음식</b> /</div></div>
+   <div class="rd-empty" role="alert"><p><b>음식 파일을 불러오지 못했어.</b><br>잠시 뒤 다시 열어줘</p><button class="btn p" id="retry">다시 시도</button></div>`,"loadfail");
+  el.querySelector("#up").onclick=root;
+  el.querySelector("#retry").onclick=()=>location.reload();
+}
+/* ===== 관리자 미리보기 (/admin/preview, 관리자만): 편집 화면이 보낸 입력 내용을 실제 사이트 화면으로 그림 =====
+   같은 사이트(관리자 화면)에서 온 메시지만 받음. 서버 검사 규칙처럼 <b>·<br> 말고는 태그가 안 되게 바꿔서 그림. 아무것도 저장하지 않음 */
+const pvRich=v=>String(v??"").replace(/\r\n?/g,"\n").trim().replace(/\n/g,"<br>").replace(/<(?!\/?b>|br\s*\/?>)/gi,"＜");
+const pvPlain=v=>String(v??"").replace(/\s+/g," ").trim().replace(/["<>`]/g,"");
+const pvLabel=v=>String(v??"").replace(/\r\n?|\n/g,"<br>").replace(/<br\s*\/?>/gi,"\u0000").replace(/["<>`]/g,"").replace(/\u0000/g,"<br>").trim();
+const pvCover=c=>c&&/^[a-f0-9]{24}$/.test(c.id||"")?{id:c.id,alt:pvPlain(c.alt),credit:pvPlain(c.credit),url:safeUrl(c.url)}:null;
+let PV_MODE="quiz",PV_LAST=null,PV_ID=null;const PV_ORIG={};   /* PV_ORIG: 미리보기로 바꿔 끼우기 전 원래 파일 */
+function pvFood(c){
+  const d=c.data||{},y=+c.category,hints=(d.hints||[]).map(h=>[pvRich(h&&h[0])||"(힌트를 써줘)",pvRich(h&&h[1])]);
+  while(hints.length<3)hints.push(["(힌트를 써줘)",""]);
+  const icon=String(d.icon||"");
+  const f={id:/^[a-z0-9][a-z0-9-]{1,23}$/.test(c.slug||"")?c.slug:"preview",   /* 사이트의 음식 번호 = 고유 주소 */year:FOOD_YEARS.includes(y)?y:FOOD_YEARS[FOOD_YEARS.length-1],
+    name:pvPlain(c.title)||"(이름)",sub:pvPlain(c.subtitle),icon:/^(img:[a-f0-9]{24}|emoji:.+|[a-z]+)$/.test(icon)?icon:"cookie",hints,opts:d.opts||[],
+    desc:pvRich(d.desc),tags:(d.tags||[]).map(pvPlain).filter(Boolean),remember:pvRich(c.body),
+    head:{t:pvRich(d.head&&d.head.t),m:pvPlain(d.head&&d.head.m),...(d.head&&d.head.sum?{sum:true}:{})},
+    stats:(d.stats||[]).filter(s=>s&&(s[0]||s[1])).map((s,i)=>[pvLabel(s[0]),pvPlain(s[1]),[0,1,2].includes(+s[2])?+s[2]:i%3,...(s[3]?[1]:[])]),
+    note:pvRich(d.note),why:(d.why||[]).map(pvRich).filter(Boolean),now:{when:pvPlain(d.now&&d.now.when),t:pvRich(d.now&&d.now.t)},
+    src:(c.sources||[]).filter(s=>s&&s[0]).map(s=>[pvPlain(s[0]),safeUrl(s[1])||"#"]),cat:"food",verb:pvPlain(d.verb)||"먹어봤"};
+  const ph=pvCover(c.cover);if(ph)f.photo=ph;
+  return f;
+}
+function pvShow(c){
+  PV_LAST=c;
+  const f=pvFood(c);
+  /* 고유 주소를 바꾸는 중이면 앞서 넣었던 미리보기 파일은 빼고, 원래 있던 파일이면 되돌려 둠 */
+  if(PV_ID&&PV_ID!==f.id){[FOODS,ITEMS].forEach(L=>{const i=L.findIndex(x=>x.id===PV_ID);if(i>=0){if(PV_ORIG[PV_ID])L[i]=PV_ORIG[PV_ID];else L.splice(i,1)}});
+    if(PV_ORIG[PV_ID])byId[PV_ID]=PV_ORIG[PV_ID];else delete byId[PV_ID]}
+  if(byId[f.id]&&!PV_ORIG[f.id]&&PV_ID!==f.id)PV_ORIG[f.id]=byId[f.id];
+  PV_ID=f.id;
+  /* 사이트 목록에 이 파일을 넣거나(새 파일) 바꿔 끼움(기존 파일) → 퀴즈 보기·기록 화면이 실제와 똑같이 그려짐 */
+  [FOODS,ITEMS].forEach(L=>{const i=L.findIndex(x=>x.id===f.id);if(i>=0)L[i]=f;else L.push(f)});byId[f.id]=f;
+  if(PV_MODE==="record"){S.done[f.id]={ate:"y",hints:3,solved:true,ms:42000,at:Date.now(),wrong:0};record(f)}
+  else{delete S.done[f.id];quiz(f)}
+  pvBar();
+}
+function pvBar(){
+  let b=document.getElementById("pvbar");
+  if(!b){b=document.createElement("div");b.id="pvbar";b.className="pv-bar";document.body.appendChild(b)}
+  b.innerHTML=`<button type="button" data-m="quiz" aria-pressed="${PV_MODE==="quiz"}">파일 연 화면(힌트)</button><button type="button" data-m="record" aria-pressed="${PV_MODE==="record"}">기록 화면</button>`;
+  b.onclick=e=>{const m=e.target.closest("[data-m]");if(!m)return;PV_MODE=m.dataset.m;if(PV_LAST)pvShow(PV_LAST)};
+}
+function previewBoot(){
+  setCat(null);
+  mount(`<div class="top"><div class="path">미리보기 /</div></div><div class="rd-empty"><p>왼쪽에 쓰면 여기에 실제 사이트 모양으로 보여</p></div>`,"preview");
+  window.addEventListener("message",e=>{
+    if(e.origin!==location.origin||!e.data||e.data.type!=="mz-preview"||!e.data.content)return;
+    try{pvShow(e.data.content)}catch(err){}
+  });
+}
 /* 바로 들어온 주소(공유 링크·새로고침)도 뒤로가기가 자연스럽게: 상위 화면들을 기록에 미리 깔아둠 */
 function parentChain(h){
   const [a,b]=h.split("/");const ch=["","root"];
@@ -3377,6 +3453,7 @@ window.addEventListener("popstate",e=>{
   NAV.popping=true;try{render(h,true)}finally{NAV.popping=false}
 });
 function boot(){
+  if(PREVIEW)return previewBoot();   /* 관리자 미리보기 칸 */
   loadRemoteFoods();
   /* 새로고침(같은 탭)이면 보던 화면 복원, 공유 링크로 새로 열면 첫 화면부터 */
   let alive=false;try{alive=sessionStorage.getItem("meogeobwat.alive")==="1";sessionStorage.setItem("meogeobwat.alive","1")}catch(e){}
